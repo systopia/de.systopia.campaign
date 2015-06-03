@@ -49,9 +49,11 @@
      $scope.currentCampaign = currentCampaign;
      $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
      $scope.children = children.children;
-     $scope.cc = Object.keys($scope.children).length;
      $scope.parents = parents.parents;
-
+     $scope.numberof = {
+        parents: Object.keys($scope.parents).length,
+        children: Object.keys($scope.children).length,
+        };
   }]);
 
 })(angular, CRM.$, CRM._);

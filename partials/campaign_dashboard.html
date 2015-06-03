@@ -1,11 +1,11 @@
 <div id="campaign_container">
    <div id="campaign_summary">
-      <h1>{{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : "(INACTIVE)"}}</h1>
+      <h1>[{{numberof.parents}}] {{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : "(INACTIVE)"}}</h1>
       <div id="breadcrumb">
          <!-- parents -->
          <a ng-repeat-start="(key, value) in parents" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end>&gt; </span>
          <!-- current -->
-         <a href="#/campaign/{{currentCampaign.id}}/view" class="current">{{currentCampaign.title}}</a> <span ng-show="cc > 0">&gt; </span>
+         <a href="#/campaign/{{currentCampaign.id}}/view" class="current">{{currentCampaign.title}}</a> <span ng-show="numberof.children > 0">&gt; </span>
          <!-- children -->
          <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">&gt; </span>
       </div>
@@ -17,11 +17,19 @@
            </tr>
            <tr>
              <td>Start date</td>
-             <td><input crm-ui-datepicker="{allowClear: false, minDate: -1, maxDate: -2}" ng-model="currentCampaign.start_date"/></td>
+             <td><input disableInput crm-ui-datepicker="{allowClear: false, minDate: -1, maxDate: -2}" ng-model="currentCampaign.start_date"/></td>
            </tr>
            <tr>
              <td>End date</td>
-             <td><input crm-ui-datepicker="{allowClear: false, minDate: -1, maxDate: -2}" ng-model="currentCampaign.end_date"/></td>
+             <td><input disableInput crm-ui-datepicker="{allowClear: false, minDate: -1, maxDate: -2}" ng-model="currentCampaign.end_date"/></td>
+           </tr>
+           <tr>
+             <td>Parent campaigns:</td>
+             <td>{{numberof.parents}}</td>
+           </tr>
+           <tr>
+             <td>Child campaigns:</td>
+             <td>{{numberof.children}}</td>
            </tr>
          </table>
       </div>
