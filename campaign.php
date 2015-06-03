@@ -113,3 +113,35 @@ function campaign_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
 function campaign_civicrm_angularModules(&$angularModules) {
   $angularModules['campaign'] = array('ext' => 'de.systopia.campaign', 'js' => array('js/campaign.js'), 'partials' => array('partials'), 'css' => array('css/campaign.css'));
 }
+
+/**
+ * Implementation of hook_civicrm_buildForm:
+ */
+function campaign_civicrm_buildForm($formName, &$form) {
+	if ($formName == 'CRM_Campaign_Form_Campaign' && $form->getAction() == 0 && !$_GET['qfKey']) {
+		CRM_Core_Region::instance('form-body')->add(array(
+      		'template' => 'CRM/Campaign/Form/ExtendedCampaign.tpl',
+    	));
+	}
+}
+
+/**
+ * Implementation of hook_civicrm_postProcess:
+ */
+function campaign_civicrm_postProcess( $formName, &$form ) {
+	if ($formName == 'CRM_Campaign_Form_Campaign') {
+      $params = $form->exportValues();
+
+      if(isset($params['parent_id'])) {
+         $query = "
+         UPDATE civicrm_campaign
+         SET parent_id = %1
+         WHERE title = %2;
+         ";
+
+         CRM_Core_DAO::singleValueQuery($query,
+         array(1 => array($params['parent_id'], 'Integer'),
+               2 => array($params['title'], 'String')));
+      }
+	}
+}
