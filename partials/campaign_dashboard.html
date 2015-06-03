@@ -1,7 +1,14 @@
 <div id="campaign_container">
    <div id="campaign_summary">
       <h1>{{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : "(INACTIVE)"}}</h1>
-      <div>#breadcrumb_navigation</div>
+      <div id="breadcrumb">
+         <!-- parents -->
+         <a ng-repeat-start="(key, value) in parents" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end>&gt; </span>
+         <!-- current -->
+         <a href="#/campaign/{{currentCampaign.id}}/view" class="current">{{currentCampaign.title}}</a> <span ng-show="cc > 0">&gt; </span>
+         <!-- children -->
+         <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">&gt; </span>
+      </div>
    </div>
 
    <div crm-ui-accordion="{title: ts('Campaign Information')}" >

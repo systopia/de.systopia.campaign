@@ -12,11 +12,11 @@
 * @return array
 */
 
-function civicrm_api3_campaign_tree_getid($params) {
+function civicrm_api3_campaign_tree_getids($params) {
    return CRM_Campaign_Tree::getCampaignIds($params['id'], $params['depth']);
 }
 
-function _civicrm_api3_campaign_tree_getid_spec(&$params) {
+function _civicrm_api3_campaign_tree_getids_spec(&$params) {
   $params['id']['api.required'] = 1;
   $params['depth']['api.required'] = 1;
 }

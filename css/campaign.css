@@ -7,3 +7,15 @@
   width: 95%;
   height: 10em;
 }
+
+#campaign_container #breadcrumb a {
+    text-decoration:none;
+}
+
+#campaign_container #breadcrumb a:hover {
+    text-decoration:underline;
+}
+
+#campaign_container #breadcrumb .current {
+   font-weight: bold;
+}
