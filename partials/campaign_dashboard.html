@@ -9,43 +9,45 @@
          <!-- children -->
          <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">&gt; </span>
       </div>
+      <div id="info">
+         <table class="cmpinfo">
+           <tr>
+             <td>External Identifier</td>
+             <td>{{currentCampaign.external_identifier}}</td>
+           </tr>
+           <tr>
+             <td>Start date</td>
+             <td><input crm-ui-datepicker="{allowClear: false, minDate: -1, maxDate: -2}" ng-model="currentCampaign.start_date"/></td>
+           </tr>
+           <tr>
+             <td>End date</td>
+             <td><input crm-ui-datepicker="{allowClear: false, minDate: -1, maxDate: -2}" ng-model="currentCampaign.end_date"/></td>
+           </tr>
+         </table>
+      </div>
    </div>
 
-   <div crm-ui-accordion="{title: ts('Campaign Information')}" >
-      <span>External ID: {{currentCampaign.external_identifier}}</span>
-      <div>
-         <div class="label">Start date:</div>
-         <div class="content">
-            <input crm-ui-datepicker ng-model="currentCampaign.start_date"/>
-         </div>
-         <div class="clear"></div>
-      </div>
-      <div ng-if="currentCampaign.end_date">
-         <div class="label">End date:</div>
-         <div class="content">
-            <input crm-ui-datepicker ng-model="currentCampaign.end_date"/>
-         </div>
-         <div class="clear"></div>
-      </div>
+   <div crm-ui-accordion="{title: ts('Campaign Information'), collapsed: true}" >
       <div class="label">Description</div>
       <div class="content">
          <textarea id="campaign_description"
          ng-model="currentCampaign.description"
-         ></textarea>
+         readonly></textarea>
       </div>
       <div class="clear"></div>
 
       <div class="label">Goal</div>
-      <div class="content">
-         <textarea id="campaign_goal"
-         ng-model="currentCampaign.goal_general"
-         ></textarea>
-      </div>
+      <div class="goalContent" ng-bind-html="currentCampaign.goal_general_htmlSafe"></div>
       <div class="clear"></div>
    </div>
 
    <div crm-ui-accordion="{title: ts('Key Performance Indicators')}" >
-      <span>Campaign revenue goal: ${{currentCampaign.goal_revenue}}</span>
+      <table class="kpitable">
+        <tr>
+          <td>Campaign revenue goal</td>
+          <td>{{currentCampaign.goal_revenue}}</td>
+        </tr>
+      </table>
    </div>
 
    <div crm-ui-accordion="{title: ts('Campaign Expenses')}" >

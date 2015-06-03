@@ -41,11 +41,13 @@
   }]);
 
   campaign.controller('CampaignDashboardCtrl', ['$scope', '$routeParams',
+  '$sce',
   'currentCampaign',
   'children',
-  'parents', function($scope, $routeParams, currentCampaign, children, parents) {
+  'parents', function($scope, $routeParams, $sce, currentCampaign, children, parents) {
      $scope.ts = CRM.ts('de.systopia.campaign');
      $scope.currentCampaign = currentCampaign;
+     $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
      $scope.children = children.children;
      $scope.cc = Object.keys($scope.children).length;
      $scope.parents = parents.parents;

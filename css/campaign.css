@@ -8,6 +8,10 @@
   height: 10em;
 }
 
+#campaign_container #breadcrumb {
+   margin: 10px 0;
+}
+
 #campaign_container #breadcrumb a {
     text-decoration:none;
 }
@@ -18,4 +22,12 @@
 
 #campaign_container #breadcrumb .current {
    font-weight: bold;
+}
+
+#campaign_container #info {
+   margin: 10px 0;
+}
+
+#campaign_container .goalContent {
+   margin: 10px 10px 10px 10px;
 }
