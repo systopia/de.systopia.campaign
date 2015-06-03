@@ -1,0 +1,9 @@
+/*
+   de.systopia.campaign styles file
+*/
+
+#campaign_container textarea {
+  margin: 0.5em;
+  width: 95%;
+  height: 10em;
+}

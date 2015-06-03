@@ -1,0 +1,47 @@
+<div id="campaign_container">
+   <div id="campaign_summary">
+      <h1>{{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : "(INACTIVE)"}}</h1>
+      <div>#breadcrumb_navigation</div>
+   </div>
+
+   <div crm-ui-accordion="{title: ts('Campaign Information')}" >
+      <span>External ID: {{currentCampaign.external_identifier}}</span>
+      <div>
+         <div class="label">Start date:</div>
+         <div class="content">
+            <input crm-ui-datepicker ng-model="currentCampaign.start_date"/>
+         </div>
+         <div class="clear"></div>
+      </div>
+      <div ng-if="currentCampaign.end_date">
+         <div class="label">End date:</div>
+         <div class="content">
+            <input crm-ui-datepicker ng-model="currentCampaign.end_date"/>
+         </div>
+         <div class="clear"></div>
+      </div>
+      <div class="label">Description</div>
+      <div class="content">
+         <textarea id="campaign_description"
+         ng-model="currentCampaign.description"
+         ></textarea>
+      </div>
+      <div class="clear"></div>
+
+      <div class="label">Goal</div>
+      <div class="content">
+         <textarea id="campaign_goal"
+         ng-model="currentCampaign.goal_general"
+         ></textarea>
+      </div>
+      <div class="clear"></div>
+   </div>
+
+   <div crm-ui-accordion="{title: ts('Key Performance Indicators')}" >
+      <span>Campaign revenue goal: ${{currentCampaign.goal_revenue}}</span>
+   </div>
+
+   <div crm-ui-accordion="{title: ts('Campaign Expenses')}" >
+   </div>
+
+</div>
