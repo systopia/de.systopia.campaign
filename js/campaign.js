@@ -54,6 +54,7 @@
         parents: Object.keys($scope.parents).length,
         children: Object.keys($scope.children).length,
         };
+     $scope.subcampaign_link = CRM.url('civicrm/campaign/add', {reset: 1, pid: $scope.currentCampaign.id});
   }]);
 
 })(angular, CRM.$, CRM._);

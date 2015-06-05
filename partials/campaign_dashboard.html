@@ -9,6 +9,9 @@
          <!-- children -->
          <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">&gt; </span>
       </div>
+      <div id="actions">
+        <a href="{{subcampaign_link}}" class="button">Create Subcampaign</a>
+      </div>
       <div id="info">
          <table class="cmpinfo">
            <tr>

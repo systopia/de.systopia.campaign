@@ -118,30 +118,28 @@ function campaign_civicrm_angularModules(&$angularModules) {
  * Implementation of hook_civicrm_buildForm:
  */
 function campaign_civicrm_buildForm($formName, &$form) {
-	if ($formName == 'CRM_Campaign_Form_Campaign' && $form->getAction() == 0 && !$_GET['qfKey']) {
-		CRM_Core_Region::instance('form-body')->add(array(
-      		'template' => 'CRM/Campaign/Form/ExtendedCampaign.tpl',
-    	));
-	}
-}
-
-/**
- * Implementation of hook_civicrm_postProcess:
- */
-function campaign_civicrm_postProcess( $formName, &$form ) {
 	if ($formName == 'CRM_Campaign_Form_Campaign') {
-      $params = $form->exportValues();
-
-      if(isset($params['parent_id'])) {
-         $query = "
-         UPDATE civicrm_campaign
-         SET parent_id = %1
-         WHERE title = %2;
-         ";
-
-         CRM_Core_DAO::singleValueQuery($query,
-         array(1 => array($params['parent_id'], 'Integer'),
-               2 => array($params['title'], 'String')));
+    $action = $form->getAction();
+    if($action == CRM_Core_Action::NONE && !isset($_GET['qfKey'])) {
+      // pre-select element
+      if(isset($_GET['pid'])){
+        $select = $form->getElement('parent_id');
+        $select->setSelected($_GET['pid']);
       }
+      CRM_Core_Region::instance('form-body')->add(array(
+        		'template' => 'CRM/Campaign/Form/ExtendedCampaign.tpl',
+      	));
+    }elseif ($action == CRM_Core_Action::UPDATE && !isset($_GET['qfKey'])) {
+      $campaigns = CRM_Campaign_BAO_Campaign::getCampaigns(CRM_Utils_Array::value('parent_id', $form->get('values')), $form->get('_campaignId'));
+      if (!empty($campaigns)) {
+        $form->addElement('select', 'parent_id', ts('Parent ID'),
+          array('' => ts('- select Parent -')) + $campaigns,
+          array('class' => 'crm-select2')
+        );
+      }
+      CRM_Core_Region::instance('form-body')->add(array(
+        		'template' => 'CRM/Campaign/Form/ExtendedCampaign.tpl',
+      	));
+    }
 	}
 }

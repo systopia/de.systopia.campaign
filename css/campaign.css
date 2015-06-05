@@ -24,8 +24,12 @@
    font-weight: bold;
 }
 
-#campaign_container #info {
+#campaign_container #actions {
    margin: 10px 0;
+}
+
+#campaign_container #info {
+   margin: 50px 0 10px 0;
 }
 
 #campaign_container .goalContent {
