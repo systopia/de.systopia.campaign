@@ -33,22 +33,19 @@ class CRM_Campaign_Tree {
       ";
 
       $children = array();
-      $last_ids = array();
-      $last_ids[] = $root = $id;
+      $new_nodes = array();
+      $new_nodes[] = $root = $id;
       $current_depth = 0;
 
-      while(!empty($last_ids) && $current_depth <= $depth) {
-         $current_id = array_shift($last_ids);
-         error_log("current id: $current_id");
+      while(!empty($new_nodes) && $current_depth <= $depth) {
+         $current_id = array_shift($new_nodes);
          $campaign = CRM_Core_DAO::executeQuery($query, array(1 => array($current_id, 'Integer')));
 
          while ($campaign->fetch()) {
             if($children[$campaign->id] || $campaign->id == $root) {
-               error_log("de.systopia.campaign: loop detected! id " . $campaign->id . " is already in array!");
-               continue;
+               throw new CRM_Core_Exception("de.systopia.campaign: cycle detected! id: " . $campaign->id );
             }
-            error_log("got " . $campaign->id);
-            $last_ids[] = $campaign->id;
+            $new_nodes[] = $campaign->id;
             $children[$campaign->id] = $campaign->title;
          }
          $current_depth++;
@@ -77,11 +74,11 @@ class CRM_Campaign_Tree {
          $campaign = CRM_Core_DAO::executeQuery($query, array(1 => array($current_id, 'Integer')));
          while($campaign->fetch()) {
             if($parents[$campaign->id]) {
-               error_log("de.systopia.campaign: loop detected! id " . $campaign->id . " is already in array!");
                break 2;
             } elseif ($campaign->id == $base) {
                continue;
             } else {
+               //TODO: do not discard the order of campaign by using a nested array
                $parents[$campaign->id] = $campaign->title;
                $root = $campaign->id;
             }
