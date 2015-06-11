@@ -1,13 +1,13 @@
 <div id="campaign_container">
    <div id="campaign_summary">
-      <h1>[{{numberof.parents}}] {{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : "(INACTIVE)"}}</h1>
+      <h1>{{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : "(INACTIVE)"}}</h1>
       <div id="breadcrumb">
          <!-- parents -->
-         <a ng-repeat-start="(key, value) in parents" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end>&gt; </span>
+         <a ng-repeat-start="(key, value) in parents" href="#/campaign/{{value.id}}/view">{{value.title}}</a> <span ng-repeat-end>&gt; </span>
          <!-- current -->
          <a href="#/campaign/{{currentCampaign.id}}/view" class="current">{{currentCampaign.title}}</a> <span ng-show="numberof.children > 0">&gt; </span>
          <!-- children -->
-         <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">&gt; </span>
+         <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">| </span>
       </div>
       <div id="actions">
         <a href="{{subcampaign_link}}" class="button">Create Subcampaign</a>
@@ -18,13 +18,13 @@
              <td>External Identifier</td>
              <td>{{currentCampaign.external_identifier}}</td>
            </tr>
-           <tr>
+           <tr ng-if="currentCampaign.start_date">
              <td>Start date</td>
-             <td><input disableInput crm-ui-datepicker="{allowClear: false, minDate: -1, maxDate: -2}" ng-model="currentCampaign.start_date"/></td>
+             <td><input ng-model="currentCampaign.start_date_date" disabled="disabled"/></td>
            </tr>
-           <tr>
+           <tr ng-if="currentCampaign.end_date">
              <td>End date</td>
-             <td><input disableInput crm-ui-datepicker="{allowClear: false, minDate: -1, maxDate: -2}" ng-model="currentCampaign.end_date"/></td>
+             <td><input ng-model="currentCampaign.end_date_date" disabled="disabled"/></td>
            </tr>
            <tr>
              <td>Parent campaigns:</td>
@@ -47,21 +47,27 @@
       </div>
       <div class="clear"></div>
 
-      <div class="label">Goal</div>
+      <div class="label" ng-if="currentCampaign.goal_general_htmlSafe">Goal</div>
       <div class="goalContent" ng-bind-html="currentCampaign.goal_general_htmlSafe"></div>
       <div class="clear"></div>
    </div>
 
    <div crm-ui-accordion="{title: ts('Key Performance Indicators')}" >
       <table class="kpitable">
-        <tr>
-          <td>Campaign revenue goal</td>
-          <td>{{currentCampaign.goal_revenue}}</td>
+        <tr ng-repeat="(key, value) in kpi">
+          <td>{{key}}</td>
+          <td>{{value}}</td>
         </tr>
       </table>
    </div>
 
    <div crm-ui-accordion="{title: ts('Campaign Expenses')}" >
+      <table class="exptable">
+        <tr>
+          <td>Total Costs</td>
+          <td>{{kpi.total_costs}}</td>
+        </tr>
+      </table>
    </div>
 
 </div>

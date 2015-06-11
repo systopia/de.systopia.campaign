@@ -73,13 +73,12 @@ class CRM_Campaign_Tree {
       while($current_id != NULL) {
          $campaign = CRM_Core_DAO::executeQuery($query, array(1 => array($current_id, 'Integer')));
          while($campaign->fetch()) {
-            if($parents[$campaign->id]) {
+            if(self::is_parent($campaign->id, $parents)) {
                break 2;
             } elseif ($campaign->id == $base) {
                continue;
             } else {
-               //TODO: do not discard the order of campaign by using a nested array
-               $parents[$campaign->id] = $campaign->title;
+               $parents[] = array("id" => $campaign->id, "title" => $campaign->title);
                $root = $campaign->id;
             }
          }
@@ -88,6 +87,15 @@ class CRM_Campaign_Tree {
 
       $result = array('parents' => $parents, 'root' => $root);
       return $result;
+   }
+
+   public static function is_parent($id, $parents) {
+      foreach($parents as $p) {
+         if(isset($p['id']) && $p['id'] == $id) {
+            return true;
+         }
+      }
+      return false;
    }
 
 }

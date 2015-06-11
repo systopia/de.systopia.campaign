@@ -28,7 +28,10 @@
           },
           parents: function($route, crmApi) {
              return crmApi('CampaignTree', 'getparentids', {id: $route.current.params.id});
-          }
+          },
+          kpi: function($route, crmApi) {
+             return crmApi('CampaignKpi', 'get', {id: $route.current.params.id});
+          },
         }
       });
 
@@ -44,11 +47,17 @@
   '$sce',
   'currentCampaign',
   'children',
-  'parents', function($scope, $routeParams, $sce, currentCampaign, children, parents) {
+  'parents',
+  'kpi', function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi) {
      $scope.ts = CRM.ts('de.systopia.campaign');
      $scope.currentCampaign = currentCampaign;
      $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
+     $scope.currentCampaign.start_date_date = $.datepicker.formatDate(CRM.config.dateInputFormat, new Date($scope.currentCampaign.start_date));
+     $scope.currentCampaign.end_date_date = $.datepicker.formatDate(CRM.config.dateInputFormat, new Date($scope.currentCampaign.end_date));
      $scope.children = children.children;
+     $scope.kpi = kpi.kpi;
+     console.log($scope.kpi);
+     console.log($scope.currentCampaign);
      $scope.parents = parents.parents;
      $scope.numberof = {
         parents: Object.keys($scope.parents).length,

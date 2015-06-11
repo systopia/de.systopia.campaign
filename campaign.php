@@ -143,3 +143,16 @@ function campaign_civicrm_buildForm($formName, &$form) {
     }
 	}
 }
+
+function campaign_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &$values ) {
+    if($objectName == 'Campaign' && $op == 'campaign.dashboard.row') {
+      $viewLink = array(
+          'name' => 'View',
+          'title' => 'View Campaign',
+          'class' => 'crmLivePage',
+          'url' => 'a/#/campaign/'. $objectId .'/view',
+      );
+
+      array_unshift($links, $viewLink);
+    }
+}
