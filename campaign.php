@@ -149,7 +149,7 @@ function campaign_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &
       $viewLink = array(
           'name' => 'View',
           'title' => 'View Campaign',
-          'class' => 'crmLivePage',
+          'class' => 'no-popup',
           'url' => 'a/#/campaign/'. $objectId .'/view',
       );
 
