@@ -2,15 +2,23 @@
    <div id="campaign_summary">
       <h1>{{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : "(INACTIVE)"}}</h1>
       <div id="breadcrumb">
-         <!-- parents -->
-         <a ng-repeat-start="(key, value) in parents" href="#/campaign/{{value.id}}/view">{{value.title}}</a> <span ng-repeat-end>&gt; </span>
-         <!-- current -->
-         <a href="#/campaign/{{currentCampaign.id}}/view" class="current">{{currentCampaign.title}}</a> <span ng-show="numberof.children > 0">&gt; </span>
-         <!-- children -->
-         <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">| </span>
+         <div class="parents">
+           [{{numberof.parents}}]
+           <!-- parents -->
+           <a ng-repeat-start="(key, value) in parents | orderBy:'$index':true" href="#/campaign/{{value.id}}/view" ng-if="numberof.parents > 0">{{value.title}}</a> <span ng-repeat-end>&gt; </span>
+           <!-- current -->
+           <a href="#/campaign/{{currentCampaign.id}}/view" class="current">{{currentCampaign.title}}</a>
+         </div>
+         <div class="children" ng-if="numberof.children > 0">
+           [{{numberof.children}}]
+           <!-- children -->
+           <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">| </span>
+         </div>
       </div>
       <div id="actions">
+        <a href="{{edit_link}}" class="button">Edit Campaign</a>
         <a href="{{subcampaign_link}}" class="button">Create Subcampaign</a>
+        <a href="{{tree_link}}" class="button">View Campaign Tree</a>
       </div>
       <div id="info">
          <table class="cmpinfo">
@@ -20,19 +28,11 @@
            </tr>
            <tr ng-if="currentCampaign.start_date">
              <td>Start date</td>
-             <td><input ng-model="currentCampaign.start_date_date" disabled="disabled"/></td>
+             <td>{{currentCampaign.start_date_date}}</td>
            </tr>
            <tr ng-if="currentCampaign.end_date">
              <td>End date</td>
-             <td><input ng-model="currentCampaign.end_date_date" disabled="disabled"/></td>
-           </tr>
-           <tr>
-             <td>Parent campaigns:</td>
-             <td>{{numberof.parents}}</td>
-           </tr>
-           <tr>
-             <td>Child campaigns:</td>
-             <td>{{numberof.children}}</td>
+             <td>{{currentCampaign.end_date_date}}</td>
            </tr>
          </table>
       </div>
