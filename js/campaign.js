@@ -58,7 +58,7 @@
      $scope.kpi = kpi.kpi;
      console.log($scope.kpi);
      console.log($scope.currentCampaign);
-     $scope.parents = parents.parents;
+     $scope.parents = parents.parents.reverse();
      $scope.numberof = {
         parents: Object.keys($scope.parents).length,
         children: Object.keys($scope.children).length,
