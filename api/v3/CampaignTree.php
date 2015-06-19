@@ -36,3 +36,21 @@ function civicrm_api3_campaign_tree_getparentids($params) {
 function _civicrm_api3_campaign_tree_getparentids_spec(&$params) {
  $params['id']['api.required'] = 1;
 }
+
+/**
+* Get a subtree of a campaign
+*
+* @param integer $id campaign id
+* @param integet $depth max search depth
+*
+* @return array
+*/
+
+function civicrm_api3_campaign_tree_gettree($params) {
+  return CRM_Campaign_Tree::getCampaignTree($params['id'], $params['depth']);
+}
+
+function _civicrm_api3_campaign_tree_gettree_spec(&$params) {
+ $params['id']['api.required'] = 1;
+ $params['depth']['api.required'] = 1;
+}

@@ -2,15 +2,15 @@
    <div id="campaign_summary">
       <h1>{{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : "(INACTIVE)"}}</h1>
       <div id="breadcrumb">
-         <div class="parents">
-           [{{numberof.parents}}]
+         <div class="parents" ng-show="numberof.parents > 0">
+            Parent Campaign(s) [{{numberof.parents}}]
            <!-- parents -->
            <a ng-repeat-start="(key, value) in parents | orderBy:'$index':true" href="#/campaign/{{value.id}}/view" ng-if="numberof.parents > 0">{{value.title}}</a> <span ng-repeat-end>&gt; </span>
            <!-- current -->
            <a href="#/campaign/{{currentCampaign.id}}/view" class="current">{{currentCampaign.title}}</a>
          </div>
          <div class="children" ng-if="numberof.children > 0">
-           [{{numberof.children}}]
+            Child Campaign(s) [{{numberof.children}}]
            <!-- children -->
            <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">| </span>
          </div>
@@ -26,11 +26,11 @@
              <td>External Identifier</td>
              <td>{{currentCampaign.external_identifier}}</td>
            </tr>
-           <tr ng-if="currentCampaign.start_date">
+           <tr ng-show="currentCampaign.start_date">
              <td>Start date</td>
              <td>{{currentCampaign.start_date_date}}</td>
            </tr>
-           <tr ng-if="currentCampaign.end_date">
+           <tr ng-show="currentCampaign.end_date">
              <td>End date</td>
              <td>{{currentCampaign.end_date_date}}</td>
            </tr>

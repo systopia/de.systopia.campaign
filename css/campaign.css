@@ -35,3 +35,17 @@
 #campaign_container .goalContent {
    margin: 10px 10px 10px 10px;
 }
+
+#tree_container .node circle {
+	  fill: #fff;
+	  stroke: steelblue;
+	  stroke-width: 3px;
+	}
+
+#tree_container .node text { font: 12px sans-serif; }
+
+#tree_container .link {
+	  fill: none;
+	  stroke: #aaa;
+	  stroke-width: 2px;
+	}

@@ -21,20 +21,13 @@ class CRM_Campaign_KPI {
 
       // get all sub-campaigns
       $campaigns = CRM_Campaign_Tree::getCampaignIds($id, 99);
+      $ids = array();
+      $ids[] = $id;
+
       if(count($campaigns['children']) > 0) {
          $campaigns = $campaigns['children'];
-         $ids = array();
-         $ids[] = $id;
-
-         // get kpi for current campaign only (for now)
-         // foreach($campaigns as $id => $title) {
-         //    $ids[] = $id;
-         // }
-
-         $ids_list = implode(',', $ids);
-      }else{
-         $ids_list = "-1";
       }
+      $ids_list = implode(',', $ids);
 
 
       // needed status ids
@@ -44,11 +37,11 @@ class CRM_Campaign_KPI {
       $status['failed'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Failed', 'name');
 
       // get total revenue
-      // TODO: use only completed?
       $query = "
-      SELECT    SUM(contrib.net_amount) as revenue
+      SELECT    SUM(contrib.total_amount) as revenue
       FROM  civicrm_contribution contrib
-      WHERE contrib.campaign_id IN ( $ids_list );
+      WHERE contrib.campaign_id IN ( $ids_list )
+      AND   contrib.contribution_status_id NOT IN ({$status['cancelled']}, {$status['failed']})
       ";
 
       $contribution = CRM_Core_DAO::executeQuery($query);
@@ -72,7 +65,7 @@ class CRM_Campaign_KPI {
       // get all completed and average contribution amount
       $query = "
       SELECT   COUNT(contrib.id) as amount_completed,
-               AVG(contrib.net_amount) as amount_average
+               AVG(contrib.total_amount) as amount_average
       FROM  civicrm_contribution contrib
       WHERE contrib.campaign_id IN ($ids_list)
       AND   contrib.contribution_status_id = {$status['completed']};
