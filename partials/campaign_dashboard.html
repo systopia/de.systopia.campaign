@@ -24,15 +24,15 @@
          <table class="cmpinfo">
            <tr>
              <td>External Identifier</td>
-             <td>{{currentCampaign.external_identifier}}</td>
+             <td>{{currentCampaign.external_identifier ? currentCampaign.external_identifier : "-"}}</td>
            </tr>
-           <tr ng-show="currentCampaign.start_date">
+           <tr>
              <td>Start date</td>
-             <td>{{currentCampaign.start_date_date}}</td>
+             <td>{{currentCampaign.start_date ? currentCampaign.start_date_date : "-"}}</td>
            </tr>
-           <tr ng-show="currentCampaign.end_date">
+           <tr>
              <td>End date</td>
-             <td>{{currentCampaign.end_date_date}}</td>
+             <td>{{currentCampaign.end_date ? currentCampaign.end_date_date : "-"}}</td>
            </tr>
          </table>
       </div>

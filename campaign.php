@@ -129,7 +129,7 @@ function campaign_civicrm_buildForm($formName, &$form) {
       CRM_Core_Region::instance('form-body')->add(array(
         		'template' => 'CRM/Campaign/Form/ExtendedCampaign.tpl',
       	));
-    }elseif ($action == CRM_Core_Action::UPDATE && !isset($_GET['qfKey'])) {
+    }elseif (($action == CRM_Core_Action::UPDATE || $action == CRM_Core_Action::ADD) && !isset($_GET['qfKey'])) {
       $campaigns = CRM_Campaign_BAO_Campaign::getCampaigns(CRM_Utils_Array::value('parent_id', $form->get('values')), $form->get('_campaignId'));
       if (!empty($campaigns)) {
         $form->addElement('select', 'parent_id', ts('Parent ID'),

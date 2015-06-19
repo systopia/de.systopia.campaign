@@ -7,7 +7,7 @@
       var target = cj('tr.crm-campaign-form-block-is_active').parent();
 
       target
-       .append(cj('<tr>')
+       .prepend(cj('<tr>')
            .append(cj('<td>')
                .attr('id', 'pid_label')
                .addClass('label')
