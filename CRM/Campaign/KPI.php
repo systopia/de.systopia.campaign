@@ -47,8 +47,17 @@ class CRM_Campaign_KPI {
       $contribution = CRM_Core_DAO::executeQuery($query);
       $kpi = array();
       while ($contribution->fetch()) {
-         $kpi['total_revenue'] = is_null($contribution->revenue) ? 0.00 : $contribution->revenue;
+         $total_revenue = is_null($contribution->revenue) ? 0.00 : $contribution->revenue;
       }
+
+      $kpi["total_revenue"] = array(
+         "id" => "total_revenue",
+         "title" => "Total Revenue",
+         "type" => "money",
+         "description" => "Total revenue",
+         "value" => isset($total_revenue) ? $total_revenue : 0.00,
+         "link" => ""
+      );
 
       // get total revenue goal
       $query = "
@@ -59,8 +68,17 @@ class CRM_Campaign_KPI {
 
       $campaign = CRM_Core_DAO::executeQuery($query);
       while ($campaign->fetch()) {
-         $kpi['total_revenue_goal'] = is_null($campaign->goal_revenue) ? 0.00 : $campaign->goal_revenue;
+         $total_revenue_goal = is_null($campaign->goal_revenue) ? 0.00 : $campaign->goal_revenue;
       }
+
+      $kpi["total_revenue_goal"] = array(
+         "id" => "total_revenue_goal",
+         "title" => "Total Revenue Goal",
+         "type" => "money",
+         "description" => "Total revenue goal",
+         "value" => isset($total_revenue_goal) ? $total_revenue_goal : 0.00,
+         "link" => ""
+      );
 
       // get all completed and average contribution amount
       $query = "
@@ -73,9 +91,27 @@ class CRM_Campaign_KPI {
 
       $contribution = CRM_Core_DAO::executeQuery($query);
       while ($contribution->fetch()) {
-         $kpi['amount_completed'] = $contribution->amount_completed;
-         $kpi['amount_average'] = is_null($contribution->amount_average) ? 0.00 : $contribution->amount_average;
+         $amount_completed = $contribution->amount_completed;
+         $amount_average = is_null($contribution->amount_average) ? 0.00 : $contribution->amount_average;
       }
+
+      $kpi["amount_completed"] = array(
+         "id" => "amount_completed",
+         "title" => "Amount of Contributions (completed)",
+         "type" => "number",
+         "description" => "Amount of completed contributions",
+         "value" => isset($amount_completed) ? $amount_completed : 0.00,
+         "link" => ""
+      );
+
+      $kpi["amount_average"] = array(
+         "id" => "amount_average",
+         "title" => "Average Amount of Contributions",
+         "type" => "number",
+         "description" => "Average amount of completed contributions",
+         "value" => isset($amount_average) ? $amount_average : 0.00,
+         "link" => ""
+      );
 
       // get all but cancelled and failed
       $query = "
@@ -87,62 +123,69 @@ class CRM_Campaign_KPI {
 
       $contribution = CRM_Core_DAO::executeQuery($query);
       while ($contribution->fetch()) {
-         $kpi['amount_all'] = $contribution->amount_all;
+         $amount_all = $contribution->amount_all;
       }
+
+      $kpi["amount_all"] = array(
+         "id" => "amount_all",
+         "title" => "Amount of Contributions (all but cancelled/failed)",
+         "type" => "number",
+         "description" => "Amount of Contributions (all but cancelled/failed)",
+         "value" => isset($amount_all) ? $amount_all : 0.00,
+         "link" => ""
+      );
 
       // get all first
       // TODO
-      $kpi['amount_first'] = 'TODO';
+      //$kpi['amount_first'] = 'TODO';
 
       // get average cost per first contribution
       // TODO
-      $kpi['amount_average_first'] = 'TODO';
+      //$kpi['amount_average_first'] = 'TODO';
 
       // get all expenses
-      // TODO: use api
-      $kpi['total_costs'] = 0.00;
+      $result = civicrm_api3('CampaignExpense', 'getsum', array(
+           'campaign_id' => $id
+         ));
+      if($result['is_error'] == 0) {
+            $total_costs = $result['values'][$result['id']];
+      }
+      $kpi["total_cost"] = array(
+         "id" => "ttlcost",
+         "title" => "Total Costs",
+         "type" => "money",
+         "description" => "Sum of (known) expenses to this campaign",
+         "value" => isset($total_costs) ? $total_costs : 0.00,
+         "link" => ""
+      );
 
       // get ROI
-      $kpi['roi'] = $kpi['total_revenue'] / (($kpi['total_costs'] == 0.00) ? 1.00 : $kpi['total_costs']);
+      $kpi["roi"] = array(
+         "id" => "roi",
+         "title" => "ROI",
+         "type" => "percentage",
+         "description" => "Return on investment",
+         "value" => $total_revenue / (($total_costs == 0.00) ? 1.00 : $total_costs),
+         "link" => "https://en.wikipedia.org/wiki/Return_on_investment"
+      );
 
       // get revenue goal reached percent
-      if($kpi['total_revenue_goal']) {
-         $kpi['revenue_goal_reached'] = ($kpi['total_revenue'] / $kpi['total_revenue_goal']);
+      if($total_revenue_goal) {
+         $total_revenue_goal_pc = ($total_revenue / $total_revenue_goal);
       }else{
-         $kpi['revenue_goal_reached'] = -1;
+         $total_revenue_goal_pc = -1;
       }
 
-      //TODO: return the following format
-      /*
-      [
-        {
-          "id": "ttlcost",
-          "title": "Total Costs",
-          "type": "money",
-          "description": "Sum of (known) expenses to this campaign",
-          "value": "12318.23",
-          "link": "http://i.don.t.know.maybe/we/need/this/at/some/point"
-        },
-        {
-          "id": "roi",
-          "title": "ROI",
-          "type": "percentage",
-          "description": "Return on investment",
-          "value": "12318.23",
-          "link": "https://en.wikipedia.org/wiki/Return_on_investment"
-        },
-        {
-          "id": "newctcts",
-          "title": "New Contacts",
-          "type": "number",
-          "description": "Number of new contacts this campaign has yielded",
-          "value": "123"
-        }
-      ]
+      $kpi["total_revenue_goal_pc"] = array(
+         "id" => "total_revenue_goal_pc",
+         "title" => "Total Revenue Reached",
+         "type" => "percentage",
+         "description" => "Total Revenue reached",
+         "value" => $total_revenue_goal_pc,
+         "link" => ""
+      );
 
-      */
-
-      return array('kpi' => $kpi);
+      return json_encode($kpi);
    }
 
 }

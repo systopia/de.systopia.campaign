@@ -25,6 +25,12 @@
           kpi: function($route, crmApi) {
              return crmApi('CampaignKpi', 'get', {id: $route.current.params.id});
           },
+          expenseSum: function($route, crmApi) {
+             return crmApi('CampaignExpense', 'getsum', {campaign_id: $route.current.params.id});
+          },
+          expenses: function($route, crmApi) {
+             return crmApi('CampaignExpense', 'get', {campaign_id: $route.current.params.id});
+          }
         }
       });
 
@@ -56,17 +62,22 @@
   'currentCampaign',
   'children',
   'parents',
-  'kpi', function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi) {
+  'kpi',
+  'expenseSum',
+  'expenses',
+   function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi, expenseSum, expenses) {
      $scope.ts = CRM.ts('de.systopia.campaign');
      $scope.currentCampaign = currentCampaign;
      $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
      $scope.currentCampaign.start_date_date = $.datepicker.formatDate(CRM.config.dateInputFormat, new Date($scope.currentCampaign.start_date));
      $scope.currentCampaign.end_date_date = $.datepicker.formatDate(CRM.config.dateInputFormat, new Date($scope.currentCampaign.end_date));
      $scope.children = children.children;
-     $scope.kpi = kpi.kpi;
-     console.log($scope.kpi);
-     console.log($scope.currentCampaign);
+     $scope.kpi = JSON.parse(kpi.result);
      $scope.parents = parents.parents.reverse();
+     $scope.expenseSum = expenseSum.values;
+     $scope.expenses = expenses.values;
+     console.log($scope.kpi);
+     console.log($scope.expenses);
      $scope.numberof = {
         parents: Object.keys($scope.parents).length,
         children: Object.keys($scope.children).length,
@@ -102,9 +113,9 @@
         var treeData=scope[attrs.treeData];
         console.log(treeData);
 
-        var margin = {top: 40, right: 120, bottom: 20, left: 120},
-        	width = 960 - margin.right - margin.left,
-        	height = 500 - margin.top - margin.bottom;
+        var margin = {top: 100, right: 50, bottom: 100, left: 50},
+        width  = 960 - margin.left - margin.right,
+        height = 500 - margin.top  - margin.bottom;
 
         var center = [width / 2, height / 2];
 
@@ -112,6 +123,7 @@
         var rawSvg = elem.find("svg")[0];
 
         var svg = d3.select(rawSvg)
+        .attr("style", "outline: thin dashed black;")
         .attr("width", width + margin.right + margin.left)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -145,7 +157,7 @@
         var i = 0;
 
         var tree = d3.layout.tree()
-        	.size([height, width]);
+        	.size([width, height]);
 
         var diagonal = d3.svg.diagonal()
         	.projection(function(d) { return [d.x, d.y]; });

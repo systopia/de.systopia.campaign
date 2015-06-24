@@ -16,9 +16,9 @@
          </div>
       </div>
       <div id="actions">
+        <a href="{{tree_link}}" class="button">View Campaign Tree</a>
         <a href="{{edit_link}}" class="button">Edit Campaign</a>
         <a href="{{subcampaign_link}}" class="button">Create Subcampaign</a>
-        <a href="{{tree_link}}" class="button">View Campaign Tree</a>
       </div>
       <div id="info">
          <table class="cmpinfo">
@@ -55,18 +55,34 @@
    <div crm-ui-accordion="{title: ts('Key Performance Indicators')}" >
       <table class="kpitable">
         <tr ng-repeat="(key, value) in kpi">
-          <td>{{key}}</td>
-          <td>{{value}}</td>
+          <td>{{value.title}}</td>
+          <td>{{value.value}}</td>
         </tr>
       </table>
    </div>
 
    <div crm-ui-accordion="{title: ts('Campaign Expenses')}" >
-      <table class="exptable">
-        <tr>
-          <td>Total Costs</td>
-          <td>{{kpi.total_costs}}</td>
+      <table class="expsumtable">
+        <tr ng-repeat="(key, value) in expenseSum">
+          <td>Total Costs ({{key}})</td>
+          <td>{{value}}</td>
         </tr>
+      </table>
+      <table class="exptable">
+         <tr>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Actions</th>
+         </tr>
+         <tr ng-repeat="(id, expense) in expenses">
+            <td>{{expense.amount}}</td>
+            <td>{{expense.currency}}</td>
+            <td>{{expense.description ? (expense.description | limitTo : 15) : ('-')}}{{expense.description.length > 15 ? '...' : ''}}</td>
+            <td>{{expense.created_date}}</td>
+            <td>todo</td>
+         </tr>
       </table>
    </div>
 

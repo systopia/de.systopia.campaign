@@ -32,17 +32,27 @@
    margin: 50px 0 10px 0;
 }
 
+#actions{
+   width: 100%;
+   float: left;
+   margin-bottom: 15px;
+}
+
 #campaign_container .goalContent {
    margin: 10px 10px 10px 10px;
 }
 
 #tree_container .node circle {
 	  fill: #fff;
-	  stroke: steelblue;
+	  stroke: #5D677B;
 	  stroke-width: 3px;
 	}
 
-#tree_container .node text { font: 12px sans-serif; }
+#tree_container .node text {
+   font-family: "Trebuchet MS", "Helvetica Neue", Arial, Helvetica, sans-serif;
+   font-size: 12px;
+   color: #494949;
+   }
 
 #tree_container .link {
 	  fill: none;
