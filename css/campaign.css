@@ -42,6 +42,22 @@
    margin: 10px 10px 10px 10px;
 }
 
+#campaign_container .addExpense {
+  margin: 5px 0px 5px 5px;
+}
+
+#campaign_container #campaign_description {
+  margin: 10px 10px 10px 10px;
+}
+
+#campaign_container .exptable td {
+  max-width: 150px;
+}
+
+#campaign_container .exptable tr [colspan="5"]{
+ text-align: center;
+}
+
 #tree_container .node circle {
 	  fill: #fff;
 	  stroke: #5D677B;

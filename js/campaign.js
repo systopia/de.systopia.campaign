@@ -50,6 +50,11 @@
         }
       });
 
+      $routeProvider.when('/campaign/:id/expense/add', {
+        templateUrl: resourceUrl + '/partials/campaign_expense.html',
+        controller: 'CampaignExpenseCtrl'
+      });
+
   }]);
 
    campaign.controller('DashboardCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {
@@ -65,7 +70,10 @@
   'kpi',
   'expenseSum',
   'expenses',
-   function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi, expenseSum, expenses) {
+  'crmApi',
+  'dialogService',
+  '$interval',
+   function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi, expenseSum, expenses, crmApi, dialogService, $interval) {
      $scope.ts = CRM.ts('de.systopia.campaign');
      $scope.currentCampaign = currentCampaign;
      $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
@@ -85,9 +93,64 @@
      $scope.tree_link = CRM.url('civicrm/a/#/campaign/' + $scope.currentCampaign.id + '/tree', {});
      $scope.subcampaign_link = CRM.url('civicrm/campaign/add', {reset: 1, pid: $scope.currentCampaign.id});
      $scope.edit_link = CRM.url('civicrm/campaign/add', {reset: 1, id: $scope.currentCampaign.id, action: 'update'});
+     $scope.add_link = CRM.url('civicrm/a/#/campaign/' + $scope.currentCampaign.id + '/expense/add', {});
+
+     $scope.updateKpiAndExpenses = function() {
+       crmApi('CampaignExpense', 'get', {campaign_id: $scope.currentCampaign.id}).then(function (apiResult) {
+         $scope.expenses = apiResult.values;
+       }, function(apiResult) {
+         CRM.alert(apiResult.error_message, "Error while fetching expenses", "error");
+       });
+       crmApi('CampaignKpi', 'get', {id: $scope.currentCampaign.id}).then(function (apiResult) {
+         $scope.kpi = JSON.parse(apiResult.result);
+       }, function(apiResult) {
+         CRM.alert(apiResult.error_message, "Error while fetching expenses", "error");
+       });
+     }
+
+     $scope.deleteExpense = function(expense) {
+       crmApi('CampaignExpense', 'delete', {id: expense.id}).then(function (apiResult) {
+         $scope.updateKpiAndExpenses();
+         CRM.alert("Successfully removed expense \"" + expense.description + "\"", "Expense deleted", "success");
+       }, function(apiResult) {
+         CRM.alert(apiResult.error_message, "Could not delete expense", "error");
+       });
+     }
+
+     $scope.addExpense = function() {
+       var model = {
+         campaign_id: $scope.currentCampaign.id,
+        };
+        var options = CRM.utils.adjustDialogDefaults({
+          width: '40%',
+          height: 'auto',
+          autoOpen: false,
+          title: ts('Add Expense')
+        });
+        dialogService.open('addExpenseDialog', resourceUrl + '/partials/campaign_expense.html', model, options).then(function (result) {
+          $scope.updateKpiAndExpenses();
+        });
+     }
+
+
   }]);
 
-
+  campaign.controller('CampaignExpenseCtrl', ['$scope', '$routeParams', 'crmApi', 'dialogService',
+  function($scope, $routeParams, crmApi, dialogService) {
+    $scope.ts = CRM.ts('de.systopia.campaign');
+    $scope.submit = function() {
+      if($scope.addExpenseForm.$invalid) {
+        return;
+      }
+      crmApi('CampaignExpense', 'create', $scope.model).then(function (apiResult) {
+        var expense = apiResult.values[apiResult.id];
+        CRM.alert("Successfully added expense \"" + expense.description + "\"", "Expense added", "success");
+        dialogService.close('addExpenseDialog', expense);
+      }, function(apiResult) {
+        CRM.alert(apiResult.error_message, "Could not add expense", "error");
+      });
+    }
+  }]);
 
   campaign.controller('CampaignTreeCtrl', ['$scope', '$routeParams',
    'tree',
@@ -111,7 +174,6 @@
       template: "<svg width='850' height='200'></svg>",
       link: function(scope, elem, attrs){
         var treeData=scope[attrs.treeData];
-        console.log(treeData);
 
         var margin = {top: 100, right: 50, bottom: 100, left: 50},
         width  = 960 - margin.left - margin.right,
@@ -146,6 +208,57 @@
               .scaleExtent([0.5, 5])
               .on("zoom", zoomed);
 
+         var selectedNode = null;
+
+         var drag = d3.behavior.drag()
+         .on("dragstart", function(c) {
+            selectedNode = d3.event.sourceEvent.toElement;
+            d3.event.sourceEvent.stopPropagation();
+         })
+         .on("drag", function(d) {
+            var nodes = tree.nodes(d);
+            var links = tree.links(nodes);
+
+            var nt = {'x': 0, 'y': 0};
+
+            nodes.forEach(function(k) {
+               var currentNode = d3.select('#node_' + k.id);
+               var t = d3.transform(currentNode.attr("transform"));
+               nt = {'x': t.translate[0] + d3.event.x,
+                          'y': t.translate[1] + d3.event.y};
+
+               d.x = nt.x;
+               d.y = nt.y;
+
+               currentNode.attr("transform", "translate(" + nt.x + "," + nt.y + ")");
+               currentNode.select("circle").style("stroke", "red");
+            });
+
+            links.forEach(function(k) {
+               var currentLink = d3.select('#p_' + k.source.id + '_' + k.target.id);
+               var t = d3.transform(currentLink.attr("transform"));
+               var nt2 = {'x': t.translate[0] ,//+ d3.event.x,
+                          'y': t.translate[1] };//+ d3.event.y};
+               //console.log(currentLink);
+               //currentLink.attr("transform", "translate(" + nt.x + "," + nt.y + ")");
+            });
+
+            var parentLink = d3.select('#p_' + d.parentid + '_' + d.id);
+            parentLink.style("stroke", "red");
+
+            
+
+         })
+         .on("dragend", function(c) {
+            d3.selectAll(".node").select("circle").style("stroke", null) ;
+
+            var parentLink = d3.select('#p_' + c.parentid + '_' + c.id);
+            parentLink.style("stroke", null);
+
+            selectedNode = null;
+         });
+
+
         d3.select("svg")
         .call(zoom);
 
@@ -160,6 +273,8 @@
         	.size([width, height]);
 
         var diagonal = d3.svg.diagonal()
+          .source(function(d) { return {"x":d.source.x, "y":d.source.y}; })
+          .target(function(d) { return {"x":d.target.x, "y":d.target.y}; })
         	.projection(function(d) { return [d.x, d.y]; });
 
         root = treeData;
@@ -182,10 +297,10 @@
         }
 
         function reset() {
-          svg.call(zoom
-              .x(x.domain([-width / 2, width / 2]))
-              .y(y.domain([-height / 2, height / 2]))
-              .event);
+           svg.call(zoom
+               .x(x.domain([-width / 2, width / 2]))
+               .y(y.domain([-height / 2, height / 2]))
+               .event);
         }
 
         function createCampaignLink(d) { return CRM.url('civicrm/a/#/campaign/' + d.id + '/tree', {}); }
@@ -202,6 +317,7 @@
 
           var nodeEnter = node.enter().append("g")
         	  .attr("class", "node")
+           .attr("id", function(d) {return "node_" + d.id;})
         	  .attr("transform", function(d) {
         		  return "translate(" + d.x + "," + d.y + ")"; });
 
@@ -209,7 +325,8 @@
            .attr("xlink:href", createCampaignLink)
            .append("circle")
         	  .attr("r", 15)
-        	  .style("fill", "#fff");
+        	  .style("fill", "#fff")
+            .call(drag);
 
           nodeEnter.append("a")
           .attr("xlink:href", createCampaignLink)
@@ -226,6 +343,8 @@
 
           link.enter().insert("path", "g")
         	  .attr("class", "link")
+           .style("stroke", "#aaa")
+           .attr("id", function(d) { return "p_" + d.source.id + "_" + d.target.id;})
         	  .attr("d", diagonal);
         }
 

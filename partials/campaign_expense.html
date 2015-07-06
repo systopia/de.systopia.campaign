@@ -1,0 +1,35 @@
+<div class="CampaignExpenseAddDiv" ng-controller="CampaignExpenseCtrl">
+  <div class="crm-block" ng-form="addExpenseForm" crm-ui-id-scope>
+    <div class="crm-group">
+      <div crm-ui-field="{name: 'addExpenseForm.amount', title: ts('Amount')}">
+        <input
+         crm-ui-id="addExpenseForm.amount"
+         type="text"
+         class="crm-form-text"
+         ng-model="model.amount"
+         required
+         placeholder="Amount"
+         name="amount" required/>
+      </div>
+      <div crm-ui-field="{name: 'addExpenseForm.description', title: ts('Description')}">
+        <input
+         crm-ui-id="addExpenseForm.description"
+         type="text"
+         class="crm-form-text"
+         ng-model="model.description"
+         required
+         placeholder="Description"
+         name="description" />
+      </div>
+      <div crm-ui-field="{name: 'addExpenseForm.contactId', title: ts('Contact')}">
+        <input crm-entityref="{entity: 'Contact', select: {allowClear:true}}" name="contactId" ng-model="model.contact_id" required/>
+      </div>
+      <div crm-ui-field="{name: 'addExpenseForm.transactionDate', title: ts('Transaction Date')}">
+        <input crm-ui-datepicker="{time: false}" ng-model="model.transaction_date"/>
+      </div>
+      <div crm-ui-field="{name: 'addExpenseForm.submit'}">
+        <a class="button" crm-ui-id="addExpenseForm.submit" name="submit" ng-click="submit()" ng-class="{disabled: addExpenseForm.$invalid}">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>

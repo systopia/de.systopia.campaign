@@ -41,9 +41,7 @@
    <div crm-ui-accordion="{title: ts('Campaign Information'), collapsed: true}" >
       <div class="label">Description</div>
       <div class="content">
-         <textarea id="campaign_description"
-         ng-model="currentCampaign.description"
-         readonly></textarea>
+         <div id="campaign_description">{{currentCampaign.description ? currentCampaign.description : "-"}}</div>
       </div>
       <div class="clear"></div>
 
@@ -56,33 +54,31 @@
       <table class="kpitable">
         <tr ng-repeat="(key, value) in kpi">
           <td>{{value.title}}</td>
-          <td>{{value.value}}</td>
+          <td>{{(value.type == "money") ? (value.value | currency:"USD $") : (value.type == "percentage" ? (value.value == -1 ? "-" : (value.value * 100 | number:2) + "%") : (value.value | number))}}</td>
         </tr>
       </table>
    </div>
 
    <div crm-ui-accordion="{title: ts('Campaign Expenses')}" >
+      <a ng-click="addExpense()" class="button addExpense">Add Expense</a>
       <table class="expsumtable">
-        <tr ng-repeat="(key, value) in expenseSum">
-          <td>Total Costs ({{key}})</td>
-          <td>{{value}}</td>
+        <tr>
         </tr>
       </table>
       <table class="exptable">
          <tr>
             <th>Amount</th>
-            <th>Currency</th>
             <th>Description</th>
             <th>Date</th>
             <th>Actions</th>
          </tr>
-         <tr ng-repeat="(id, expense) in expenses">
-            <td>{{expense.amount}}</td>
-            <td>{{expense.currency}}</td>
-            <td>{{expense.description ? (expense.description | limitTo : 15) : ('-')}}{{expense.description.length > 15 ? '...' : ''}}</td>
+         <tr ng-repeat="(id, expense) in expenses track by $index">
+            <td>{{expense.amount | currency:"USD $"}}</td>
+            <td>{{expense.description ? (expense.description | limitTo : 50) : ('-')}}{{expense.description.length > 50 ? '...' : ''}}</td>
             <td>{{expense.created_date}}</td>
-            <td>todo</td>
+            <td><a crm-confirm="{message: ts('Are you sure you want to delete this expense?')}" on-yes="deleteExpense(expense)" class="button">Delete</a></td>
          </tr>
+         <tr ng-show="expenses.length < 1"><td colspan="5"><span class="centered">No expenses found</span></td></tr>
       </table>
    </div>
 

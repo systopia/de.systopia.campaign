@@ -107,7 +107,7 @@ class CRM_Campaign_KPI {
       $kpi["amount_average"] = array(
          "id" => "amount_average",
          "title" => "Average Amount of Contributions",
-         "type" => "number",
+         "type" => "money",
          "description" => "Average amount of completed contributions",
          "value" => isset($amount_average) ? $amount_average : 0.00,
          "link" => ""
