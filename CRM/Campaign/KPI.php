@@ -163,7 +163,7 @@ class CRM_Campaign_KPI {
       $kpi["roi"] = array(
          "id" => "roi",
          "title" => "ROI",
-         "type" => "percentage",
+         "type" => "number",
          "description" => "Return on investment",
          "value" => $total_revenue / (($total_costs == 0.00) ? 1.00 : $total_costs),
          "link" => "https://en.wikipedia.org/wiki/Return_on_investment"
@@ -184,6 +184,8 @@ class CRM_Campaign_KPI {
          "value" => $total_revenue_goal_pc,
          "link" => ""
       );
+
+      CRM_Utils_CampaignCustomisationHooks::campaign_kpis($id, $kpi, 99);
 
       return json_encode($kpi);
    }

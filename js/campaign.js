@@ -132,6 +132,27 @@
         });
      }
 
+     $scope.editExpense = function(exp) {
+       console.log(exp);
+       var model = {
+         campaign_id: $scope.currentCampaign.id,
+         amount: exp.amount,
+         description: exp.description,
+         contact_id: exp.contact_id,
+         transaction_date: exp.transaction_date,
+         id: exp.id
+        };
+        var options = CRM.utils.adjustDialogDefaults({
+          width: '40%',
+          height: 'auto',
+          autoOpen: false,
+          title: ts('Add Expense')
+        });
+        dialogService.open('addExpenseDialog', resourceUrl + '/partials/campaign_expense.html', model, options).then(function (result) {
+          $scope.updateKpiAndExpenses();
+        });
+     }
+
 
   }]);
 
@@ -212,48 +233,60 @@
 
          var drag = d3.behavior.drag()
          .on("dragstart", function(c) {
-            selectedNode = d3.event.sourceEvent.toElement;
+            selectedNode = c;
+            console.log(c);
             d3.event.sourceEvent.stopPropagation();
          })
          .on("drag", function(d) {
             var nodes = tree.nodes(d);
-            var links = tree.links(nodes);
 
-            var nt = {'x': 0, 'y': 0};
+            console.log(d3.event);
 
             nodes.forEach(function(k) {
                var currentNode = d3.select('#node_' + k.id);
-               var t = d3.transform(currentNode.attr("transform"));
-               nt = {'x': t.translate[0] + d3.event.x,
-                          'y': t.translate[1] + d3.event.y};
+              //  var t = d3.transform(currentNode.attr("transform"));
+              //  var nt = { 'x': t.translate[0] + d3.event.x,
+              //             'y': t.translate[1] + d3.event.y };
 
-               d.x = nt.x;
-               d.y = nt.y;
+              //  if(k.x0 == undefined) {
+              //    k.x0 = k.x;
+              //  }
+              //  if(k.y0 == undefined) {
+              //    k.y0 = k.y;
+              //  }
 
-               currentNode.attr("transform", "translate(" + nt.x + "," + nt.y + ")");
+               //k.x += d3.event.x;
+               //k.y += d3.event.y;
+
+
+
                currentNode.select("circle").style("stroke", "red");
-            });
-
-            links.forEach(function(k) {
-               var currentLink = d3.select('#p_' + k.source.id + '_' + k.target.id);
-               var t = d3.transform(currentLink.attr("transform"));
-               var nt2 = {'x': t.translate[0] ,//+ d3.event.x,
-                          'y': t.translate[1] };//+ d3.event.y};
-               //console.log(currentLink);
-               //currentLink.attr("transform", "translate(" + nt.x + "," + nt.y + ")");
             });
 
             var parentLink = d3.select('#p_' + d.parentid + '_' + d.id);
             parentLink.style("stroke", "red");
 
-            
-
+            update();
          })
          .on("dragend", function(c) {
             d3.selectAll(".node").select("circle").style("stroke", null) ;
 
             var parentLink = d3.select('#p_' + c.parentid + '_' + c.id);
             parentLink.style("stroke", null);
+
+            var xdist = c.x - c.x0;
+            var ydist = c.y - c.y0;
+            var distance = Math.sqrt((xdist*xdist)+(ydist*ydist));
+            console.log(distance);
+
+            // if(distance < 100.0) {
+            //   var nodes = tree.nodes(c);
+            //   nodes.forEach(function(k) {
+            //     k.x = k.x0;
+            //     k.y = k.y0;
+            //   });
+            //   update();
+            // }
 
             selectedNode = null;
          });
@@ -278,6 +311,7 @@
         	.projection(function(d) { return [d.x, d.y]; });
 
         root = treeData;
+        var nodes;
 
         function zoomed() {
              var scale = d3.event.scale,
@@ -301,32 +335,39 @@
                .x(x.domain([-width / 2, width / 2]))
                .y(y.domain([-height / 2, height / 2]))
                .event);
+           init();
+           update();
         }
 
         function createCampaignLink(d) { return CRM.url('civicrm/a/#/campaign/' + d.id + '/tree', {}); }
 
-        function update(source) {
-
-          var nodes = tree.nodes(root).reverse(),
-        	  links = tree.links(nodes);
-
+        function init() {
+          nodes = tree.nodes(root).reverse();
           nodes.forEach(function(d) { d.y = d.depth * 100; });
+          console.log("nodes", nodes);
+        }
+
+        function update(source) {
+          links = tree.links(nodes);
 
           var node = svg.selectAll("g.node")
         	  .data(nodes, function(d) { return d.id || (d.id = ++i); });
 
+          node.attr("transform", function(d) {
+            return "translate(" + d.x + "," + d.y + ")"; });
+
           var nodeEnter = node.enter().append("g")
         	  .attr("class", "node")
-           .attr("id", function(d) {return "node_" + d.id;})
+            .attr("id", function(d) {return "node_" + d.id;})
         	  .attr("transform", function(d) {
         		  return "translate(" + d.x + "," + d.y + ")"; });
 
           nodeEnter.append("a")
            .attr("xlink:href", createCampaignLink)
            .append("circle")
-        	  .attr("r", 15)
-        	  .style("fill", "#fff")
-            .call(drag);
+        	   .attr("r", 15)
+        	   .style("fill", "#fff")
+             .call(drag);
 
           nodeEnter.append("a")
           .attr("xlink:href", createCampaignLink)
@@ -341,13 +382,18 @@
           var link = svg.selectAll("path.link")
         	  .data(links, function(d) { return d.target.id; });
 
+          link.attr("d", diagonal);
+
           link.enter().insert("path", "g")
         	  .attr("class", "link")
-           .style("stroke", "#aaa")
-           .attr("id", function(d) { return "p_" + d.source.id + "_" + d.target.id;})
+            .style("stroke", "#aaa")
+            .attr("id", function(d) { return "p_" + d.source.id + "_" + d.target.id;})
         	  .attr("d", diagonal);
+
+          link.exit().remove();
         }
 
+        init();
         update(root);
       }
     };
