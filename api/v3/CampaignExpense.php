@@ -16,7 +16,28 @@
 function civicrm_api3_campaign_expense_get($params) {
   $params['entity_table'] = 'civicrm_campaign';
   $params['entity_id'] = $params['campaign_id'];
-  return _civicrm_api3_basic_get(CRM_Financial_BAO_FinancialItem, $params);
+  $reply = _civicrm_api3_basic_get(CRM_Financial_BAO_FinancialItem, $params);
+
+  // extract the encoded expense_type_id from description
+  if (isset($reply['values'])) {
+    $values = $reply['values']; // copy array so we can modify while iterating
+    foreach ($values as $expense_id => $expense) {
+      if (!empty($expense['description'])) {
+        $parts = split(':', $expense['description'], 1);
+        if (count($parts)>1) {
+          $reply['values'][$expense_id]['expense_type_id'] = $parts[0];
+          $reply['values'][$expense_id]['description']     = $parts[1];
+        } else {
+          $reply['values'][$expense_id]['expense_type_id'] = 1;  // TODO: use default?
+          $reply['values'][$expense_id]['description']     = $expense['description'];
+        }
+      } else {
+        $reply['values'][$expense_id]['expense_type_id'] = 1;  // TODO: use default?
+        $reply['values'][$expense_id]['description']     = '';
+      }
+    }    
+  }
+  return $reply;
 }
 
 
@@ -67,6 +88,14 @@ function _civicrm_api3_campaign_expense_getsum_spec(&$params) {
 function civicrm_api3_campaign_expense_create($params) {
   $params['entity_table'] = 'civicrm_campaign';
   $params['entity_id'] = $params['campaign_id'];
+
+  // encode the expense_type_id in the description (prefix)
+  if (!empty($params['description'])) {
+    $params['description'] = $params['expense_type_id'] . ':' . $params['description'];
+  } else {
+    $params['description'] = $params['expense_type_id'] . ':';
+  }
+  unset($params['expense_type_id']);
   return _civicrm_api3_basic_create(CRM_Financial_BAO_FinancialItem, $params);
 }
 
@@ -97,7 +126,7 @@ function _civicrm_api3_campaign_expense_create_spec(&$params) {
     'api.default'  => 1);
   $params['expense_type_id'] = array(
     'title'        => 'Refers to option group civicrm_campaign_expense_types for categorisation',
-    'api.required' => 0,
+    'api.required' => 1,
     'api.default'  => 1);
 }
 
