@@ -47,6 +47,9 @@ function campaign_civicrm_uninstall() {
  */
 function campaign_civicrm_enable() {
   _campaign_civix_civicrm_enable();
+
+  //add/check the required option groups
+  campaign_civicrm_install_options(campaign_civicrm_options());
 }
 
 /**
@@ -156,4 +159,71 @@ function campaign_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &
 
       array_unshift($links, $viewLink);
     }
+}
+
+
+function campaign_civicrm_install_options($data) {
+  foreach ($data as $groupName => $group) {
+    // check group existence
+    $result = civicrm_api('option_group', 'getsingle', array('version' => 3, 'name' => $groupName));
+    if (isset($result['is_error']) && $result['is_error']) {
+      $params = array(
+          'version' => 3,
+          'sequential' => 1,
+          'name' => $groupName,
+          'is_reserved' => 1,
+          'is_active' => 1,
+          'title' => $group['title'],
+          'description' => $group['description'],
+      );
+      $result = civicrm_api('option_group', 'create', $params);
+      $group_id = $result['values'][0]['id'];
+    } else {
+      $group_id = $result['id'];
+    }
+    if (is_array($group['values'])) {
+      $groupValues = $group['values'];
+      $weight = 1;
+      foreach ($groupValues as $valueName => $value) {
+        $result = civicrm_api('option_value', 'getsingle', array('version' => 3, 'name' => $valueName));
+        if (isset($result['is_error']) && $result['is_error']) {
+          $params = array(
+              'version' => 3,
+              'sequential' => 1,
+              'option_group_id' => $group_id,
+              'name' => $valueName,
+              'label' => $value['label'],
+              'weight' => isset($value['weight']) ? $value['weight'] : $weight,
+              'is_default' => $value['is_default'],
+              'is_active' => 1,
+          );
+          if (isset($value['value'])) {
+            $params['value'] = $value['value'];
+          }
+          $result = civicrm_api('option_value', 'create', $params);
+        } else {
+          $weight = $result['weight'] + 1;
+        }
+      }
+    }
+  }
+}
+
+function campaign_civicrm_options() {
+  return array(
+      'campaign_expense_types' => array(
+          'title' => 'Campaign Expense Types',
+          'description' => '',
+          'is_reserved' => 1,
+          'is_active' => 1,
+          'values' => array(
+            'Default' => array(
+              'label' => ts('Default'),
+              'is_default' => 1,
+              'is_reserved' => 1,
+              'value' => 1,
+            ),
+          ),
+        ),
+    );
 }

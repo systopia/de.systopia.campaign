@@ -24,6 +24,11 @@
       <div crm-ui-field="{name: 'addExpenseForm.contactId', title: ts('Contact')}">
         <input crm-entityref="{entity: 'Contact', select: {allowClear:true}}" name="contactId" ng-model="model.contact_id" required/>
       </div>
+      <div crm-ui-field="{name: 'addExpenseForm.expenseTypeId', title: ts('Category')}">
+        <select crm-ui-select="{placeholder:ts('- select -'), allowClear:true,...}" ng-model="model.expense_type_id">
+          <option></option
+        </select>
+      </div>
       <div crm-ui-field="{name: 'addExpenseForm.transactionDate', title: ts('Transaction Date')}">
         <input crm-ui-datepicker="{time: false}" ng-model="model.transaction_date"/>
       </div>

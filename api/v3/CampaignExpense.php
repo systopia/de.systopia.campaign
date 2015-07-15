@@ -10,7 +10,7 @@
 
 /**
  * Get expenses
- * 
+ *
  * function passed on to CRM_Financial_BAO_FinancialItem
  */
 function civicrm_api3_campaign_expense_get($params) {
@@ -25,7 +25,7 @@ function civicrm_api3_campaign_expense_get($params) {
  * Get expenses sum
  * will sum up the expenses for the given campaign_id and all
  * sub-campaigns (up to the given depth)
- * 
+ *
  * function passed on to CRM_Financial_BAO_FinancialItem
  */
 function civicrm_api3_campaign_expense_getsum($params) {
@@ -33,7 +33,7 @@ function civicrm_api3_campaign_expense_getsum($params) {
   $sums = array($config->defaultCurrency => 0.0);
 
   $campaign_ids = array($params['campaign_id']);
-  $query = array('id'    => $params['campaign_id'], 
+  $query = array('id'    => $params['campaign_id'],
                  'depth' => $params['depth']);
   $campaign_tree = civicrm_api3('CampaignTree', 'getids', $query);
   foreach ($campaign_tree['children'] as $child_id => $child_label) {
@@ -66,7 +66,7 @@ function _civicrm_api3_campaign_expense_getsum_spec(&$params) {
  */
 function civicrm_api3_campaign_expense_create($params) {
   $params['entity_table'] = 'civicrm_campaign';
-  $params['entity_id'] = $params['campaign_id'];  
+  $params['entity_id'] = $params['campaign_id'];
   return _civicrm_api3_basic_create(CRM_Financial_BAO_FinancialItem, $params);
 }
 
@@ -97,7 +97,8 @@ function _civicrm_api3_campaign_expense_create_spec(&$params) {
     'api.default'  => 1);
   $params['expense_type_id'] = array(
     'title'        => 'Refers to option group civicrm_campaign_expense_types for categorisation',
-    'api.required' => 0);
+    'api.required' => 0,
+    'api.default'  => 1);
 }
 
 

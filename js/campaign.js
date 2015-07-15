@@ -83,7 +83,12 @@
      $scope.kpi = JSON.parse(kpi.result);
      $scope.parents = parents.parents.reverse();
      $scope.expenseSum = expenseSum.values;
-     $scope.expenses = expenses.values;
+     $scope.expenses = [];
+
+     angular.forEach(expenses.values, function(item) {
+       $scope.expenses.push(item);
+     });
+
      console.log($scope.kpi);
      console.log($scope.expenses);
      $scope.numberof = {
@@ -94,6 +99,13 @@
      $scope.subcampaign_link = CRM.url('civicrm/campaign/add', {reset: 1, pid: $scope.currentCampaign.id});
      $scope.edit_link = CRM.url('civicrm/campaign/add', {reset: 1, id: $scope.currentCampaign.id, action: 'update'});
      $scope.add_link = CRM.url('civicrm/a/#/campaign/' + $scope.currentCampaign.id + '/expense/add', {});
+
+     $scope.predicate = 'amount';
+     $scope.reverse = true;
+     $scope.order = function(predicate) {
+       $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+       $scope.predicate = predicate;
+     };
 
      $scope.updateKpiAndExpenses = function() {
        crmApi('CampaignExpense', 'get', {campaign_id: $scope.currentCampaign.id}).then(function (apiResult) {
@@ -159,6 +171,10 @@
   campaign.controller('CampaignExpenseCtrl', ['$scope', '$routeParams', 'crmApi', 'dialogService',
   function($scope, $routeParams, crmApi, dialogService) {
     $scope.ts = CRM.ts('de.systopia.campaign');
+    crmApi('OptionValue', 'get', {"option_group_id": "campaign_expense_types"}).then(function (apiResult) {
+      $scope.categories = apiResult.values;
+      console.log($scope.categories);
+    });
     $scope.submit = function() {
       if($scope.addExpenseForm.$invalid) {
         return;

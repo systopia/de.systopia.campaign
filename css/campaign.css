@@ -58,6 +58,13 @@
  text-align: center;
 }
 
+#campaign_container .exptable .sortorder:after {
+  content: '\25b2';
+}
+#campaign_container .exptable .sortorder.reverse:after {
+  content: '\25bc';
+}
+
 #tree_container .node circle {
 	  fill: #fff;
 	  stroke: #5D677B;
