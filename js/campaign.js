@@ -89,8 +89,6 @@
        $scope.expenses.push(item);
      });
 
-     console.log($scope.kpi);
-     console.log($scope.expenses);
      $scope.numberof = {
         parents: Object.keys($scope.parents).length,
         children: Object.keys($scope.children).length,
@@ -118,7 +116,7 @@
        }, function(apiResult) {
          CRM.alert(apiResult.error_message, "Error while fetching expenses", "error");
        });
-     }
+    };
 
      $scope.deleteExpense = function(expense) {
        crmApi('CampaignExpense', 'delete', {id: expense.id}).then(function (apiResult) {
@@ -127,7 +125,7 @@
        }, function(apiResult) {
          CRM.alert(apiResult.error_message, "Could not delete expense", "error");
        });
-     }
+    };
 
      $scope.addExpense = function() {
        var model = {
@@ -142,16 +140,16 @@
         dialogService.open('addExpenseDialog', resourceUrl + '/partials/campaign_expense.html', model, options).then(function (result) {
           $scope.updateKpiAndExpenses();
         });
-     }
+     };
 
      $scope.editExpense = function(exp) {
-       console.log(exp);
        var model = {
          campaign_id: $scope.currentCampaign.id,
          amount: exp.amount,
          description: exp.description,
          contact_id: exp.contact_id,
          transaction_date: exp.transaction_date,
+         expense_type_id: exp.expense_type_id,
          id: exp.id
         };
         var options = CRM.utils.adjustDialogDefaults({
@@ -163,7 +161,7 @@
         dialogService.open('addExpenseDialog', resourceUrl + '/partials/campaign_expense.html', model, options).then(function (result) {
           $scope.updateKpiAndExpenses();
         });
-     }
+     };
 
 
   }]);
@@ -186,7 +184,7 @@
       }, function(apiResult) {
         CRM.alert(apiResult.error_message, "Could not add expense", "error");
       });
-    }
+   };
   }]);
 
   campaign.controller('CampaignTreeCtrl', ['$scope', '$routeParams',
@@ -230,6 +228,10 @@
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+        var nodes;
+        var node;
+        var link;
+
          var x = d3.scale.linear()
              .domain([-width / 2, width / 2])
              .range([0, width]);
@@ -245,64 +247,90 @@
               .scaleExtent([0.5, 5])
               .on("zoom", zoomed);
 
-         var selectedNode = null;
+         var selectedNode = null, subNodes = null, parentLink = null;
 
          var drag = d3.behavior.drag()
          .on("dragstart", function(c) {
             selectedNode = c;
-            console.log(c);
+            selectedNode.startx = selectedNode.x;
+            selectedNode.x0 = selectedNode.x;
+            selectedNode.starty = selectedNode.y;
+            selectedNode.y0 = selectedNode.y;
+            console.log("selected node:", c);
+            subNodes = tree.nodes(c);
+            subNodes.splice(0,1);
+            console.log("subnodes:", subNodes);
+            parentLink = d3.select('#p_' + c.parentid + '_' + c.id);
+            parentLink.style("visibility", "hidden");
             d3.event.sourceEvent.stopPropagation();
          })
          .on("drag", function(d) {
-            var nodes = tree.nodes(d);
 
-            console.log(d3.event);
+            if(selectedNode) {
+               var cnode = d3.select('#node_' + selectedNode.id);
+               var t = d3.transform(cnode.attr("transform"));
+               nt = {'x': t.translate[0] + d3.event.x,
+                         'y': t.translate[1] + d3.event.y};
 
-            nodes.forEach(function(k) {
-               var currentNode = d3.select('#node_' + k.id);
-              //  var t = d3.transform(currentNode.attr("transform"));
-              //  var nt = { 'x': t.translate[0] + d3.event.x,
-              //             'y': t.translate[1] + d3.event.y };
+               selectedNode.x = nt.x;
+               selectedNode.y = nt.y;
 
-              //  if(k.x0 == undefined) {
-              //    k.x0 = k.x;
-              //  }
-              //  if(k.y0 == undefined) {
-              //    k.y0 = k.y;
-              //  }
+               cnode.attr("transform", "translate(" + nt.x + "," + nt.y + ")");
+            }
 
-               //k.x += d3.event.x;
-               //k.y += d3.event.y;
-
-
-
-               currentNode.select("circle").style("stroke", "red");
-            });
-
-            var parentLink = d3.select('#p_' + d.parentid + '_' + d.id);
-            parentLink.style("stroke", "red");
-
-            update();
          })
          .on("dragend", function(c) {
-            d3.selectAll(".node").select("circle").style("stroke", null) ;
+            d3.selectAll(".node").select("circle").style("stroke", null);
 
-            var parentLink = d3.select('#p_' + c.parentid + '_' + c.id);
-            parentLink.style("stroke", null);
+            parentLink.style("visibility", null);
 
-            var xdist = c.x - c.x0;
-            var ydist = c.y - c.y0;
-            var distance = Math.sqrt((xdist*xdist)+(ydist*ydist));
-            console.log(distance);
 
-            // if(distance < 100.0) {
-            //   var nodes = tree.nodes(c);
-            //   nodes.forEach(function(k) {
-            //     k.x = k.x0;
-            //     k.y = k.y0;
-            //   });
-            //   update();
-            // }
+            var nodeTarget = null;
+            nodes.forEach(function(nd) {
+                 if(nd.id != selectedNode.id) {
+                    //get distance
+                    var xdist = Math.abs(selectedNode.x - nd.x);
+                    var ydist = Math.abs(selectedNode.y - nd.y);
+                    var dist =  Math.sqrt((xdist*xdist)+(ydist*ydist));
+                    if(dist <= 30) {
+                       nodeTarget = nd;
+                    }
+
+               }
+            });
+
+            if(nodeTarget) {
+               console.log("dragged", selectedNode.name, "onto", nodeTarget.name,"!");
+
+               CRM.api3('CampaignTree', 'setnodeparent', {
+                 "sequential": 1,
+                 "id": selectedNode.id,
+                 "parentid": nodeTarget.id
+              });
+
+               var index = selectedNode.parent.children.indexOf(selectedNode);
+               if (index > -1) {
+                  selectedNode.parent.children.splice(index, 1);
+               }
+               if (typeof nodeTarget.children !== 'undefined' || typeof nodeTarget._children !== 'undefined') {
+                  if (typeof nodeTarget.children !== 'undefined') {
+                     nodeTarget.children.push(selectedNode);
+                  } else {
+                     nodeTarget._children.push(selectedNode);
+                  }
+               } else {
+                  nodeTarget.children = [];
+                  nodeTarget.children.push(selectedNode);
+               }
+               init();
+               update();
+            }else{
+               var cnode = d3.select('#node_' + selectedNode.id);
+               selectedNode.x = selectedNode.startx;
+               selectedNode.y = selectedNode.starty;
+
+               cnode.attr("transform", "translate(" + selectedNode.startx + "," + selectedNode.starty + ")");
+            }
 
             selectedNode = null;
          });
@@ -327,7 +355,7 @@
         	.projection(function(d) { return [d.x, d.y]; });
 
         root = treeData;
-        var nodes;
+
 
         function zoomed() {
              var scale = d3.event.scale,
@@ -364,10 +392,11 @@
         }
 
         function update(source) {
-          links = tree.links(nodes);
-
-          var node = svg.selectAll("g.node")
+           node = svg.selectAll("g.node")
         	  .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+          link = svg.selectAll("path.link")
+                .data(tree.links(nodes), function(d) { return d.target.id; });
 
           node.attr("transform", function(d) {
             return "translate(" + d.x + "," + d.y + ")"; });
@@ -394,9 +423,6 @@
         	  .attr("text-anchor", "middle")
         	  .text(function(d) { return d.name; })
         	  .style("fill-opacity", 1);
-
-          var link = svg.selectAll("path.link")
-        	  .data(links, function(d) { return d.target.id; });
 
           link.attr("d", diagonal);
 

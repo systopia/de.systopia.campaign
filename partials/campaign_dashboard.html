@@ -85,10 +85,10 @@
             </th>
             <th>Actions</th>
          </tr>
-         <tr ng-repeat="expense in expenses| orderBy:predicate:reverse">
+         <tr ng-repeat="expense in expenses | orderBy:predicate:reverse">
             <td>{{expense.amount | currency:"USD $"}}</td>
             <td>{{expense.description ? (expense.description | limitTo : 50) : ('-')}}{{expense.description.length > 50 ? '...' : ''}}</td>
-            <td></td>
+            <td>{{expense.expense_type_id}}</td>
             <td>{{expense.created_date}}</td>
             <td><a class="button" ng-click="editExpense(expense)">Edit</a> <a crm-confirm="{message: ts('Are you sure you want to delete this expense?')}" on-yes="deleteExpense(expense)" class="button">Delete</a></td>
          </tr>

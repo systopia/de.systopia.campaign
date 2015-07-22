@@ -54,3 +54,21 @@ function _civicrm_api3_campaign_tree_gettree_spec(&$params) {
  $params['id']['api.required'] = 1;
  $params['depth']['api.required'] = 1;
 }
+
+/**
+* Set a parentid of a campaign node
+*
+* @param integer $id campaign id
+* @param integer $parent new parent id
+*
+* @return array
+*/
+
+function civicrm_api3_campaign_tree_setnodeparent($params) {
+  return CRM_Campaign_Tree::setNodeParent($params['id'], $params['parentid']);
+}
+
+function _civicrm_api3_campaign_tree_setnodeparent_spec(&$params) {
+ $params['id']['api.required'] = 1;
+ $params['parentid']['api.required'] = 1;
+}

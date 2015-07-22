@@ -179,4 +179,26 @@ class CRM_Campaign_Tree {
       return $tree;
    }
 
+   /**
+   * Set a parent of a campaign node
+   *
+   *
+   * @param integer $id campaign id
+   * @param integet $parentid new parent id
+   *
+   * @return empty
+   */
+
+   public static function setNodeParent($id, $parentid) {
+
+     $query = "
+     UPDATE    civicrm_campaign camp
+     SET       camp.parent_id = %1
+     WHERE camp.id = %2;
+     ";
+
+     CRM_Core_DAO::executeQuery($query, array(1 => array($parentid, 'Integer'), 2 => array($id, 'Integer')));
+     return civicrm_api3_create_success();
+  }
+
 }

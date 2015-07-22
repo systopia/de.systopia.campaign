@@ -25,8 +25,8 @@
         <input crm-entityref="{entity: 'Contact', select: {allowClear:true}}" name="contactId" ng-model="model.contact_id" required/>
       </div>
       <div crm-ui-field="{name: 'addExpenseForm.expenseTypeId', title: ts('Category')}">
-        <select crm-ui-select="{placeholder:ts('- select -'), allowClear:true,...}" ng-model="model.expense_type_id">
-          <option></option
+        <select crm-ui-select="{placeholder:ts('- select -'), allowClear:true, width:'auto'}" ng-model="model.expense_type_id">
+          <option ng-repeat="category in categories" value="{{category.value}}">{{category.label}}</option
         </select>
       </div>
       <div crm-ui-field="{name: 'addExpenseForm.transactionDate', title: ts('Transaction Date')}">
