@@ -1,0 +1,31 @@
+<div id="campaign_container">
+   <div id="campaign_summary">
+      <h1>Clone "{{currentCampaign.title}}"</h1>
+      <table class="cmpinfo">
+        <tr>
+          <td>Include subtree</td>
+          <td><input type="checkbox" ng-model="form_model.onlyroot" ng-true-value="0" ng-false-value="1"></td>
+        </tr>
+        <tr>
+          <td>Title Match Pattern</td>
+          <td><input type="text" ng-model="form_model.titlesearch"></td>
+        </tr>
+        <tr>
+          <td>Title Replacement Pattern</td>
+          <td><input type="text" ng-model="form_model.titlereplace"></td>
+        </tr>
+        <tr>
+          <td>Start Date Offset</td>
+          <td><input type="text" ng-model="form_model.startdateoffset"></td>
+        </tr>
+        <tr>
+          <td>End Date Offset</td>
+          <td><input type="text" ng-model="form_model.enddateoffset"></td>
+        </tr>
+      </table>
+   </div>
+   <div id="actions">
+     <a ng-click="cloneCampaign()" class="button">Save</a>
+     <a href="{{campaign_link}}" class="button">Cancel</a>
+   </div>
+</div>

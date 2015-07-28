@@ -135,14 +135,6 @@ class CRM_Campaign_KPI {
          "link" => ""
       );
 
-      // get all first
-      // TODO
-      //$kpi['amount_first'] = 'TODO';
-
-      // get average cost per first contribution
-      // TODO
-      //$kpi['amount_average_first'] = 'TODO';
-
       // get all expenses
       $result = civicrm_api3('CampaignExpense', 'getsum', array(
            'campaign_id' => $id
@@ -158,6 +150,51 @@ class CRM_Campaign_KPI {
          "value" => isset($total_costs) ? $total_costs : 0.00,
          "link" => ""
       );
+
+
+      $query = "
+      SELECT COUNT(id)
+      FROM civicrm_contribution first_contribution
+      WHERE first_contribution.campaign_id IN ($ids_list)
+        AND NOT EXISTS (SELECT id
+                        FROM civicrm_contribution other_contribution
+                        WHERE other_contribution.contact_id = first_contribution.contact_id
+                          AND other_contribution.receive_date < first_contribution.receive_date);";
+
+      $first_contributions = CRM_Core_DAO::singleValueQuery($query);
+
+      // get all first
+      $kpi["amount_first"] = array(
+         "id" => "amount_first",
+         "title" => "Number of First Contributions",
+         "type" => "number",
+         "description" => "Number of first contributions associated with this campaign",
+         "value" => $first_contributions,
+         "link" => ""
+      );
+
+      // get average cost per first contribution
+      $kpi['amount_average_first'] = array(
+         "id" => "amount_average_first",
+         "title" => "Average Cost per First Contribution",
+         "type" => "money",
+         "description" => "Average Cost per first contribution associated with this campaign",
+         "value" => $total_costs / $first_contributions,
+         "link" => ""
+      );
+
+      $second_or_later = $amount_all - $first_contributions;
+
+      // get average cost per second or later contribution
+      $kpi['amount_average_second_or_later'] = array(
+         "id" => "amount_average_second",
+         "title" => "Average Cost per Second or Later Contribution",
+         "type" => "money",
+         "description" => "Average Cost per second or later contribution associated with this campaign",
+         "value" => $second_or_later,
+         "link" => ""
+      );
+
 
       // get ROI
       $kpi["roi"] = array(

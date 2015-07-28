@@ -55,6 +55,16 @@
         controller: 'CampaignExpenseCtrl'
       });
 
+      $routeProvider.when('/campaign/:id/clone', {
+         templateUrl: resourceUrl + '/partials/campaign_copy.html',
+         controller: 'CampaignCloneCtrl',
+         resolve: {
+          currentCampaign: function($route, crmApi) {
+            return crmApi('Campaign', 'getsingle', {id: $route.current.params.id});
+          }
+        }
+      });
+
   }]);
 
    campaign.controller('DashboardCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {
@@ -97,6 +107,7 @@
      $scope.subcampaign_link = CRM.url('civicrm/campaign/add', {reset: 1, pid: $scope.currentCampaign.id});
      $scope.edit_link = CRM.url('civicrm/campaign/add', {reset: 1, id: $scope.currentCampaign.id, action: 'update'});
      $scope.add_link = CRM.url('civicrm/a/#/campaign/' + $scope.currentCampaign.id + '/expense/add', {});
+     $scope.clone_link = CRM.url('civicrm/a/#/campaign/' + $scope.currentCampaign.id + '/clone', {});
 
      $scope.predicate = 'amount';
      $scope.reverse = true;
@@ -147,7 +158,6 @@
          campaign_id: $scope.currentCampaign.id,
          amount: exp.amount,
          description: exp.description,
-         contact_id: exp.contact_id,
          transaction_date: exp.transaction_date,
          expense_type_id: exp.expense_type_id,
          id: exp.id
@@ -161,6 +171,14 @@
         dialogService.open('addExpenseDialog', resourceUrl + '/partials/campaign_expense.html', model, options).then(function (result) {
           $scope.updateKpiAndExpenses();
         });
+     };
+
+     $scope.applyToChildren = function(property, value) {
+        for(var child_campaign_id in $scope.children) {
+           var val = {id: child_campaign_id};
+           val[property] = value;
+           crmApi('Campaign', 'create', val);
+        }
      };
 
 
@@ -185,6 +203,31 @@
         CRM.alert(apiResult.error_message, "Could not add expense", "error");
       });
    };
+  }]);
+
+  campaign.controller('CampaignCloneCtrl', ['$scope', '$routeParams', 'crmApi', 'currentCampaign',
+  function($scope, $routeParams, crmApi, currentCampaign) {
+    $scope.ts = CRM.ts('de.systopia.campaign');
+    $scope.currentCampaign = currentCampaign;
+    $scope.campaign_link = CRM.url('civicrm/a/#/campaign/' + $scope.currentCampaign.id + '/view', {});
+
+    $scope.form_model = {
+      id: $scope.currentCampaign.id,
+      onlyroot: 1,
+      titlesearch: "/2015/",
+      titlereplace: "2016",
+      startdateoffset: "+1 day",
+      enddateoffset: "+1 day"
+    };
+
+    $scope.cloneCampaign = function() {
+      crmApi('CampaignTree', 'clone', $scope.form_model).then(function (apiResult) {
+        CRM.alert("Successfully cloned campaign", "Campaign cloned", "success");
+      }, function(apiResult) {
+        CRM.alert(apiResult.error_message, "Could not clone campaign", "error");
+      });
+    };
+
   }]);
 
   campaign.controller('CampaignTreeCtrl', ['$scope', '$routeParams',
@@ -251,18 +294,20 @@
 
          var drag = d3.behavior.drag()
          .on("dragstart", function(c) {
-            selectedNode = c;
-            selectedNode.startx = selectedNode.x;
-            selectedNode.x0 = selectedNode.x;
-            selectedNode.starty = selectedNode.y;
-            selectedNode.y0 = selectedNode.y;
-            console.log("selected node:", c);
-            subNodes = tree.nodes(c);
-            subNodes.splice(0,1);
-            console.log("subnodes:", subNodes);
-            parentLink = d3.select('#p_' + c.parentid + '_' + c.id);
-            parentLink.style("visibility", "hidden");
-            d3.event.sourceEvent.stopPropagation();
+            if(c != root) {
+               selectedNode = c;
+               selectedNode.startx = selectedNode.x;
+               selectedNode.x0 = selectedNode.x;
+               selectedNode.starty = selectedNode.y;
+               selectedNode.y0 = selectedNode.y;
+               console.log("selected node:", c);
+               subNodes = tree.nodes(c);
+               subNodes.splice(0,1);
+               console.log("subnodes:", subNodes);
+               parentLink = d3.select('#p_' + c.parentid + '_' + c.id);
+               parentLink.style("visibility", "hidden");
+               d3.event.sourceEvent.stopPropagation();
+            }
          })
          .on("drag", function(d) {
 
@@ -355,7 +400,6 @@
         	.projection(function(d) { return [d.x, d.y]; });
 
         root = treeData;
-
 
         function zoomed() {
              var scale = d3.event.scale,
