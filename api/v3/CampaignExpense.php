@@ -91,6 +91,11 @@ function civicrm_api3_campaign_expense_create($params) {
   $params['entity_table'] = 'civicrm_campaign';
   $params['entity_id'] = $params['campaign_id'];
 
+  // if no contact_id is given, set the current user
+  if (empty($params['contact_id'])) {
+    $params['contact_id'] = CRM_Core_Session::singleton()->get('userID');
+  }
+
   // encode the expense_type_id in the description (prefix)
   if (!empty($params['description'])) {
     $params['description'] = $params['expense_type_id'] . ':' . $params['description'];
@@ -105,7 +110,7 @@ function _civicrm_api3_campaign_expense_create_spec(&$params) {
   $config = CRM_Core_Config::singleton();
   $params['contact_id'] = array(
     'title'        => 'Contact associated with this expense',
-    'api.required' => 1);
+    'api.required' => 0);
   $params['transaction_date'] = array(
     'title'        => 'Date of the expense',
     'api.default'  => date('Ymdhis'));
