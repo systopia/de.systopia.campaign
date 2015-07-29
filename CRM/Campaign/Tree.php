@@ -212,42 +212,47 @@ class CRM_Campaign_Tree {
   *
   * @param integer $id campaign id
   * @param boolean $onlyRoot clones only the root (given) id or the whole subtree
-  * @param string  $titleSearch regex pattern to match the title
-  * @param string  $titleReplace regex pattern to replace (parts of) the title
-  * @param string  $startDateOffset offset start date
-  * @param string  $endDateOffset offset end date
   * @return empty
   */
 
-  public static function cloneCampaign($id, $onlyRoot, $titleSearch = NULL, $titleReplace = NULL, $startDateOffset = NULL, $endDateOffset = NULL) {
-     if($onlyRoot) {
-        // get campaign
-        $campaign = civicrm_api3('Campaign', 'getsingle', array('id' => $id));
-        // strip ids etc
-        unset($campaign['id'], $campaign['created_id'], $campaign['created_date'],
-        $campaign['last_modified_id'], $campaign['last_modified_date'], $campaign['name'], $campaign['external_identifier']);
-        // change name and title
-        if ($titleSearch && $titleReplace) {
-           $campaign['title'] = preg_replace($titleSearch, $titleReplace, $campaign['title']);
-        }
-        // offset start date
-        if ($startDateOffset) {
-           $date = new DateTime($campaign['start_date']);
-           $date = $date->modify($startDateOffset);
-           $date = $date->format('Y-m-d H:i:s');
-           $campaign['start_date'] = $date;
-        }
-        // offset end date
-        if ($endDateOffset) {
-           $date = new DateTime($campaign['end_date']);
-           $date = $date->modify($startDateOffset);
-           $date = $date->format('Y-m-d H:i:s');
-           $campaign['end_date'] = $date;
-        }
-        // create copy
-        $result = civicrm_api3('Campaign', 'create', $campaign);
-        return $result["id"];
-    }
+  public static function cloneCampaign($node_id, $parent_id, $depth, $adjustments) {
+      // get campaign
+      $campaign = civicrm_api3('Campaign', 'getsingle', array('id' => $node_id));
+      // strip ids etc
+      unset($campaign['id'], $campaign['created_id'], $campaign['created_date'],
+      $campaign['last_modified_id'], $campaign['last_modified_date'], $campaign['name'], $campaign['external_identifier']);
+      // change name and title
+      if (isset($adjustments['titleSearch']) && isset($adjustments['titleReplace'])) {
+         $campaign['title'] = preg_replace($adjustments['titleSearch'], $adjustments['titleReplace'], $campaign['title']);
+      }
+      // offset start date
+      if (isset($adjustments['startDateOffset'])) {
+         $date = new DateTime($campaign['start_date']);
+         $date = $date->modify($adjustments['startDateOffset']);
+         $date = $date->format('Y-m-d H:i:s');
+         $campaign['start_date'] = $date;
+      }
+      // offset end date
+      if ($adjustments['endDateOffset']) {
+         $date = new DateTime($campaign['end_date']);
+         $date = $date->modify($adjustments['endDateOffset']);
+         $date = $date->format('Y-m-d H:i:s');
+         $campaign['end_date'] = $date;
+      }
+      // parent id
+      if ($parent_id) {
+        $campaign['parent_id'] = $parent_id;
+      }
+      // create copy
+      $result = civicrm_api3('Campaign', 'create', $campaign);
+      
+      if ($depth > 0) {
+         $direct_children = self::getCampaignIds($node_id, 0)["children"];
+         foreach ($direct_children as $id => $name) {
+           self::cloneCampaign($id, $result["id"], $depth-1, $adjustments);
+         }
+      }
+      return $result["id"];
   }
 
 

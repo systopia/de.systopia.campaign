@@ -213,12 +213,14 @@
 
     $scope.form_model = {
       id: $scope.currentCampaign.id,
-      onlyroot: 1,
-      titlesearch: "/2015/",
-      titlereplace: "2016",
-      startdateoffset: "+1 day",
-      enddateoffset: "+1 day"
+      depth: 0,
+      titleSearch: "/2015/",
+      titleReplace: "2016",
+      startDateOffset: "+1 day",
+      endDateOffset: "+1 day"
     };
+
+    console.log($scope.form_model);
 
     $scope.cloneCampaign = function() {
       crmApi('CampaignTree', 'clone', $scope.form_model).then(function (apiResult) {
