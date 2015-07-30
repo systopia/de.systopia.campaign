@@ -24,6 +24,11 @@
       <div id="info">
          <table class="cmpinfo">
            <tr>
+             <td>Is Active</td>
+             <td>{{currentCampaign.is_active ? ts('True') : ts('False') }}</td>
+             <td><a crm-confirm="{message: ts('Are you sure you want to apply this status to all children?')}" on-yes="applyToChildren('is_active', currentCampaign.is_active)" class="button">Apply to Children</a></td>
+           </tr>
+           <tr>
              <td>External Identifier</td>
              <td>{{currentCampaign.external_identifier ? currentCampaign.external_identifier : "-"}}</td>
            </tr>
