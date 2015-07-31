@@ -1,3 +1,18 @@
+/*-------------------------------------------------------+
+| de.systopia.campaign                                   |
+| Copyright (C) 2015 SYSTOPIA                            |
+| Author: N. Bochan (bochan -at- systopia.de)            |
+| http://www.systopia.de/                                |
++--------------------------------------------------------+
+| This program is released as free software under the    |
+| Affero GPL license. You can redistribute it and/or     |
+| modify it under the terms of this license which you    |
+| can read by viewing the included agpl.txt or online    |
+| at www.gnu.org/licenses/agpl.html. Removal of this     |
+| copyright header is strictly prohibited without        |
+| written permission from the original author(s).        |
++--------------------------------------------------------*/
+
 (function(angular, $, _) {
    var resourceUrl = CRM.resourceUrls['de.systopia.campaign'];
    var campaign = angular.module('campaign', ['ngRoute', 'crmUtil', 'crmUi', 'crmD3']);
@@ -95,7 +110,17 @@
      $scope.expenseSum = expenseSum.values;
      $scope.expenses = [];
 
+     crmApi('OptionValue', 'get', {"option_group_id": "campaign_status", "return": "value,label"}).then(function (apiResult) {
+       $scope.campaign_status = apiResult.values;
+
+       angular.forEach($scope.campaign_status, function(item) {
+          if(item.value == $scope.currentCampaign.status_id)
+          $scope.currentCampaign.status_id_text = item.label;
+       });
+     });
+     $scope.expense_sum = 0.00;
      angular.forEach(expenses.values, function(item) {
+       $scope.expense_sum = $scope.expense_sum + parseFloat(item.amount);
        $scope.expenses.push(item);
      });
 
@@ -453,11 +478,27 @@
         	  .attr("transform", function(d) {
         		  return "translate(" + d.x + "," + d.y + ")"; });
 
+         var menu = [
+                   {
+                       title: ts('View Campaign'),
+                       action: function(elm, d, i) {
+                           window.open(CRM.url('civicrm/a/#/campaign/' + d.id + '/view', {}), '_self');
+                       }
+                   },
+                   {
+                       title: ts('Edit Campaign'),
+                       action: function(elm, d, i) {
+                          window.open(CRM.url('civicrm/campaign/add', {reset: 1, id: d.id, action: 'update'}), '_blank');
+                       }
+                   }
+         ];
+
           nodeEnter.append("a")
            .attr("xlink:href", createCampaignLink)
            .append("circle")
         	   .attr("r", 15)
         	   .style("fill", "#fff")
+             .on('contextmenu', d3.contextMenu(menu))
              .call(drag);
 
           nodeEnter.append("a")
@@ -469,6 +510,7 @@
         	  .attr("text-anchor", "middle")
         	  .text(function(d) { return d.name; })
         	  .style("fill-opacity", 1);
+
 
           link.attr("d", diagonal);
 

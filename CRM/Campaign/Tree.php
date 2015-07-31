@@ -1,4 +1,18 @@
 <?php
+/*-------------------------------------------------------+
+| de.systopia.campaign                                   |
+| Copyright (C) 2015 SYSTOPIA                            |
+| Author: N. Bochan (bochan -at- systopia.de)            |
+| http://www.systopia.de/                                |
++--------------------------------------------------------+
+| This program is released as free software under the    |
+| Affero GPL license. You can redistribute it and/or     |
+| modify it under the terms of this license which you    |
+| can read by viewing the included agpl.txt or online    |
+| at www.gnu.org/licenses/agpl.html. Removal of this     |
+| copyright header is strictly prohibited without        |
+| written permission from the original author(s).        |
++--------------------------------------------------------*/
 
 class CRM_Campaign_Tree {
 
@@ -245,7 +259,7 @@ class CRM_Campaign_Tree {
       }
       // create copy
       $result = civicrm_api3('Campaign', 'create', $campaign);
-      
+
       if ($depth > 0) {
          $direct_children = self::getCampaignIds($node_id, 0)["children"];
          foreach ($direct_children as $id => $name) {

@@ -1,3 +1,20 @@
+<!--
+/*#######################################################+
+| de.systopia.campaign                                   |
+| Copyright (C) 2015 SYSTOPIA                            |
+| Author: N. Bochan (bochan -at- systopia.de)            |
+| http://www.systopia.de/                                |
++########################################################+
+| This program is released as free software under the    |
+| Affero GPL license. You can redistribute it and/or     |
+| modify it under the terms of this license which you    |
+| can read by viewing the included agpl.txt or online    |
+| at www.gnu.org/licenses/agpl.html. Removal of this     |
+| copyright header is strictly prohibited without        |
+| written permission from the original author(s).        |
++########################################################*/
+-->
+
 <div id="campaign_container">
    <div id="campaign_summary">
       <h1>{{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : "(INACTIVE)"}}</h1>
@@ -23,6 +40,12 @@
       </div>
       <div id="info">
          <table class="cmpinfo">
+
+            <tr>
+              <td>Is Active</td>
+              <td>{{currentCampaign.status_id_text ? currentCampaign.status_id_text : '-' }}</td>
+              <td><a crm-confirm="{message: ts('Are you sure you want to apply this status id to all children?')}" on-yes="applyToChildren('status_id', currentCampaign.status_id)" class="button">Apply to Children</a></td>
+            </tr>
            <tr>
              <td>Is Active</td>
              <td>{{currentCampaign.is_active ? ts('True') : ts('False') }}</td>
@@ -58,7 +81,7 @@
       <div class="clear"></div>
    </div>
 
-   <div crm-ui-accordion="{title: ts('Key Performance Indicators')}" >
+   <div crm-ui-accordion="{title: ts('Key Performance Indicators (includes subcampaigns)')}" >
       <table class="kpitable">
         <tr ng-repeat="(key, value) in kpi">
           <td>{{value.title}}</td>
@@ -67,10 +90,12 @@
       </table>
    </div>
 
-   <div crm-ui-accordion="{title: ts('Campaign Expenses')}" >
+   <div crm-ui-accordion="{title: ts('Campaign Expenses (only this campaign)')}" >
       <a ng-click="addExpense()" class="button addExpense">Add Expense</a>
       <table class="expsumtable">
         <tr>
+           <td>Costs (only this campaign)</td>
+           <td>{{expense_sum | currency:"USD $"}}</td>
         </tr>
       </table>
       <table class="exptable">

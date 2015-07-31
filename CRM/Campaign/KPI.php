@@ -1,4 +1,18 @@
 <?php
+/*-------------------------------------------------------+
+| de.systopia.campaign                                   |
+| Copyright (C) 2015 SYSTOPIA                            |
+| Author: N. Bochan (bochan -at- systopia.de)            |
+| http://www.systopia.de/                                |
++--------------------------------------------------------+
+| This program is released as free software under the    |
+| Affero GPL license. You can redistribute it and/or     |
+| modify it under the terms of this license which you    |
+| can read by viewing the included agpl.txt or online    |
+| at www.gnu.org/licenses/agpl.html. Removal of this     |
+| copyright header is strictly prohibited without        |
+| written permission from the original author(s).        |
++--------------------------------------------------------*/
 
 class CRM_Campaign_KPI {
 
@@ -97,9 +111,9 @@ class CRM_Campaign_KPI {
 
       $kpi["amount_completed"] = array(
          "id" => "amount_completed",
-         "title" => "Amount of Contributions (completed)",
+         "title" => "Number of Contributions (completed)",
          "type" => "number",
-         "description" => "Amount of completed contributions",
+         "description" => "Number of completed contributions",
          "value" => isset($amount_completed) ? $amount_completed : 0.00,
          "link" => ""
       );
@@ -128,9 +142,9 @@ class CRM_Campaign_KPI {
 
       $kpi["amount_all"] = array(
          "id" => "amount_all",
-         "title" => "Amount of Contributions (all but cancelled/failed)",
+         "title" => "Number of Contributions (all but cancelled/failed)",
          "type" => "number",
-         "description" => "Amount of Contributions (all but cancelled/failed)",
+         "description" => "Number of Contributions (all but cancelled/failed)",
          "value" => isset($amount_all) ? $amount_all : 0.00,
          "link" => ""
       );
