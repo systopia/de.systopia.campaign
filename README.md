@@ -17,6 +17,7 @@ After the extension has been enabled every campaign entry on the campaign dashbo
 
 ## Updating
 In case of an update follow these steps in order to safely upgrade your installation:
+
 1. In CiviCRM go to "Administer" > "System Settings" >"Manage Extensions"
 2. *Disable* the extension
 3. *Uninstall* the extension
