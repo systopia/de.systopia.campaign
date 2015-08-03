@@ -165,7 +165,7 @@
 
      $scope.addExpense = function() {
        var model = {
-         campaign_id: $scope.currentCampaign.id,
+         campaign_id: $scope.currentCampaign.id
         };
         var options = CRM.utils.adjustDialogDefaults({
           width: '40%',

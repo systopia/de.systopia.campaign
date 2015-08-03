@@ -23,7 +23,7 @@ function civicrm_api3_campaign_expense_get($params) {
     $values = $reply['values']; // copy array so we can modify while iterating
     foreach ($values as $expense_id => $expense) {
       if (!empty($expense['description'])) {
-        $parts = split(':', $expense['description'], 1);
+        $parts = explode(":", $expense['description']);
         if (count($parts)>1) {
           $reply['values'][$expense_id]['expense_type_id'] = $parts[0];
           $reply['values'][$expense_id]['description']     = $parts[1];
