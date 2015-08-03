@@ -95,10 +95,10 @@
   'kpi',
   'expenseSum',
   'expenses',
-  'crmApi',
   'dialogService',
+  'crmApi',
   '$interval',
-   function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi, expenseSum, expenses, crmApi, dialogService, $interval) {
+   function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi, expenseSum, expenses, dialogService, crmApi, $interval) {
      $scope.ts = CRM.ts('de.systopia.campaign');
      $scope.currentCampaign = currentCampaign;
      $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
@@ -209,8 +209,8 @@
 
   }]);
 
-  campaign.controller('CampaignExpenseCtrl', ['$scope', '$routeParams', 'crmApi', 'dialogService',
-  function($scope, $routeParams, crmApi, dialogService) {
+  campaign.controller('CampaignExpenseCtrl', ['$scope', '$routeParams','dialogService', 'crmApi',
+  function($scope, $routeParams, dialogService, crmApi) {
     $scope.ts = CRM.ts('de.systopia.campaign');
     crmApi('OptionValue', 'get', {"option_group_id": "campaign_expense_types"}).then(function (apiResult) {
       $scope.categories = apiResult.values;
@@ -301,6 +301,7 @@
         var nodes;
         var node;
         var link;
+        var dragInitiated = false;
 
          var x = d3.scale.linear()
              .domain([-width / 2, width / 2])
@@ -321,7 +322,10 @@
 
          var drag = d3.behavior.drag()
          .on("dragstart", function(c) {
-            if(c != root) {
+            if (d3.event.sourceEvent.button == 0) {
+              dragInitiated = true;
+            }
+            if(c != root && dragInitiated) {
                selectedNode = c;
                selectedNode.startx = selectedNode.x;
                selectedNode.x0 = selectedNode.x;
@@ -352,59 +356,63 @@
 
          })
          .on("dragend", function(c) {
-            d3.selectAll(".node").select("circle").style("stroke", null);
+           if (d3.event.sourceEvent.button == 0) {
+             dragInitiated = false;
 
-            parentLink.style("visibility", null);
+             d3.selectAll(".node").select("circle").style("stroke", null);
+
+             parentLink.style("visibility", null);
 
 
-            var nodeTarget = null;
-            nodes.forEach(function(nd) {
-                 if(nd.id != selectedNode.id) {
-                    //get distance
-                    var xdist = Math.abs(selectedNode.x - nd.x);
-                    var ydist = Math.abs(selectedNode.y - nd.y);
-                    var dist =  Math.sqrt((xdist*xdist)+(ydist*ydist));
-                    if(dist <= 30) {
-                       nodeTarget = nd;
-                    }
+             var nodeTarget = null;
+             nodes.forEach(function(nd) {
+                  if(nd.id != selectedNode.id) {
+                     //get distance
+                     var xdist = Math.abs(selectedNode.x - nd.x);
+                     var ydist = Math.abs(selectedNode.y - nd.y);
+                     var dist =  Math.sqrt((xdist*xdist)+(ydist*ydist));
+                     if(dist <= 30) {
+                        nodeTarget = nd;
+                     }
 
-               }
-            });
+                }
+             });
 
-            if(nodeTarget) {
-               console.log("dragged", selectedNode.name, "onto", nodeTarget.name,"!");
+             if(nodeTarget) {
+                console.log("dragged", selectedNode.name, "onto", nodeTarget.name,"!");
 
-               CRM.api3('CampaignTree', 'setnodeparent', {
-                 "sequential": 1,
-                 "id": selectedNode.id,
-                 "parentid": nodeTarget.id
-              });
+                CRM.api3('CampaignTree', 'setnodeparent', {
+                  "sequential": 1,
+                  "id": selectedNode.id,
+                  "parentid": nodeTarget.id
+               });
 
-               var index = selectedNode.parent.children.indexOf(selectedNode);
-               if (index > -1) {
-                  selectedNode.parent.children.splice(index, 1);
-               }
-               if (typeof nodeTarget.children !== 'undefined' || typeof nodeTarget._children !== 'undefined') {
-                  if (typeof nodeTarget.children !== 'undefined') {
-                     nodeTarget.children.push(selectedNode);
-                  } else {
-                     nodeTarget._children.push(selectedNode);
-                  }
-               } else {
-                  nodeTarget.children = [];
-                  nodeTarget.children.push(selectedNode);
-               }
-               init();
-               update();
-            }else{
-               var cnode = d3.select('#node_' + selectedNode.id);
-               selectedNode.x = selectedNode.startx;
-               selectedNode.y = selectedNode.starty;
+                var index = selectedNode.parent.children.indexOf(selectedNode);
+                if (index > -1) {
+                   selectedNode.parent.children.splice(index, 1);
+                }
+                if (typeof nodeTarget.children !== 'undefined' || typeof nodeTarget._children !== 'undefined') {
+                   if (typeof nodeTarget.children !== 'undefined') {
+                      nodeTarget.children.push(selectedNode);
+                   } else {
+                      nodeTarget._children.push(selectedNode);
+                   }
+                } else {
+                   nodeTarget.children = [];
+                   nodeTarget.children.push(selectedNode);
+                }
+                init();
+                update();
+             }else{
+                var cnode = d3.select('#node_' + selectedNode.id);
+                selectedNode.x = selectedNode.startx;
+                selectedNode.y = selectedNode.starty;
 
-               cnode.attr("transform", "translate(" + selectedNode.startx + "," + selectedNode.starty + ")");
-            }
+                cnode.attr("transform", "translate(" + selectedNode.startx + "," + selectedNode.starty + ")");
+             }
 
-            selectedNode = null;
+             selectedNode = null;
+           }
          });
 
 

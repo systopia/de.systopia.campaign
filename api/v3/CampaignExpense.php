@@ -23,7 +23,7 @@ function civicrm_api3_campaign_expense_get($params) {
     $values = $reply['values']; // copy array so we can modify while iterating
     foreach ($values as $expense_id => $expense) {
       if (!empty($expense['description'])) {
-        $parts = explode(":", $expense['description']);
+        $parts = explode(":", $expense['description'], 2);
         if (count($parts)>1) {
           $reply['values'][$expense_id]['expense_type_id'] = $parts[0];
           $reply['values'][$expense_id]['description']     = $parts[1];
@@ -103,6 +103,12 @@ function civicrm_api3_campaign_expense_create($params) {
     $params['description'] = $params['expense_type_id'] . ':';
   }
   unset($params['expense_type_id']);
+
+  // encode the tx date
+  if (!empty($params['transaction_date'])) {
+    $params['transaction_date'] = date('YmdHis', strtotime($params['transaction_date']));
+  }
+
   return _civicrm_api3_basic_create(CRM_Financial_BAO_FinancialItem, $params);
 }
 
@@ -113,7 +119,7 @@ function _civicrm_api3_campaign_expense_create_spec(&$params) {
     'api.required' => 0);
   $params['transaction_date'] = array(
     'title'        => 'Date of the expense',
-    'api.default'  => date('Ymdhis'));
+    'api.default'  => date('YmdHis'));
   $params['description'] = array(
     'title'        => 'Description of the expense',
     'api.required' => 0);
