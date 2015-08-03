@@ -10,6 +10,7 @@ CiviFundraiser adds an extended campaign dashboard to CiviCRM
 [image]
 
 Here you can find all relevant information for a specific campaign:
+
 1. The campaign name
 2. Its parent- and child-campaings (if there are any, otherwise this area is hidden)
 3. Buttons to
