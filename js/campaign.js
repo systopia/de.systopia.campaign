@@ -375,25 +375,32 @@
            if (d3.event.sourceEvent.button == 0) {
              dragInitiated = false;
 
+             var nodeTarget = null;
+             nodes.forEach(function(nd) {
+                  if(nd.id != selectedNode.id) {
+                     // check visibility
+                     var dom_node = d3.select('#node_' + nd.id);
+                     var isVisible = (dom_node.style("visibility") != "hidden");
+                     //console.log(nd, isVisible);
+                     if(isVisible) {
+                       //get distance
+                       var xdist = Math.abs(selectedNode.x - nd.x);
+                       var ydist = Math.abs(selectedNode.y - nd.y);
+                       var dist =  Math.sqrt((xdist*xdist)+(ydist*ydist));
+
+                       if(dist <= 30) {
+                          nodeTarget = nd;
+                       }
+                     }
+
+                }
+             });
+
              d3.selectAll(".node").select("circle").style("stroke", null);
              d3.selectAll(".node").style("visibility", null);
              d3.selectAll(".link").style("visibility", null);
 
              parentLink.style("visibility", null);
-
-             var nodeTarget = null;
-             nodes.forEach(function(nd) {
-                  if(nd.id != selectedNode.id) {
-                     //get distance
-                     var xdist = Math.abs(selectedNode.x - nd.x);
-                     var ydist = Math.abs(selectedNode.y - nd.y);
-                     var dist =  Math.sqrt((xdist*xdist)+(ydist*ydist));
-                     if(dist <= 30) {
-                        nodeTarget = nd;
-                     }
-
-                }
-             });
 
              if(nodeTarget) {
                 console.log("dragged", selectedNode.name, "onto", nodeTarget.name,"!");
