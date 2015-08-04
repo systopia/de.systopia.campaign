@@ -320,6 +320,21 @@
 
          var selectedNode = null, subNodes = null, parentLink = null;
 
+         function hideSubtree(node, depth) {
+           if(depth > 1 && node.children) {
+             node.children.forEach(function(child) {
+                  // hide node
+                  var dom_node = d3.select('#node_' + child.id);
+                  dom_node.style("visibility", "hidden");
+                  // hide link
+                  var dom_path =  d3.select('#p_' + child.parentid + '_' + child.id);
+                  dom_path.style("visibility", "hidden");
+
+                  hideSubtree(child, depth-1);
+             });
+           }
+         }
+
          var drag = d3.behavior.drag()
          .on("dragstart", function(c) {
             if (d3.event.sourceEvent.button == 0) {
@@ -331,10 +346,11 @@
                selectedNode.x0 = selectedNode.x;
                selectedNode.starty = selectedNode.y;
                selectedNode.y0 = selectedNode.y;
-               console.log("selected node:", c);
+               hideSubtree(c, 99);
+               //console.log("selected node:", c);
                subNodes = tree.nodes(c);
                subNodes.splice(0,1);
-               console.log("subnodes:", subNodes);
+               //console.log("subnodes:", subNodes);
                parentLink = d3.select('#p_' + c.parentid + '_' + c.id);
                parentLink.style("visibility", "hidden");
                d3.event.sourceEvent.stopPropagation();
@@ -360,9 +376,10 @@
              dragInitiated = false;
 
              d3.selectAll(".node").select("circle").style("stroke", null);
+             d3.selectAll(".node").style("visibility", null);
+             d3.selectAll(".link").style("visibility", null);
 
              parentLink.style("visibility", null);
-
 
              var nodeTarget = null;
              nodes.forEach(function(nd) {

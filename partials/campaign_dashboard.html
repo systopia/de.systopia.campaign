@@ -42,7 +42,7 @@
          <table class="cmpinfo">
 
             <tr>
-              <td>Is Active</td>
+              <td>Status</td>
               <td>{{currentCampaign.status_id_text ? currentCampaign.status_id_text : '-' }}</td>
               <td><a crm-confirm="{message: ts('Are you sure you want to apply this status id to all children?')}" on-yes="applyToChildren('status_id', currentCampaign.status_id)" class="button">Apply to Children</a></td>
             </tr>
