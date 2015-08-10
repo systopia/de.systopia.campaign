@@ -85,9 +85,18 @@
       <table class="kpitable">
         <tr ng-repeat="(key, value) in kpi">
           <td>{{value.title}}</td>
-          <td>{{(value.type == "money") ? (value.value | currency:"USD $") : (value.type == "percentage" ? (value.value == -1 ? "-" : (value.value * 100 | number:2) + "%") : (value.value | number))}}</td>
+          <td>{{value | parseKPI}}</td>
         </tr>
       </table>
+   </div>
+
+   <div crm-ui-accordion="{title: ts('KPI Visualisation')}" >
+     <table class="kpiviztable">
+       <tr ng-repeat="(key, value) in kpi | filterKPI">
+         <td>{{value.title}}</td>
+         <td><kpivisualization kpi="value"></kpivisualization></td>
+       </tr>
+     </table>
    </div>
 
    <div crm-ui-accordion="{title: ts('Campaign Expenses (only this campaign)')}" >

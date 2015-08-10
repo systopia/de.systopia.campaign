@@ -206,7 +206,6 @@
         }
      };
 
-
   }]);
 
   campaign.controller('CampaignExpenseCtrl', ['$scope', '$routeParams','dialogService', 'crmApi',
@@ -229,6 +228,68 @@
       });
    };
   }]);
+
+  campaign.filter("parseKPI", function(currencyFilter, numberFilter){
+   return function(input){
+      // skip array values (can't be displayed)
+      if(Array.isArray(input.value)) {
+        return "-";
+      }
+      switch (input.kpi_type) {
+        case "money":
+          return currencyFilter(input.value, "USD $");
+        case "percentage":
+          return (input.value == -1 ? "-" : numberFilter(input.value * 100, 2) + "%");
+        case "number":
+          return numberFilter(input.value);
+        default:
+          return "-";
+      }
+   }
+  });
+
+  campaign.filter("filterKPI", function(){
+   return function(items){
+    var filtered = [];
+    for (var item in items) {
+      if (items.hasOwnProperty(item)) {
+        var current_item = items[item];
+        if(!"vis_type" in current_item) {
+          continue;
+        }
+        switch (current_item.vis_type) {
+          case "pie_chart":
+          case "line_graph":
+            filtered.push(current_item);
+          case "none":
+          default:
+            continue;
+        }
+      }
+    }
+    return filtered;
+   }
+  });
+
+  campaign.directive("kpivisualization", function($window) {
+    return {
+      template: '<ng-include src="getTemplateUrl()"/>',
+      scope: {
+          kpi: '=kpi'
+      },
+      restrict: 'E',
+      controller: function($scope) {
+        console.log($scope);
+        //function used on the ng-include to resolve the template
+        $scope.getTemplateUrl = function() {
+          var resURL = resourceUrl + '/partials/';
+
+          if ($scope.kpi.vis_type == "pie_chart")
+            return resURL + 'kpi_piechart.html';
+        }
+      }
+    };
+  });
 
   campaign.controller('CampaignCloneCtrl', ['$scope', '$routeParams', 'crmApi', 'currentCampaign',
   function($scope, $routeParams, crmApi, currentCampaign) {
@@ -403,7 +464,6 @@
              parentLink.style("visibility", null);
 
              if(nodeTarget) {
-                console.log("dragged", selectedNode.name, "onto", nodeTarget.name,"!");
 
                 CRM.api3('CampaignTree', 'setnodeparent', {
                   "sequential": 1,

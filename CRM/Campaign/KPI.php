@@ -67,7 +67,8 @@ class CRM_Campaign_KPI {
       $kpi["total_revenue"] = array(
          "id" => "total_revenue",
          "title" => "Total Revenue",
-         "type" => "money",
+         "kpi_type" => "money",
+         "vis_type" => "none",
          "description" => "Total revenue",
          "value" => isset($total_revenue) ? $total_revenue : 0.00,
          "link" => ""
@@ -88,7 +89,8 @@ class CRM_Campaign_KPI {
       $kpi["total_revenue_goal"] = array(
          "id" => "total_revenue_goal",
          "title" => "Total Revenue Goal",
-         "type" => "money",
+         "kpi_type" => "money",
+         "vis_type" => "none",
          "description" => "Total revenue goal",
          "value" => isset($total_revenue_goal) ? $total_revenue_goal : 0.00,
          "link" => ""
@@ -112,7 +114,8 @@ class CRM_Campaign_KPI {
       $kpi["amount_completed"] = array(
          "id" => "amount_completed",
          "title" => "Number of Contributions (completed)",
-         "type" => "number",
+         "kpi_type" => "number",
+         "vis_type" => "none",
          "description" => "Number of completed contributions",
          "value" => isset($amount_completed) ? $amount_completed : 0.00,
          "link" => ""
@@ -121,7 +124,8 @@ class CRM_Campaign_KPI {
       $kpi["amount_average"] = array(
          "id" => "amount_average",
          "title" => "Average Amount of Contributions",
-         "type" => "money",
+         "kpi_type" => "money",
+         "vis_type" => "none",
          "description" => "Average amount of completed contributions",
          "value" => isset($amount_average) ? $amount_average : 0.00,
          "link" => ""
@@ -143,7 +147,8 @@ class CRM_Campaign_KPI {
       $kpi["amount_all"] = array(
          "id" => "amount_all",
          "title" => "Number of Contributions (all but cancelled/failed)",
-         "type" => "number",
+         "kpi_type" => "number",
+         "vis_type" => "none",
          "description" => "Number of Contributions (all but cancelled/failed)",
          "value" => isset($amount_all) ? $amount_all : 0.00,
          "link" => ""
@@ -159,7 +164,8 @@ class CRM_Campaign_KPI {
       $kpi["total_cost"] = array(
          "id" => "ttlcost",
          "title" => "Total Costs",
-         "type" => "money",
+         "kpi_type" => "money",
+         "vis_type" => "none",
          "description" => "Sum of (known) expenses to this campaign",
          "value" => isset($total_costs) ? $total_costs : 0.00,
          "link" => ""
@@ -181,7 +187,8 @@ class CRM_Campaign_KPI {
       $kpi["amount_first"] = array(
          "id" => "amount_first",
          "title" => "Number of First Contributions",
-         "type" => "number",
+         "kpi_type" => "number",
+         "vis_type" => "none",
          "description" => "Number of first contributions associated with this campaign",
          "value" => $first_contributions,
          "link" => ""
@@ -191,7 +198,8 @@ class CRM_Campaign_KPI {
       $kpi['amount_average_first'] = array(
          "id" => "amount_average_first",
          "title" => "Average Cost per First Contribution",
-         "type" => "money",
+         "kpi_type" => "money",
+         "vis_type" => "none",
          "description" => "Average Cost per first contribution associated with this campaign",
          "value" => $total_costs / $first_contributions,
          "link" => ""
@@ -203,7 +211,8 @@ class CRM_Campaign_KPI {
       $kpi['amount_average_second_or_later'] = array(
          "id" => "amount_average_second",
          "title" => "Average Cost per Second or Later Contribution",
-         "type" => "money",
+         "kpi_type" => "money",
+         "vis_type" => "none",
          "description" => "Average Cost per second or later contribution associated with this campaign",
          "value" => $second_or_later,
          "link" => ""
@@ -214,7 +223,8 @@ class CRM_Campaign_KPI {
       $kpi["roi"] = array(
          "id" => "roi",
          "title" => "ROI",
-         "type" => "number",
+         "kpi_type" => "number",
+         "vis_type" => "none",
          "description" => "Return on investment",
          "value" => $total_revenue / (($total_costs == 0.00) ? 1.00 : $total_costs),
          "link" => "https://en.wikipedia.org/wiki/Return_on_investment"
@@ -230,7 +240,8 @@ class CRM_Campaign_KPI {
       $kpi["total_revenue_goal_pc"] = array(
          "id" => "total_revenue_goal_pc",
          "title" => "Total Revenue Reached",
-         "type" => "percentage",
+         "kpi_type" => "percentage",
+         "vis_type" => "pie_chart",
          "description" => "Total Revenue reached",
          "value" => $total_revenue_goal_pc,
          "link" => ""
