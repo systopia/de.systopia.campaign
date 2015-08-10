@@ -53,7 +53,7 @@
            </tr>
            <tr>
              <td>External Identifier</td>
-             <td>{{currentCampaign.external_identifier ? currentCampaign.external_identifier : "-"}}</td>
+             <td colspan="2">{{currentCampaign.external_identifier ? currentCampaign.external_identifier : "-"}}</td>
            </tr>
            <tr>
              <td>Start date</td>
@@ -81,22 +81,23 @@
       <div class="clear"></div>
    </div>
 
-   <div crm-ui-accordion="{title: ts('Key Performance Indicators (includes subcampaigns)')}" >
-      <table class="kpitable">
-        <tr ng-repeat="(key, value) in kpi">
-          <td>{{value.title}}</td>
-          <td>{{value | parseKPI}}</td>
-        </tr>
-      </table>
+   <div crm-ui-accordion="{title: ts('KPI Charts')}" >
+     <div id="kpivis">
+       <div class="kpivisitem" ng-repeat="(key, value) in kpi | filterKPI">
+         <div class="title"><h3>{{value.title}}</h3></div>
+         <div class="visualization"><kpivisualization kpi="value"></kpivisualization></div>
+       </div>
+       <div style="clear:both"></div>
+     </div>
    </div>
 
-   <div crm-ui-accordion="{title: ts('KPI Visualisation')}" >
-     <table class="kpiviztable">
-       <tr ng-repeat="(key, value) in kpi | filterKPI">
-         <td>{{value.title}}</td>
-         <td><kpivisualization kpi="value"></kpivisualization></td>
-       </tr>
-     </table>
+   <div crm-ui-accordion="{title: ts('Key Performance Indicators (includes subcampaigns)')}" >
+      <table class="kpitable">
+        <tr ng-repeat="(key, value) in kpi | preFilterKPI">
+          <td>{{value.title}}</td>
+          <td>{{value | formatKPI}}</td>
+        </tr>
+      </table>
    </div>
 
    <div crm-ui-accordion="{title: ts('Campaign Expenses (only this campaign)')}" >

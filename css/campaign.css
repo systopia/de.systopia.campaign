@@ -98,3 +98,26 @@
 	  stroke: #aaa;
 	  stroke-width: 2px;
 	}
+
+.CampaignExpenseAddDiv #addexpense_category {
+  width: 20em;
+  height: 1.8em;
+}
+
+#kpivis {
+  width: 100%;
+}
+
+.kpivisitem {
+  float: left;
+  padding: 20px 20px 20px 20px;
+}
+
+.kpivisitem h3 {
+  text-align: center;
+}
+
+piechart svg {
+  display: block;
+  margin: auto;
+}

@@ -1,38 +1,47 @@
 <div class="CampaignExpenseAddDiv" ng-controller="CampaignExpenseCtrl">
+  <form name="addExpense">
   <div class="crm-block" ng-form="addExpenseForm" crm-ui-id-scope>
-    <div class="crm-group">
-      <div crm-ui-field="{name: 'addExpenseForm.amount', title: ts('Amount')}">
-        <input
-         crm-ui-id="addExpenseForm.amount"
-         type="text"
-         class="crm-form-text"
-         ng-model="model.amount"
-         required
-         placeholder="Amount"
-         name="amount" required/>
-      </div>
-      <div crm-ui-field="{name: 'addExpenseForm.transactionDate', title: ts('Transaction Date')}">
-        <input crm-ui-datepicker ng-model="model.transaction_date"/>
-      </div>
-      <div crm-ui-field="{name: 'addExpenseForm.expenseTypeId', title: ts('Category')}">
-        <select crm-ui-select style="width: 10em;" ng-model="model.expense_type_id">
-          <option value=""></option>
-          <option ng-repeat="category in categories" value="{{category.value}}">{{category.label}}</option
-        </select>
-      </div>
-      <div crm-ui-field="{name: 'addExpenseForm.description', title: ts('Description')}">
-        <input
-         crm-ui-id="addExpenseForm.description"
-         type="text"
-         class="crm-form-text"
-         ng-model="model.description"
-         required
-         placeholder="Description"
-         name="description" />
-      </div>
-      <div crm-ui-field="{name: 'addExpenseForm.submit'}">
-        <a class="button" crm-ui-id="addExpenseForm.submit" name="submit" ng-click="submit()" ng-class="{disabled: addExpenseForm.$invalid}">Submit</a>
-      </div>
-    </div>
+    <table>
+      <tr>
+        <td>{{ts('Amount')}}</td>
+        <td>
+          <input
+           crm-ui-id="addExpenseForm.amount"
+           type="text"
+           class="crm-form-text"
+           ng-model="model.amount"
+           required
+           placeholder="Amount"
+           name="amount" required/>
+         </td>
+      </tr>
+      <tr>
+        <td>{{ts('Transaction Date')}}</td>
+        <td><input crm-ui-datepicker ng-model="model.transaction_date"/></td>
+      </tr>
+      <tr>
+        <td>{{ts('Category')}}</td>
+        <td>
+          <select id="addexpense_category" ng-model="model.expense_type_id" ng-options="cat.value as cat.label for (key, cat) in categories"></select>
+        </td>
+      </tr>
+      <tr>
+        <td>{{ts('Description')}}</td>
+        <td>
+          <input
+           crm-ui-id="addExpenseForm.description"
+           type="text"
+           class="crm-form-text"
+           ng-model="model.description"
+           required
+           placeholder="Description"
+           name="description" />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"><a class="button" crm-ui-id="addExpenseForm.submit" name="submit" ng-click="submit()" ng-class="{disabled: addExpenseForm.$invalid}">Submit</a></td>
+      </tr>
+    </table>
   </div>
+</form>
 </div>

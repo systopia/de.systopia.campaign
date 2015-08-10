@@ -213,7 +213,6 @@
     $scope.ts = CRM.ts('de.systopia.campaign');
     crmApi('OptionValue', 'get', {"option_group_id": "campaign_expense_types"}).then(function (apiResult) {
       $scope.categories = apiResult.values;
-      console.log($scope.categories);
     });
     $scope.submit = function() {
       if($scope.addExpenseForm.$invalid) {
@@ -229,7 +228,31 @@
    };
   }]);
 
-  campaign.filter("parseKPI", function(currencyFilter, numberFilter){
+  campaign.filter("preFilterKPI", function(){
+   return function(items){
+     var filtered = [];
+     for (var item in items) {
+       if (items.hasOwnProperty(item)) {
+         var current_item = items[item];
+         // skip array values (can't be displayed)
+         if(Array.isArray(current_item.value)) {
+           continue;
+         }
+         switch (current_item.kpi_type) {
+           case "money":
+           case "percentage":
+           case "number":
+            filtered.push(current_item);
+            break;
+           default:
+         }
+       }
+     }
+     return filtered;
+    }
+  });
+
+  campaign.filter("formatKPI", function(currencyFilter, numberFilter){
    return function(input){
       // skip array values (can't be displayed)
       if(Array.isArray(input.value)) {
@@ -258,12 +281,11 @@
           continue;
         }
         switch (current_item.vis_type) {
-          case "pie_chart":
-          case "line_graph":
-            filtered.push(current_item);
+          case "":
           case "none":
-          default:
             continue;
+          default:
+            filtered.push(current_item);
         }
       }
     }
@@ -279,16 +301,53 @@
       },
       restrict: 'E',
       controller: function($scope) {
-        console.log($scope);
+        $scope.chartdata = $scope.kpi;
         //function used on the ng-include to resolve the template
         $scope.getTemplateUrl = function() {
-          var resURL = resourceUrl + '/partials/';
-
-          if ($scope.kpi.vis_type == "pie_chart")
-            return resURL + 'kpi_piechart.html';
+          return resourceUrl + '/partials/kpi_' + $scope.kpi.vis_type + '.html';
         }
       }
     };
+  });
+
+  campaign.directive("piechart", function($window) {
+    return {
+      scope: {
+          chartdata: '=chartdata'
+      },
+      restrict: 'E',
+      link: function(scope, elem, attrs){
+        var chartdata=scope[attrs.chartdata];
+        var d3 = $window.d3;
+
+        var w = 300;
+        var h = 300;
+        var r = h/2;
+        var color = d3.scale.category20c();
+
+        var data = chartdata.value;
+        var vis = d3.select(elem[0]).append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
+        var pie = d3.layout.pie().value(function(d){return d.value;});
+        var arc = d3.svg.arc().outerRadius(r);
+
+        var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
+        arcs.append("svg:path")
+            .attr("fill", function(d, i){
+                return color(i);
+            })
+            .attr("d", function (d) {
+                return arc(d);
+            });
+
+        // add text
+        arcs.append("svg:text").attr("transform", function(d){
+        			d.innerRadius = 0;
+        			d.outerRadius = r;
+            return "translate(" + arc.centroid(d) + ")";}).attr("text-anchor", "middle").text( function(d, i) {
+              return data[i].label;}
+        		);
+      }
+    }
   });
 
   campaign.controller('CampaignCloneCtrl', ['$scope', '$routeParams', 'crmApi', 'currentCampaign',

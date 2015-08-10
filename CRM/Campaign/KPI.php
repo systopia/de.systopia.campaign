@@ -241,9 +241,20 @@ class CRM_Campaign_KPI {
          "id" => "total_revenue_goal_pc",
          "title" => "Total Revenue Reached",
          "kpi_type" => "percentage",
-         "vis_type" => "pie_chart",
+         "vis_type" => "none",
          "description" => "Total Revenue reached",
          "value" => $total_revenue_goal_pc,
+         "link" => ""
+      );
+
+      // get revenue breakdown (TODO: This is just a mockup!)
+      $kpi["revenue_breakdown"] = array(
+         "id" => "revenue_breakdown",
+         "title" => "Revenue Breakdown",
+         "kpi_type" => "hidden",
+         "vis_type" => "pie_chart",
+         "description" => "Revenue Breakdown",
+         "value" => array(array("label" => "Javascript", "value" => 60), array("label" => "HTML", "value" => 30), array("label" => "Other", "value" => 10)),
          "link" => ""
       );
 
