@@ -211,6 +211,7 @@ class CRM_Campaign_Tree {
      WHERE camp.id = %2;
      ";
 
+     //getCampaignIds($id, $depth)
      if($id == $parentid) {
         throw new CRM_Core_Exception("de.systopia.campaign: can't set self as parent! id: " . $id . " -> " . $parentid);
      }
