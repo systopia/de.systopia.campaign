@@ -350,6 +350,81 @@
     }
   });
 
+  campaign.directive("linegraph", function($window) {
+    return {
+      scope: {
+          chartdata: '=chartdata'
+      },
+      restrict: 'E',
+      link: function(scope, elem, attrs){
+        var chartdata=scope[attrs.chartdata];
+        var d3 = $window.d3;
+
+        var margin = {top: 30, right: 20, bottom: 30, left: 50},
+            width  = 600 - margin.left - margin.right,
+            height = 300 - margin.top  - margin.bottom;
+
+        var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
+
+        var x = d3.time.scale().range([0, width]);
+        var y = d3.scale.linear().range([height, 0]);
+
+        var xAxis = d3.svg.axis()
+                      .scale(x)
+                      .orient("bottom")
+                      .ticks(5);
+
+        var yAxis = d3.svg.axis().scale(y)
+            .orient("left").ticks(5);
+
+        var valueline = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y(d.value); })
+            .interpolate("basis");
+
+        var vis = d3.select(elem[0]).append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+                .attr("transform",
+                      "translate(" + margin.left + "," + margin.top + ")");
+        var data = chartdata.value;
+
+          data.forEach(function(d) {
+              d.date = parseDate(d.date);
+              d.value = +d.value;
+          });
+
+          x.domain(d3.extent(data, function(d) { return d.date; }))
+                  .ticks(d3.time.day);
+          y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
+          var newData = x.ticks(d3.time.day)
+               .map(function(day) {
+                 console.log(day);
+                   return _.find(data,
+                       { date: day }) ||
+                       { date: day, value: 0 };
+                });
+
+
+          vis.append("path")
+             .attr("class", "line")
+             .attr("d", valueline(newData));
+
+          vis.append("g")
+             .attr("class", "x axis")
+             .attr("transform", "translate(0," + height + ")")
+             .call(xAxis)
+
+          vis.append("g")
+             .attr("class", "y axis")
+             .call(yAxis);
+
+      }
+    }
+  });
+
   campaign.controller('CampaignCloneCtrl', ['$scope', '$routeParams', 'crmApi', 'currentCampaign',
   function($scope, $routeParams, crmApi, currentCampaign) {
     $scope.ts = CRM.ts('de.systopia.campaign');

@@ -51,10 +51,12 @@ class CRM_Campaign_KPI {
       $status['failed'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Failed', 'name');
 
       // get total revenue
+      $ids_list_tr = implode(',', array_merge(array($id), array_keys($campaigns)));
+
       $query = "
       SELECT    SUM(contrib.total_amount) as revenue
       FROM  civicrm_contribution contrib
-      WHERE contrib.campaign_id IN ( $ids_list )
+      WHERE contrib.campaign_id IN ( $ids_list_tr )
       AND   contrib.contribution_status_id NOT IN ({$status['cancelled']}, {$status['failed']})
       ";
 
@@ -247,14 +249,99 @@ class CRM_Campaign_KPI {
          "link" => ""
       );
 
-      // get revenue breakdown (TODO: This is just a mockup!)
+      // get revenue breakdown
+      $query = "
+      SELECT    SUM(contrib.total_amount) as revenue,
+                camp.title as label
+      FROM  civicrm_contribution contrib,
+            civicrm_campaign camp
+      WHERE contrib.campaign_id IN ( %s )
+      AND   contrib.campaign_id = camp.id
+      AND   contrib.contribution_status_id NOT IN ({$status['cancelled']}, {$status['failed']})
+      ";
+
+      $e_query = sprintf($query, $id);
+      $contribution = CRM_Core_DAO::executeQuery($e_query);
+      while ($contribution->fetch()) {
+         $revenue_current = array("label" => $contribution->label, "value" => (is_null($contribution->revenue) ? 0.00 : $contribution->revenue) / $total_revenue);
+      }
+
+      $revenue_subcampaigns = array();
+      $tmp_idslist = array();
+      $children = CRM_Campaign_Tree::getCampaignIds($id, 0);
+
+      if(count($children['children']) > 0) {
+         $children = $children['children'];
+
+         foreach ($children as $c_id => $label) {
+           $subcampaigns = CRM_Campaign_Tree::getCampaignIds($c_id, 99);
+
+           $tmp_idslist[] = $c_id;
+           if(count($subcampaigns['children']) > 0) {
+              $subcampaigns = $subcampaigns['children'];
+              foreach ($subcampaigns as $key => $value) {
+                $tmp_idslist[] = $key;
+              }
+
+           }
+           $id_string = implode(',', $tmp_idslist);
+           $e_query = sprintf($query, $id_string);
+
+           $curr_contrib = CRM_Core_DAO::executeQuery($e_query);
+           while ($curr_contrib->fetch()) {
+             if (is_null($curr_contrib->revenue)) {
+               continue;
+             }
+             $revenue_subcampaigns[] = array("label" => $label, "value" => $curr_contrib->revenue / $total_revenue);
+           }
+
+           $tmp_idslist = array();
+         }
+
+      }
+
+      $revenue_combined = array();
+      $revenue_combined[] = $revenue_current;
+      $revenue_combined = array_merge($revenue_combined, $revenue_subcampaigns);
+
       $kpi["revenue_breakdown"] = array(
          "id" => "revenue_breakdown",
          "title" => "Revenue Breakdown",
          "kpi_type" => "hidden",
          "vis_type" => "pie_chart",
          "description" => "Revenue Breakdown",
-         "value" => array(array("label" => "Javascript", "value" => 60), array("label" => "HTML", "value" => 30), array("label" => "Other", "value" => 10)),
+         "value" => $revenue_combined,
+         "link" => ""
+      );
+
+      // get donation heartbeat
+      $ids_list_hb = implode(',', array_merge(array($id), array_keys($campaigns)));
+
+      $query_contribs = "
+      SELECT `receive_date` as date,
+              COUNT(*) as value
+      FROM  civicrm_contribution contrib
+      WHERE contrib.campaign_id IN ( $ids_list_hb )
+      AND contrib.contribution_status_id NOT IN ({$status['cancelled']}, {$status['failed']})
+      GROUP BY DATE(`receive_date`)
+      ;";
+      $all_contribs = array();
+
+      $contribution = CRM_Core_DAO::executeQuery($query_contribs);
+      while ($contribution->fetch()) {
+        $date = new DateTime($contribution->date);
+        $date = $date->format('Y-m-d 00:00:00');
+        $all_contribs[] = array("date" => $date, "value" => $contribution->value);
+      }
+
+
+      $kpi["donation_heartbeat"] = array(
+         "id" => "donation_heartbeat",
+         "title" => "Donation Heartbeat",
+         "kpi_type" => "hidden",
+         "vis_type" => "line_graph",
+         "description" => "Donation Heartbeat",
+         "value" => $all_contribs,
          "link" => ""
       );
 

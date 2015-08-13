@@ -121,3 +121,22 @@ piechart svg {
   display: block;
   margin: auto;
 }
+
+linegraph svg {
+  display: block;
+  margin: auto;
+}
+
+linegraph path {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+linegraph .axis path,
+linegraph .axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
