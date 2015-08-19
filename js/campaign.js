@@ -319,6 +319,7 @@
       restrict: 'E',
       link: function(scope, elem, attrs){
         var chartdata=scope[attrs.chartdata];
+        console.log(chartdata);
         var d3 = $window.d3;
 
         var w = 300;
@@ -402,7 +403,6 @@
 
           var newData = x.ticks(d3.time.day)
                .map(function(day) {
-                 console.log(day);
                    return _.find(data,
                        { date: day }) ||
                        { date: day, value: 0 };
@@ -426,6 +426,18 @@
     }
   });
 
+  campaign.directive('titlechanger',function() {
+        return {
+            restrict : 'C',
+            link : function postLink(scope, elem, attr) {
+                elem.ready(function(){
+                   var new_title = scope.currentCampaign.is_active === "1" ? scope.currentCampaign.title  : scope.currentCampaign.title + " " + ts("(INACTIVE)");
+                   $('#page-title').text(new_title);
+                });
+            }
+        }
+    });
+
   campaign.controller('CampaignCloneCtrl', ['$scope', '$routeParams', 'crmApi', 'currentCampaign',
   function($scope, $routeParams, crmApi, currentCampaign) {
     $scope.ts = CRM.ts('de.systopia.campaign');
@@ -440,8 +452,6 @@
       startDateOffset: "+1 day",
       endDateOffset: "+1 day"
     };
-
-    console.log($scope.form_model);
 
     $scope.cloneCampaign = function() {
       crmApi('CampaignTree', 'clone', $scope.form_model).then(function (apiResult) {
@@ -543,10 +553,8 @@
                selectedNode.starty = selectedNode.y;
                selectedNode.y0 = selectedNode.y;
                hideSubtree(c, 99);
-               //console.log("selected node:", c);
                subNodes = tree.nodes(c);
                subNodes.splice(0,1);
-               //console.log("subnodes:", subNodes);
                parentLink = d3.select('#p_' + c.parentid + '_' + c.id);
                parentLink.style("visibility", "hidden");
                d3.event.sourceEvent.stopPropagation();
@@ -577,7 +585,6 @@
                      // check visibility
                      var dom_node = d3.select('#node_' + nd.id);
                      var isVisible = (dom_node.style("visibility") != "hidden");
-                     //console.log(nd, isVisible);
                      if(isVisible) {
                        //get distance
                        var xdist = Math.abs(selectedNode.x - nd.x);
@@ -687,7 +694,6 @@
         function init() {
           nodes = tree.nodes(root).reverse();
           nodes.forEach(function(d) { d.y = d.depth * 100; });
-          console.log("nodes", nodes);
         }
 
         function update(source) {

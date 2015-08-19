@@ -17,20 +17,20 @@
 
 <div id="campaign_container">
    <div id="campaign_summary">
-      <h1>{{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : ts("(INACTIVE)")}}</h1>
       <div id="breadcrumb">
          <div class="parents">
             Parent Campaign(s) [{{numberof.parents}}]:
            <!-- parents -->
            <a ng-repeat-start="(key, value) in parents | orderBy:'$index':true" href="#/campaign/{{value.id}}/view" ng-if="numberof.parents > 0">{{value.title}}</a> <span ng-repeat-end>&gt; </span>
-           <a ng-if="numberof.parents == 0">none</a>
+           <a ng-if="numberof.parents == 0">{{ts('This is a root campaign')}}</a>
            <!-- current -->
-           <a href="#/campaign/{{currentCampaign.id}}/view" class="current">{{currentCampaign.title}}</a>
+           <a href="#/campaign/{{currentCampaign.id}}/view" class="current" ng-if="numberof.parents > 0">{{currentCampaign.title}}</a>
          </div>
          <div class="children">
             Subcampaign(s) [{{numberof.children}}]:
            <!-- children -->
            <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">| </span>
+           <a ng-if="numberof.children == 0">{{ts('none')}}</a>
          </div>
       </div>
       <div id="actions">
@@ -144,4 +144,6 @@
          <tr ng-show="expenses.length < 1"><td colspan="5"><span class="centered">No expenses found</span></td></tr>
       </table>
    </div>
+
+   <div class="titlechanger"></div>
 </div>
