@@ -62,6 +62,7 @@ class CRM_Campaign_KPI {
 
       $contribution = CRM_Core_DAO::executeQuery($query);
       $kpi = array();
+      $total_revenue = 0.00;
       while ($contribution->fetch()) {
          $total_revenue = is_null($contribution->revenue) ? 0.00 : $contribution->revenue;
       }
