@@ -17,7 +17,7 @@
       </tr>
       <tr>
         <td>{{ts('Transaction Date')}}</td>
-        <td><input crm-ui-datepicker ng-model="model.transaction_date"/></td>
+        <td><input id="td_picker" crm-ui-datepicker="{time: false, setDate: +0}" ng-model="model.transaction_date"/></td>
       </tr>
       <tr>
         <td>{{ts('Category')}}</td>

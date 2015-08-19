@@ -12,7 +12,7 @@ CiviFundraiser adds an extended campaign dashboard to CiviCRM
 Here you can find all relevant information for a specific campaign:
 
 1. The campaign name
-2. Its parent- and child-campaings (if there are any, otherwise this area is hidden)
+2. Its parent- and sub-campaings (if there are any, otherwise this area is hidden)
 3. Buttons to
     1. View the *Campaign Tree*, a visualization of the campaign relationships
     2. Edit the current campaign
@@ -23,7 +23,7 @@ Here you can find all relevant information for a specific campaign:
    2. Wherether it is *active* or *disabled*
    3. The external identifier
    4. *Start-* and *end date* of the campaign
-   5. A "Apply to Children"-Button, that applies the respective campaign attribute to **all sub-campaigns**. Be careful when using this as there is currently no option to reverse this operation. In case of doubt use the *Clone Tool* to create a copy of a campaign first.
+   5. A "Apply to Subcampaigns"-Button, that applies the respective campaign attribute to **all sub-campaigns**. Be careful when using this as there is currently no option to reverse this operation. In case of doubt use the *Clone Tool* to create a copy of a campaign first.
 5. The *Campaign Information*-Section, that contains the
     1. Campaign Description
     2. Campaign Goals

@@ -19,7 +19,7 @@
  */
 
  /**
-* Get all child nodes of a campaign
+* Get all subnodes of a campaign
 *
 * @param integer $id campaign id
 * @param integer $depth maximum depth

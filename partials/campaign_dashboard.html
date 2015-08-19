@@ -17,17 +17,18 @@
 
 <div id="campaign_container">
    <div id="campaign_summary">
-      <h1>{{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : "(INACTIVE)"}}</h1>
+      <h1>{{currentCampaign.title}} {{currentCampaign.is_active === "1" ? "" : ts("(INACTIVE)")}}</h1>
       <div id="breadcrumb">
-         <div class="parents" ng-show="numberof.parents > 0">
-            Parent Campaign(s) [{{numberof.parents}}]
+         <div class="parents">
+            Parent Campaign(s) [{{numberof.parents}}]:
            <!-- parents -->
            <a ng-repeat-start="(key, value) in parents | orderBy:'$index':true" href="#/campaign/{{value.id}}/view" ng-if="numberof.parents > 0">{{value.title}}</a> <span ng-repeat-end>&gt; </span>
+           <a ng-if="numberof.parents == 0">none</a>
            <!-- current -->
            <a href="#/campaign/{{currentCampaign.id}}/view" class="current">{{currentCampaign.title}}</a>
          </div>
-         <div class="children" ng-if="numberof.children > 0">
-            Child Campaign(s) [{{numberof.children}}]
+         <div class="children">
+            Subcampaign(s) [{{numberof.children}}]:
            <!-- children -->
            <a ng-repeat-start="(key, value) in children" href="#/campaign/{{key}}/view">{{value}}</a> <span ng-repeat-end ng-if="!$last">| </span>
          </div>
@@ -37,33 +38,38 @@
         <a href="{{edit_link}}" class="button">Edit Campaign</a>
         <a href="{{subcampaign_link}}" class="button">Create Subcampaign</a>
         <a href="{{clone_link}}" class="button">Clone Campaign</a>
+        <a href="{{btd_link}}" class="button fr">Back to Dashboard</a>
       </div>
       <div id="info">
          <table class="cmpinfo">
 
             <tr>
               <td>Status</td>
-              <td>{{currentCampaign.status_id_text ? currentCampaign.status_id_text : '-' }}</td>
-              <td><a crm-confirm="{message: ts('Are you sure you want to apply this status id to all children?')}" on-yes="applyToChildren('status_id', currentCampaign.status_id)" class="button">Apply to Children</a></td>
+              <td>{{currentCampaign.status_id_text ? currentCampaign.status_id_text : 'not set' }}</td>
+              <td><a crm-confirm="{message: ts('Are you sure you want to apply this status id to all subcampaigns?')}" on-yes="applyToChildren('status_id', currentCampaign.status_id)" class="button">Apply to Subcampaigns</a></td>
             </tr>
            <tr>
              <td>Is Active</td>
-             <td>{{currentCampaign.is_active ? ts('True') : ts('False') }}</td>
-             <td><a crm-confirm="{message: ts('Are you sure you want to apply this status to all children?')}" on-yes="applyToChildren('is_active', currentCampaign.is_active)" class="button">Apply to Children</a></td>
+             <td>{{currentCampaign.is_active ? ts('Yes') : ts('No') }}</td>
+             <td><a crm-confirm="{message: ts('Are you sure you want to apply this status to all subcampaigns?')}" on-yes="applyToChildren('is_active', currentCampaign.is_active)" class="button">Apply to Subcampaigns</a></td>
            </tr>
            <tr>
              <td>External Identifier</td>
-             <td colspan="2">{{currentCampaign.external_identifier ? currentCampaign.external_identifier : "-"}}</td>
+             <td colspan="2">{{currentCampaign.external_identifier ? currentCampaign.external_identifier : "none"}}</td>
            </tr>
            <tr>
              <td>Start date</td>
-             <td>{{currentCampaign.start_date ? currentCampaign.start_date_date : "-"}}</td>
-             <td><a crm-confirm="{message: ts('Are you sure you want to apply this start date to all children?')}" on-yes="applyToChildren('start_date', currentCampaign.start_date)" class="button">Apply to Children</a></td>
+             <td>{{currentCampaign.start_date ? currentCampaign.start_date_date : "none"}}</td>
+             <td><a crm-confirm="{message: ts('Are you sure you want to apply this start date to all subcampaigns?')}" on-yes="applyToChildren('start_date', currentCampaign.start_date)" class="button">Apply to Subcampaigns</a></td>
            </tr>
            <tr>
              <td>End date</td>
-             <td>{{currentCampaign.end_date ? currentCampaign.end_date_date : "-"}}</td>
-             <td><a crm-confirm="{message: ts('Are you sure you want to apply this end date to all children?')}" on-yes="applyToChildren('end_date', currentCampaign.end_date)" class="button">Apply to Children</a></td>
+             <td>{{currentCampaign.end_date ? currentCampaign.end_date_date : "none"}}</td>
+             <td><a crm-confirm="{message: ts('Are you sure you want to apply this end date to all subcampaigns?')}" on-yes="applyToChildren('end_date', currentCampaign.end_date)" class="button">Apply to Subcampaigns</a></td>
+           </tr>
+           <tr>
+             <td>Revenue Goal</td>
+             <td colspan="2">{{currentCampaign.goal_revenue ? currentCampaign.goal_revenue : "none"}}</td>
            </tr>
          </table>
       </div>

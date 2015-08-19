@@ -44,6 +44,10 @@
    margin: 10px 0;
 }
 
+#campaign_container #actions .fr {
+  float: right;
+}
+
 #campaign_container #info {
    margin: 50px 0 10px 0;
 }
@@ -89,7 +93,7 @@
 
 #tree_container .node text {
    font-family: "Trebuchet MS", "Helvetica Neue", Arial, Helvetica, sans-serif;
-   font-size: 12px;
+   font-size: 16px;
    color: #494949;
    }
 

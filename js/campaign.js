@@ -102,8 +102,8 @@
      $scope.ts = CRM.ts('de.systopia.campaign');
      $scope.currentCampaign = currentCampaign;
      $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
-     $scope.currentCampaign.start_date_date = $.datepicker.formatDate(CRM.config.dateInputFormat, new Date($scope.currentCampaign.start_date));
-     $scope.currentCampaign.end_date_date = $.datepicker.formatDate(CRM.config.dateInputFormat, new Date($scope.currentCampaign.end_date));
+     $scope.currentCampaign.start_date_date = $scope.currentCampaign.start_date ? CRM.$.datepicker.formatDate(CRM.config.dateInputFormat, new Date($scope.currentCampaign.start_date.replace(/-/g, ' '))) : 'none';
+     $scope.currentCampaign.end_date_date = $scope.currentCampaign.end_date ? CRM.$.datepicker.formatDate(CRM.config.dateInputFormat, new Date($scope.currentCampaign.end_date.replace(/-/g, ' '))) : 'none';
      $scope.children = children.children;
      $scope.kpi = JSON.parse(kpi.result);
      $scope.parents = parents.parents.reverse();
@@ -133,6 +133,7 @@
      $scope.edit_link = CRM.url('civicrm/campaign/add', {reset: 1, id: $scope.currentCampaign.id, action: 'update'});
      $scope.add_link = CRM.url('civicrm/a/#/campaign/' + $scope.currentCampaign.id + '/expense/add', {});
      $scope.clone_link = CRM.url('civicrm/a/#/campaign/' + $scope.currentCampaign.id + '/clone', {});
+     $scope.btd_link = CRM.url('civicrm/campaign', {reset: 1});
 
      $scope.predicate = 'amount';
      $scope.reverse = true;
@@ -681,6 +682,7 @@
         }
 
         function createCampaignLink(d) { return CRM.url('civicrm/a/#/campaign/' + d.id + '/tree', {}); }
+        function createSubcampaignLink(d) { return CRM.url('civicrm/campaign/add', {pid: d.id}); }
 
         function init() {
           nodes = tree.nodes(root).reverse();
@@ -715,6 +717,12 @@
                        title: ts('Edit Campaign'),
                        action: function(elm, d, i) {
                           window.open(CRM.url('civicrm/campaign/add', {reset: 1, id: d.id, action: 'update'}), '_blank');
+                       }
+                   },
+                   {
+                       title: ts('Create Subcampaign'),
+                       action: function(elm, d, i) {
+                         window.open(createSubcampaignLink(d));
                        }
                    }
          ];
