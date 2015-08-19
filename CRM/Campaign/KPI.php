@@ -51,7 +51,11 @@ class CRM_Campaign_KPI {
       $status['failed'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Failed', 'name');
 
       // get total revenue
-      $ids_list_tr = implode(',', array_merge(array($id), array_keys($campaigns)));
+      if(count($campaigns['children']) > 0) {
+         $ids_list_tr = implode(',', array_merge(array($id), array_keys($campaigns)));
+      }else{
+        $ids_list_tr = $ids_list;
+      }
 
       $query = "
       SELECT    SUM(contrib.total_amount) as revenue
@@ -316,7 +320,11 @@ class CRM_Campaign_KPI {
       );
 
       // get donation heartbeat
-      $ids_list_hb = implode(',', array_merge(array($id), array_keys($campaigns)));
+      if(count($campaigns['children']) > 0) {
+        $ids_list_hb = implode(',', array_merge(array($id), array_keys($campaigns)));
+      }else{
+        $ids_list_hb = $ids_list;
+      }
 
       $query_contribs = "
       SELECT `receive_date` as date,
