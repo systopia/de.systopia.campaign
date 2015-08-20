@@ -146,21 +146,21 @@
        crmApi('CampaignExpense', 'get', {campaign_id: $scope.currentCampaign.id}).then(function (apiResult) {
          $scope.expenses = apiResult.values;
        }, function(apiResult) {
-         CRM.alert(apiResult.error_message, "Error while fetching expenses", "error");
+         CRM.alert(apiResult.error_message, ts('Error while fetching expenses'), "error");
        });
        crmApi('CampaignKpi', 'get', {id: $scope.currentCampaign.id}).then(function (apiResult) {
          $scope.kpi = JSON.parse(apiResult.result);
        }, function(apiResult) {
-         CRM.alert(apiResult.error_message, "Error while fetching expenses", "error");
+         CRM.alert(apiResult.error_message, ts('Error while fetching expenses'), "error");
        });
     };
 
      $scope.deleteExpense = function(expense) {
        crmApi('CampaignExpense', 'delete', {id: expense.id}).then(function (apiResult) {
          $scope.updateKpiAndExpenses();
-         CRM.alert("Successfully removed expense \"" + expense.description + "\"", "Expense deleted", "success");
+         CRM.alert(ts('Successfully removed expense %1',  {1: expense.description}), ts('Expense deleted'), "success");
        }, function(apiResult) {
-         CRM.alert(apiResult.error_message, "Could not delete expense", "error");
+         CRM.alert(apiResult.error_message, ts('Could not delete expense'), "error");
        });
     };
 
@@ -221,10 +221,10 @@
       }
       crmApi('CampaignExpense', 'create', $scope.model).then(function (apiResult) {
         var expense = apiResult.values[apiResult.id];
-        CRM.alert("Successfully added expense \"" + expense.description + "\"", "Expense added", "success");
+        CRM.alert(ts('Successfully added expense %1',  {1: expense.description}), ts('Expense added'), "success");
         dialogService.close('addExpenseDialog', expense);
       }, function(apiResult) {
-        CRM.alert(apiResult.error_message, "Could not add expense", "error");
+        CRM.alert(apiResult.error_message, ts('Could not add expense'), "error");
       });
    };
   }]);
@@ -319,7 +319,6 @@
       restrict: 'E',
       link: function(scope, elem, attrs){
         var chartdata=scope[attrs.chartdata];
-        console.log(chartdata);
         var d3 = $window.d3;
 
         var w = 300;
@@ -328,6 +327,18 @@
         var color = d3.scale.category20c();
 
         var data = chartdata.value;
+
+        angular.forEach(data, function(d, i) {
+          if(typeof(d.label) === 'undefined' || typeof(d.value) === 'undefined' || d.value === false) {
+            delete data[i];
+            data.length = data.length - 1;
+          }
+        });
+
+        if(CRM._.isEmpty(data)) {
+          data.push({label: ts('No Data'), value: 100});
+        }
+
         var vis = d3.select(elem[0]).append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
         var pie = d3.layout.pie().value(function(d){return d.value;});
         var arc = d3.svg.arc().outerRadius(r);
@@ -392,6 +403,14 @@
                       "translate(" + margin.left + "," + margin.top + ")");
         var data = chartdata.value;
 
+        angular.forEach(data, function(d, i) {
+          if(typeof(d.date) === 'undefined' || typeof(d.value) === 'undefined') {
+            delete data[i];
+            data.length = data.length - 1;
+          }
+        });
+
+
           data.forEach(function(d) {
               d.date = parseDate(d.date);
               d.value = +d.value;
@@ -421,6 +440,13 @@
           vis.append("g")
              .attr("class", "y axis")
              .call(yAxis);
+
+          if(CRM._.isEmpty(data)) {
+            vis.append("text")
+                  .attr("x", width/2-20)
+                  .attr("y", height/2)
+                  .text(ts('No Data'));
+          }
 
       }
     }
@@ -455,9 +481,9 @@
 
     $scope.cloneCampaign = function() {
       crmApi('CampaignTree', 'clone', $scope.form_model).then(function (apiResult) {
-        CRM.alert("Successfully cloned campaign", "Campaign cloned", "success");
+        CRM.alert(ts('Successfully cloned campaign'), ts('Campaign cloned'), "success");
       }, function(apiResult) {
-        CRM.alert(apiResult.error_message, "Could not clone campaign", "error");
+        CRM.alert(apiResult.error_message, ts('Could not clone campaign'), "error");
       });
     };
 
@@ -647,8 +673,6 @@
 
         var resetBtn = d3.select("#tree_container #resetBtn");
         resetBtn.on("click", reset);
-      //   var zoomInBtn = d3.select("#tree_container #zoomInBtn");
-      //   zoomInBtn.on("click", zoomIn);
 
         var i = 0;
 

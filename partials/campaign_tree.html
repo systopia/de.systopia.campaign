@@ -4,6 +4,8 @@
     <a ng-if="parents.root" href="{{root_link}}" class="button">View Root</a>
     <a ng-if="current_campaign.parent_id" href="{{parent_link}}" class="button">View Parent</a>
     <a id="resetBtn" class="button">Reset View</a>
+    <a id="helpBtn" class="button fr">Help</a>
   </div>
+  <div style="clear:both"></div>
   <div id="tree" campaign-tree tree-data="current_tree"></div>
 </div>
