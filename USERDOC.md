@@ -50,8 +50,8 @@ Here you can find all relevant information for a specific campaign:
      1. ![Apply to Subcampaign](https://github.com/systopia/de.systopia.campaign/blob/screenshots/dashboard/dashboard_apply_to_sub.png?raw=true "\"Apply to Subcampaign\" example") 
    - The "Return to Dashboard"-Button that lets you return to the standard campaign dashboard of CiviCRM
 5. The *Campaign Information*-Section (collapsed by default), that contains the
-    1. Campaign Description
-    2. Campaign Goals
+    - Campaign Description
+    - Campaign Goals
 6. The *Key Performance Indicator Charts*-Section, which shows visualizations for some KPIs
 7. The *Key Performance Indicator*-Section 
 8. The *Campaign Expense*-Section
