@@ -28,4 +28,4 @@ In case of an update follow these steps in order to safely upgrade your installa
 6. *Install* and then *enable* the extension
 
 ## Documentation
-Follow [this link](https://github.com/systopia/de.systopia.campaign/blob/master/USERDOC.md) to get to the full version of the documentation
+Follow [this link](https://github.com/systopia/de.systopia.campaign/blob/master/USERDOC.md) to get to the full version of the User Guide
