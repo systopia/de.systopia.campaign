@@ -467,7 +467,8 @@
             link : function postLink(scope, elem, attr) {
                 elem.ready(function(){
                    var new_title = scope.currentCampaign.is_active === "1" ? scope.currentCampaign.title  : scope.currentCampaign.title + " " + ts("(INACTIVE)");
-                   $('#page-title').text(new_title);
+                   	$('h1.with-tabs').text(new_title);
+			$('#page-title').text(new_title);
                 });
             }
         }
