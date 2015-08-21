@@ -26,3 +26,6 @@ In case of an update follow these steps in order to safely upgrade your installa
   * remove the current files, download and unzip the updated release into it
 5. In CiviCRM go to "Administer" > "System Settings" >"Manage Extensions"
 6. *Install* and then *enable* the extension
+
+## Documentation
+Follow [this link](https://github.com/systopia/de.systopia.campaign/blob/master/USERDOC.md) to get to the full version of the documentation
