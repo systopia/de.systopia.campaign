@@ -9,9 +9,9 @@ However, the possibilities for analyzing the outcome are very limited – e.g. t
 
 As a result, within CiviCRM there is no efficient way to plan complex campaigns (including subsequent campaign actions, costs, budgets, fundraising goals...), or to analyze the success and costs of campaigns and their subsequent actions. This is a big deficit as this data constitutes the basis for a goal-oriented development of the organization's fundraising and overall strategy.
 
-We do not know of any CiviCRM-Extensions or other projects with a similar scope. There is an extension called "Advanced Fundraising Reports" but it mainly aims at providing addition preconfigured reports. The project aims at enhancing CiviCRM capabilities for strategic fundraising, campaigning and reporting in the following ways:
+The project aims at enhancing CiviCRM capabilities for strategic fundraising, campaigning and reporting in the following ways:
 
-### Creating a campaign hierarchy
+### Providing a campaign hierarchy
 
 Creating the possibility for parent and child campaigns 
 adapting the user interface for creating and viewing existing campaigns (e.g. a hierarchical „tree view“ and possibilities for filtering 
@@ -19,11 +19,8 @@ creating functions that simplify campaign management (such as copying complete c
 
 ### Adding campaign fields and functions
 
-Fields/function for adding categorized costs (such as postal fees, printing costs...) associated with a single campaign or campaign's action (e.g. multiple value fields or financial items) 
-function to calculate the overall costs of of a single campaign and it's child campaigns/actions 
-creating a field or a function to (manually or automatically) add campaign codes that enable a (semi-) automatic matching of contributions and campaigns 
-create fields/functions for recording the number of contacts involved in the campaign, the costs per recipient involved (e.g. for determining the costs of acquiring a contribution or the response quote) 
-
+Fields/function for adding categorized costs (such as postal fees, printing costs...)
+function to calculate the overall costs of of a single campaign and it's child campaigns/actions
 
 ## Installation
 Please refer to the [Installation Guide](https://github.com/systopia/de.systopia.campaign/blob/master/README.md)
