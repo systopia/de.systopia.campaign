@@ -144,6 +144,9 @@ Click on the *Delete*-Button of an existing expense. A confirmation dialog will 
 
 Selecting *Continue* deletes the expense. This cannot be undone.
 
+#### Expense Categories
+By default only the *default* category exists. If you need more that that add more categories in CiviCRM via *Administer* > *System Settings* > *Option Groups* > ````campaign_expense_types````
+
 ### Development and support resources
 
 The issue tracker for this project can be found here: [https://github.com/systopia/de.systopia.campaign/issues]()
