@@ -215,6 +215,9 @@
     crmApi('OptionValue', 'get', {"option_group_id": "campaign_expense_types"}).then(function (apiResult) {
       $scope.categories = apiResult.values;
     });
+    crmApi('Setting', 'getsingle', {"return": "defaultCurrency"}).then(function (apiResult) {
+      $scope.defaultCurrency = apiResult["defaultCurrency"];
+    });
     $scope.submit = function() {
       if($scope.addExpenseForm.$invalid) {
         return;
@@ -261,7 +264,7 @@
       }
       switch (input.kpi_type) {
         case "money":
-          return currencyFilter(input.value, "USD $");
+          return CRM.formatMoney(input.value);
         case "percentage":
           return (input.value == -1 ? "-" : numberFilter(input.value * 100, 2) + "%");
         case "number":
@@ -270,6 +273,12 @@
           return "-";
       }
    }
+  });
+
+  campaign.filter('formatMoney', function() {
+    return function(input, onlyNumber, format) {
+      return CRM.formatMoney(input, onlyNumber, format);
+    };
   });
 
   campaign.filter("filterKPI", function(){

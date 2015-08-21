@@ -69,7 +69,7 @@
            </tr>
            <tr>
              <td>{{ts('Revenue Goal')}}</td>
-             <td colspan="2">{{currentCampaign.goal_revenue ? currentCampaign.goal_revenue : "none"}}</td>
+             <td colspan="2">{{currentCampaign.goal_revenue ? (currentCampaign.goal_revenue | formatMoney) : "none"}}</td>
            </tr>
          </table>
       </div>
@@ -111,7 +111,7 @@
       <table class="expsumtable">
         <tr>
            <td>{{ts('Costs (only this campaign)')}}</td>
-           <td>{{expense_sum | currency:"USD $"}}</td>
+           <td>{{expense_sum | formatMoney}}</td>
         </tr>
       </table>
       <table class="exptable">
@@ -135,7 +135,7 @@
             <th>Actions</th>
          </tr>
          <tr ng-repeat="expense in expenses | orderBy:predicate:reverse">
-            <td>{{expense.amount | currency:"USD $"}}</td>
+            <td>{{expense.amount | formatMoney}}</td>
             <td>{{expense.description ? (expense.description | limitTo : 50) : ('-')}}{{expense.description.length > 50 ? '...' : ''}}</td>
             <td>{{expense.expense_type}}</td>
             <td>{{expense.transaction_date}}</td>
