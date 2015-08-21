@@ -500,6 +500,10 @@
     $scope.current_tree = JSON.parse(tree.result)[0];
     $scope.parents = parents;
 
+    $scope.getTemplateUrl = function() {
+      return resourceUrl + '/partials/tree_help_text.html';
+    }
+
     $scope.campaign_link = CRM.url('civicrm/a/#/campaign/' + $scope.current_campaign.id + '/view', {});
     $scope.parent_link = CRM.url('civicrm/a/#/campaign/' + $scope.current_campaign.parent_id + '/tree', {});
     $scope.root_link = CRM.url('civicrm/a/#/campaign/' + $scope.parents.root + '/tree', {});

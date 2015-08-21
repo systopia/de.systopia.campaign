@@ -110,6 +110,11 @@
 	  stroke-width: 2px;
 	}
 
+#tree_container #helptext {
+  display: none;
+}
+
+
 .CampaignExpenseAddDiv #addexpense_category {
   width: 20em;
   height: 1.8em;
