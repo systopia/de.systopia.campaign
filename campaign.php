@@ -128,6 +128,7 @@ function campaign_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
  * Implementation of hook_civicrm_angularModules
  */
 function campaign_civicrm_angularModules(&$angularModules) {
+  $angularModules['crmD3'] = array('ext' => 'civicrm', 'js' => array('ang/crmD3.js', 'bower_components/d3/d3.min.js'));
   $angularModules['campaign'] = array('ext' => 'de.systopia.campaign', 'js' => array('js/lib/d3-context-menu.js', 'js/campaign.js'), 'partials' => array('partials'), 'css' => array('css/lib/d3-context-menu.css', 'css/campaign.css'));
 }
 
