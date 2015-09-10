@@ -32,7 +32,7 @@
             return crmApi('Campaign', 'getsingle', {id: $route.current.params.id});
           },
           children: function($route, crmApi) {
-             return crmApi('CampaignTree', 'getids', {id: $route.current.params.id, depth: 1});
+             return crmApi('CampaignTree', 'getids', {id: $route.current.params.id, depth: 0});
           },
           parents: function($route, crmApi) {
              return crmApi('CampaignTree', 'getparentids', {id: $route.current.params.id});
