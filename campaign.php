@@ -242,3 +242,26 @@ function campaign_civicrm_options() {
         ),
     );
 }
+
+/**
+ * alterAPIPermissions() hook allows you to change the permissions checked when doing API 3 calls.
+ */
+function campaign_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions)
+{
+  // CampaignExpense API
+  $permissions['campaign_expense']['get'] = array('manage campaign');
+  $permissions['campaign_expense']['getsum'] = array('manage campaign');
+  $permissions['campaign_expense']['create'] = array('manage campaign');
+  $permissions['campaign_expense']['delete'] = array('manage campaign');
+
+  // CampaignKPI API
+  $permissions['campaign_kpi']['get'] = array('manage campaign');
+
+  // CampaignTree API
+  $permissions['campaign_tree']['getids'] = array('manage campaign');
+  $permissions['campaign_tree']['getparentids'] = array('manage campaign');
+  $permissions['campaign_tree']['gettree'] = array('manage campaign');
+  $permissions['campaign_tree']['setnodeparent'] = array('manage campaign');
+  $permissions['campaign_tree']['clone'] = array('manage campaign');
+}
+
