@@ -251,6 +251,7 @@ function campaign_civicrm_alterAPIPermissions($entity, $action, &$params, &$perm
   // Mend Campaign API
   $permissions['campaign']['getsingle'] = array('manage campaign');
   $permissions['campaign']['create'] = array('manage campaign');
+  $permissions['campaign']['update'] = array('manage campaign');
   $permissions['campaign']['get'] = array('manage campaign');
   $permissions['campaign']['delete'] = array('manage campaign');
 
@@ -259,6 +260,7 @@ function campaign_civicrm_alterAPIPermissions($entity, $action, &$params, &$perm
   $permissions['campaign_expense']['getsingle'] = array('manage campaign');
   $permissions['campaign_expense']['getsum'] = array('manage campaign');
   $permissions['campaign_expense']['create'] = array('manage campaign');
+  $permissions['campaign_expense']['update'] = array('manage campaign');
   $permissions['campaign_expense']['delete'] = array('manage campaign');
 
   // CampaignKPI API
