@@ -1,7 +1,7 @@
 # User Guide
 ---
 
-## About CiviFundraiser
+## About Campaign-Manager
 
 The module CiviCampaign provides basic functions to link contributions with campaigns. Thus, it enables users to determine the success of a campaign e.g. in regard to „return on investment“. Such data is most important to fundraisers in order to evaluate and adapt their fundraising strategy.
 
@@ -26,7 +26,7 @@ function to calculate the overall costs of of a single campaign and it's child c
 Please refer to the [Installation Guide](https://github.com/systopia/de.systopia.campaign/blob/master/README.md)
 
 ## The Campaign Dashboard
-CiviFundraiser adds an extended campaign dashboard to CiviCRM
+Campaign-Manager adds an extended campaign dashboard to CiviCRM
 
 ![Campaign Dashboard](https://github.com/systopia/de.systopia.campaign/blob/screenshots/dashboard/dashboard_overview_bottom2.png?raw=true "The Campaign Dashboard")
 
@@ -91,7 +91,7 @@ Use this option to quickly create a new campaign that is a subcampaign of the se
 This tool enables you to quickly create copies of a single campaign or nested campaigns.
 
 - *Include subtree*: Enabling this checkbox will create a copy of the currently selected campaign including all subcampaigns of it. Disabling it will only clone the current campaign.
-- *Title Match Pattern*: When cloning a subset of campaigns CiviFundraiser will scan the titles of all affected campaigns for this pattern and change all occurrences with the *Title Replacement Pattern*. 
+- *Title Match Pattern*: When cloning a subset of campaigns Campaign-Manager will scan the titles of all affected campaigns for this pattern and change all occurrences with the *Title Replacement Pattern*. 
 	- For example: The campaign "Holiday Campaign 2015" with a *Title Match Pattern* "/2015/" and a *Title Replacement Pattern* "2016" will change the Title of the clone to "Holiday Campaign 2016".
 - *Start Date Offset*/*End Date Offset*: The start (or end-) date of all affected campaigns will be offset by this value.
 	- Other possible valid values are: "+5 weeks", "12 day", "-7 weekdays", but it is recommended to use days.
