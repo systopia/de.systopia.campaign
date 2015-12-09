@@ -39,6 +39,7 @@ class CRM_Campaign_KPI {
       $ids[] = $id;
 
       if(count($campaigns['children']) > 0) {
+         $campaigns_ids = $campaigns;
          $campaigns = $campaigns['children'];
       }
       $ids_list = implode(',', $ids);
@@ -51,7 +52,7 @@ class CRM_Campaign_KPI {
       $status['failed'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Failed', 'name');
 
       // get total revenue
-      if(count($campaigns['children']) > 0) {
+      if(count($campaigns_ids['children']) > 0) {
          $ids_list_tr = implode(',', array_merge(array($id), array_keys($campaigns)));
       }else{
         $ids_list_tr = $ids_list;
@@ -108,7 +109,7 @@ class CRM_Campaign_KPI {
       SELECT   COUNT(contrib.id) as amount_completed,
                AVG(contrib.total_amount) as amount_average
       FROM  civicrm_contribution contrib
-      WHERE contrib.campaign_id IN ($ids_list)
+      WHERE contrib.campaign_id IN ($ids_list_tr)
       AND   contrib.contribution_status_id = {$status['completed']};
       ";
 
@@ -142,7 +143,7 @@ class CRM_Campaign_KPI {
       $query = "
       SELECT   COUNT(contrib.id) as amount_all
       FROM  civicrm_contribution contrib
-      WHERE contrib.campaign_id IN ($ids_list)
+      WHERE contrib.campaign_id IN ($ids_list_tr)
       AND   contrib.contribution_status_id NOT IN ({$status['cancelled']}, {$status['failed']});
       ";
 
@@ -182,7 +183,7 @@ class CRM_Campaign_KPI {
       $query = "
       SELECT COUNT(id)
       FROM civicrm_contribution first_contribution
-      WHERE first_contribution.campaign_id IN ($ids_list)
+      WHERE first_contribution.campaign_id IN ($ids_list_tr)
         AND NOT EXISTS (SELECT id
                         FROM civicrm_contribution other_contribution
                         WHERE other_contribution.contact_id = first_contribution.contact_id
@@ -320,7 +321,7 @@ class CRM_Campaign_KPI {
       );
 
       // get donation heartbeat
-      if(count($campaigns['children']) > 0) {
+      if(count($campaigns_ids['children']) > 0) {
         $ids_list_hb = implode(',', array_merge(array($id), array_keys($campaigns)));
       }else{
         $ids_list_hb = $ids_list;
