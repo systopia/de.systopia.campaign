@@ -155,7 +155,7 @@ The issue tracker for this project can be found here: [https://github.com/systop
 
 As mentioned above you can add custom KPIs, edit or remove existing ones by implementing the following hook:
 
-```campaign_civicrm_campaignKpis ($campaign_id, &$kpi_array, $tree_level)```
+```hook_civicrm_campaignKpis ($campaign_id, &$kpi_array, $tree_level)```
 
 The ```$kpi_array``` consists of kpi-elements that follow this schema:
 
