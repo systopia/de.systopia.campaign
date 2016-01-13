@@ -155,16 +155,16 @@ The issue tracker for this project can be found here: [https://github.com/systop
 
 As mentioned above you can add custom KPIs, edit or remove existing ones by implementing the following hook:
 
-```civicrm_campaign_kpis ($campaign_id, $kpi_array, $tree_level)```
+```campaign_civicrm_campaignKpis ($campaign_id, &$kpi_array, $tree_level)```
 
 The ```$kpi_array``` consists of kpi-elements that follow this schema:
 
 ```
-$kpi["donation_heartbeat"] = array(
+$kpi_array["donation_heartbeat"] = array(
   "id" => "donation_heartbeat",
   "title" => "Donation Heartbeat",          // title shown in kpi list on the dashboard
   "kpi_type" => "hidden",                   // "hidden", "money", "number" or "percentage"
-  "vis_type" => "line_graph",				// "line_graph" or "pie_chart"
+  "vis_type" => "line_graph",               // "line_graph" or "pie_chart"
   "description" => "Donation Heartbeat",    // short description, not used yet    
   "value" => $all_contribs,                 // value(s) of this KPI
   "link" => ""                              // link to advanced description, not used yet
