@@ -45,7 +45,7 @@
 
             <tr>
               <td>{{ts('Status')}}</td>
-              <td>{{currentCampaign.status_id_text ? currentCampaign.status_id_text : 'not set' }}</td>
+              <td>{{currentCampaign.status_id_text ? currentCampaign.status_id_text : ts('not set') }}</td>
               <td><a crm-confirm="{message: ts('Are you sure you want to apply this status id to all subcampaigns?')}" on-yes="applyToChildren('status_id', currentCampaign.status_id)" class="button">{{ts('Apply to Subcampaigns')}}</a></td>
             </tr>
            <tr>
@@ -55,21 +55,21 @@
            </tr>
            <tr>
              <td>{{ts('External Identifier')}}</td>
-             <td colspan="2">{{currentCampaign.external_identifier ? currentCampaign.external_identifier : "none"}}</td>
+             <td colspan="2">{{currentCampaign.external_identifier ? currentCampaign.external_identifier : ts('none')}}</td>
            </tr>
            <tr>
              <td>{{ts('Start date')}}</td>
-             <td>{{currentCampaign.start_date ? currentCampaign.start_date_date : "none"}}</td>
+             <td>{{currentCampaign.start_date ? currentCampaign.start_date_date : ts('none')}}</td>
              <td><a crm-confirm="{message: ts('Are you sure you want to apply this start date to all subcampaigns?')}" on-yes="applyToChildren('start_date', currentCampaign.start_date)" class="button">{{ts('Apply to Subcampaigns')}}</a></td>
            </tr>
            <tr>
              <td>{{ts('End date')}}</td>
-             <td>{{currentCampaign.end_date ? currentCampaign.end_date_date : "none"}}</td>
+             <td>{{currentCampaign.end_date ? currentCampaign.end_date_date : ts('none')}}</td>
              <td><a crm-confirm="{message: ts('Are you sure you want to apply this end date to all subcampaigns?')}" on-yes="applyToChildren('end_date', currentCampaign.end_date)" class="button">{{ts('Apply to Subcampaigns')}}</a></td>
            </tr>
            <tr>
              <td>{{ts('Revenue Goal')}}</td>
-             <td colspan="2">{{currentCampaign.goal_revenue ? (currentCampaign.goal_revenue | formatMoney) : "none"}}</td>
+             <td colspan="2">{{currentCampaign.goal_revenue ? (currentCampaign.goal_revenue | formatMoney) : ts('none')}}</td>
            </tr>
          </table>
       </div>
@@ -82,7 +82,7 @@
       </div>
       <div class="clear"></div>
 
-      <div class="label" ng-if="currentCampaign.goal_general_htmlSafe">Goal</div>
+      <div class="label" ng-if="currentCampaign.goal_general_htmlSafe">{{ts('Goal')}}</div>
       <div class="goalContent" ng-bind-html="currentCampaign.goal_general_htmlSafe"></div>
       <div class="clear"></div>
    </div>

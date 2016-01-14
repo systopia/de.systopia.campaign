@@ -57,7 +57,7 @@ class CRM_Campaign_Tree {
 
          while ($campaign->fetch()) {
             if( (array_key_exists($children, $campaign->id) && $children[$campaign->id]['id'] == $campaign->id) || $campaign->id == $root) {
-               throw new CRM_Core_Exception("de.systopia.campaign: cycle detected! id: " . $campaign->id );
+               throw new CRM_Core_Exception(ts("de.systopia.campaign: cycle detected! id: %1", array(1 => $campaign->id)));
             }
             $new_nodes[] = $campaign->id;
             $children[$campaign->id] = $campaign->title;
@@ -160,7 +160,7 @@ class CRM_Campaign_Tree {
 
         while ($campaign->fetch()) {
            if( (array_key_exists($children, $campaign->id) && $children[$campaign->id]['id'] == $campaign->id) || $campaign->id == $root) {
-              throw new CRM_Core_Exception("de.systopia.campaign: cycle detected! id: " . $campaign->id );
+             throw new CRM_Core_Exception(ts("de.systopia.campaign: cycle detected! id: %1", array(1 => $campaign->id)));
            }
            $new_nodes[] = $campaign->id;
            $children[] = array('id' => $campaign->id, 'name' => $campaign->title, 'parentid' => $campaign->parent_id);
@@ -212,7 +212,7 @@ class CRM_Campaign_Tree {
      ";
 
      if($id == $parentid) {
-        throw new CRM_Core_Exception("de.systopia.campaign: can't set self as parent! id: " . $id . " -> " . $parentid);
+        throw new CRM_Core_Exception(ts("de.systopia.campaign: can't set self as parent! id: %1 -> %2", array(1 => $id, 2 => $parentid)));
      }
 
      CRM_Core_DAO::executeQuery($query, array(1 => array($parentid, 'Integer'), 2 => array($id, 'Integer')));

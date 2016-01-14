@@ -166,8 +166,8 @@ function campaign_civicrm_buildForm($formName, &$form) {
 function campaign_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &$values ) {
     if($objectName == 'Campaign' && $op == 'campaign.dashboard.row') {
       $viewLink = array(
-          'name' => 'View',
-          'title' => 'View Campaign',
+          'name' => ts('View'),
+          'title' => ts('View Campaign'),
           'class' => 'no-popup',
           'url' => 'a/#/campaign/'. $objectId .'/view',
       );
@@ -227,7 +227,7 @@ function campaign_civicrm_install_options($data) {
 function campaign_civicrm_options() {
   return array(
       'campaign_expense_types' => array(
-          'title' => 'Campaign Expense Types',
+          'title' => ts('Campaign Expense Types'),
           'description' => '',
           'is_reserved' => 1,
           'is_active' => 1,

@@ -115,30 +115,30 @@ function civicrm_api3_campaign_expense_create($params) {
 function _civicrm_api3_campaign_expense_create_spec(&$params) {
   $config = CRM_Core_Config::singleton();
   $params['contact_id'] = array(
-    'title'        => 'Contact associated with this expense',
+    'title'        => ts('Contact associated with this expense'),
     'api.required' => 0);
   $params['transaction_date'] = array(
-    'title'        => 'Date of the expense',
+    'title'        => ts('Date of the expense'),
     'api.default'  => date('YmdHis'));
   $params['description'] = array(
-    'title'        => 'Description of the expense',
+    'title'        => ts('Description of the expense'),
     'api.required' => 0);
   $params['amount'] = array(
-    'title'        => 'Total amount of the expense',
+    'title'        => ts('Total amount of the expense'),
     'api.required' => 1);
   $params['currency'] = array(
-    'title'        => 'Currency of the expense',
+    'title'        => ts('Currency of the expense'),
     'api.required' => 0,
     'api.default'  => $config->defaultCurrency);
   $params['financial_account_id'] = array(
-    'title'        => 'Financial account of the expense',
+    'title'        => ts('Financial account of the expense'),
     'api.required' => 0);
   $params['status_id'] = array(
-    'title'        => 'Status of the expense (see option group contribution_status)',
+    'title'        => ts('Status of the expense (see option group contribution_status)'),
     'api.required' => 0,
     'api.default'  => 1);
   $params['expense_type_id'] = array(
-    'title'        => 'Refers to option group civicrm_campaign_expense_types for categorisation',
+    'title'        => ts('Refers to option group civicrm_campaign_expense_types for categorisation'),
     'api.required' => 1,
     'api.default'  => 1);
 }
@@ -157,12 +157,12 @@ function civicrm_api3_campaign_expense_delete($params) {
   if ($expense['entity_table'] == 'civicrm_campaign') {
     return _civicrm_api3_basic_delete(CRM_Financial_BAO_FinancialItem, $params);
   } else {
-    return civicrm_api3_create_error("A CampaignExpense with ID '{$params['id']}' doesn't exist.");
+    return civicrm_api3_create_error(ts("A CampaignExpense with ID '%1' doesn't exist.", array(1 => $params['id'])));
   }
 }
 
 function _civicrm_api3_campaign_expense_delete_spec(&$params) {
   $params['id'] = array(
-    'title'        => 'CampaignExpense ID',
+    'title'        => ts('CampaignExpense ID'),
     'api.required' => 1);
 }
