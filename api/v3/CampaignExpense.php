@@ -115,30 +115,30 @@ function civicrm_api3_campaign_expense_create($params) {
 function _civicrm_api3_campaign_expense_create_spec(&$params) {
   $config = CRM_Core_Config::singleton();
   $params['contact_id'] = array(
-    'title'        => ts('Contact associated with this expense'),
+    'title'        => ts('Contact associated with this expense', array('domain' => 'de.systopia.campaign')),
     'api.required' => 0);
   $params['transaction_date'] = array(
-    'title'        => ts('Date of the expense'),
+    'title'        => ts('Date of the expense', array('domain' => 'de.systopia.campaign')),
     'api.default'  => date('YmdHis'));
   $params['description'] = array(
-    'title'        => ts('Description of the expense'),
+    'title'        => ts('Description of the expense', array('domain' => 'de.systopia.campaign')),
     'api.required' => 0);
   $params['amount'] = array(
-    'title'        => ts('Total amount of the expense'),
+    'title'        => ts('Total amount of the expense', array('domain' => 'de.systopia.campaign')),
     'api.required' => 1);
   $params['currency'] = array(
-    'title'        => ts('Currency of the expense'),
+    'title'        => ts('Currency of the expense', array('domain' => 'de.systopia.campaign')),
     'api.required' => 0,
     'api.default'  => $config->defaultCurrency);
   $params['financial_account_id'] = array(
-    'title'        => ts('Financial account of the expense'),
+    'title'        => ts('Financial account of the expense', array('domain' => 'de.systopia.campaign')),
     'api.required' => 0);
   $params['status_id'] = array(
-    'title'        => ts('Status of the expense (see option group contribution_status)'),
+    'title'        => ts('Status of the expense (see option group contribution_status)', array('domain' => 'de.systopia.campaign')),
     'api.required' => 0,
     'api.default'  => 1);
   $params['expense_type_id'] = array(
-    'title'        => ts('Refers to option group civicrm_campaign_expense_types for categorisation'),
+    'title'        => ts('Refers to option group civicrm_campaign_expense_types for categorisation', array('domain' => 'de.systopia.campaign')),
     'api.required' => 1,
     'api.default'  => 1);
 }
@@ -157,12 +157,12 @@ function civicrm_api3_campaign_expense_delete($params) {
   if ($expense['entity_table'] == 'civicrm_campaign') {
     return _civicrm_api3_basic_delete(CRM_Financial_BAO_FinancialItem, $params);
   } else {
-    return civicrm_api3_create_error(ts("A CampaignExpense with ID '%1' doesn't exist.", array(1 => $params['id'])));
+    return civicrm_api3_create_error(ts("A CampaignExpense with ID '%1' doesn't exist.", array(1 => $params['id'], 'domain' => 'de.systopia.campaign')));
   }
 }
 
 function _civicrm_api3_campaign_expense_delete_spec(&$params) {
   $params['id'] = array(
-    'title'        => ts('CampaignExpense ID'),
+    'title'        => ts('CampaignExpense ID', array('domain' => 'de.systopia.campaign')),
     'api.required' => 1);
 }

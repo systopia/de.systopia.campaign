@@ -151,8 +151,8 @@ function campaign_civicrm_buildForm($formName, &$form) {
       $cid = $form->get('id');
       $campaigns = CRM_Campaign_BAO_Campaign::getCampaigns(CRM_Utils_Array::value('parent_id', $form->get('values')), $cid);
       if (!empty($campaigns)) {
-        $form->addElement('select', 'parent_id', ts('Parent ID'),
-          array('' => ts('- select Parent -')) + $campaigns,
+        $form->addElement('select', 'parent_id', ts('Parent ID', array('domain' => 'de.systopia.campaign')),
+          array('' => ts('- select Parent -', array('domain' => 'de.systopia.campaign'))) + $campaigns,
           array('class' => 'crm-select2')
         );
       }
@@ -166,8 +166,8 @@ function campaign_civicrm_buildForm($formName, &$form) {
 function campaign_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &$values ) {
     if($objectName == 'Campaign' && $op == 'campaign.dashboard.row') {
       $viewLink = array(
-          'name' => ts('View'),
-          'title' => ts('View Campaign'),
+          'name' => ts('View', array('domain' => 'de.systopia.campaign')),
+          'title' => ts('View Campaign', array('domain' => 'de.systopia.campaign')),
           'class' => 'no-popup',
           'url' => 'a/#/campaign/'. $objectId .'/view',
       );
@@ -227,13 +227,13 @@ function campaign_civicrm_install_options($data) {
 function campaign_civicrm_options() {
   return array(
       'campaign_expense_types' => array(
-          'title' => ts('Campaign Expense Types'),
+          'title' => ts('Campaign Expense Types', array('domain' => 'de.systopia.campaign')),
           'description' => '',
           'is_reserved' => 1,
           'is_active' => 1,
           'values' => array(
             'Default' => array(
-              'label' => ts('Default'),
+              'label' => ts('Default', array('domain' => 'de.systopia.campaign')),
               'is_default' => 1,
               'is_reserved' => 1,
               'value' => 1,

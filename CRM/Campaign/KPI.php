@@ -74,10 +74,10 @@ class CRM_Campaign_KPI {
 
       $kpi["total_revenue"] = array(
          "id" => "total_revenue",
-         "title" => ts("Total Revenue"),
+         "title" => ts("Total Revenue", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "money",
          "vis_type" => "none",
-         "description" => ts("Total revenue"),
+         "description" => ts("Total revenue", array('domain' => 'de.systopia.campaign')),
          "value" => isset($total_revenue) ? $total_revenue : 0.00,
          "link" => ""
       );
@@ -96,10 +96,10 @@ class CRM_Campaign_KPI {
 
       $kpi["total_revenue_goal"] = array(
          "id" => "total_revenue_goal",
-         "title" => ts("Total Revenue Goal"),
+         "title" => ts("Total Revenue Goal", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "money",
          "vis_type" => "none",
-         "description" => ts("Total revenue goal"),
+         "description" => ts("Total revenue goal", array('domain' => 'de.systopia.campaign')),
          "value" => isset($total_revenue_goal) ? $total_revenue_goal : 0.00,
          "link" => ""
       );
@@ -121,20 +121,20 @@ class CRM_Campaign_KPI {
 
       $kpi["amount_completed"] = array(
          "id" => "amount_completed",
-         "title" => ts("Number of Contributions (completed)"),
+         "title" => ts("Number of Contributions (completed)", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "number",
          "vis_type" => "none",
-         "description" => ts("Number of completed contributions"),
+         "description" => ts("Number of completed contributions", array('domain' => 'de.systopia.campaign')),
          "value" => isset($amount_completed) ? $amount_completed : 0.00,
          "link" => ""
       );
 
       $kpi["amount_average"] = array(
          "id" => "amount_average",
-         "title" => ts("Average Amount of Contributions"),
+         "title" => ts("Average Amount of Contributions", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "money",
          "vis_type" => "none",
-         "description" => ts("Average amount of completed contributions"),
+         "description" => ts("Average amount of completed contributions", array('domain' => 'de.systopia.campaign')),
          "value" => isset($amount_average) ? $amount_average : 0.00,
          "link" => ""
       );
@@ -154,10 +154,10 @@ class CRM_Campaign_KPI {
 
       $kpi["amount_all"] = array(
          "id" => "amount_all",
-         "title" => ts("Number of Contributions (all but cancelled/failed)"),
+         "title" => ts("Number of Contributions (all but cancelled/failed)", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "number",
          "vis_type" => "none",
-         "description" => ts("Number of Contributions (all but cancelled/failed)"),
+         "description" => ts("Number of Contributions (all but cancelled/failed)", array('domain' => 'de.systopia.campaign')),
          "value" => isset($amount_all) ? $amount_all : 0.00,
          "link" => ""
       );
@@ -171,10 +171,10 @@ class CRM_Campaign_KPI {
       }
       $kpi["total_cost"] = array(
          "id" => "ttlcost",
-         "title" => ts("Total Costs"),
+         "title" => ts("Total Costs", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "money",
          "vis_type" => "none",
-         "description" => ts("Sum of (known) expenses to this campaign"),
+         "description" => ts("Sum of (known) expenses to this campaign", array('domain' => 'de.systopia.campaign')),
          "value" => isset($total_costs) ? $total_costs : 0.00,
          "link" => ""
       );
@@ -194,10 +194,10 @@ class CRM_Campaign_KPI {
       // get all first
       $kpi["amount_first"] = array(
          "id" => "amount_first",
-         "title" => ts("Number of First Contributions"),
+         "title" => ts("Number of First Contributions", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "number",
          "vis_type" => "none",
-         "description" => ts("Number of first contributions associated with this campaign"),
+         "description" => ts("Number of first contributions associated with this campaign", array('domain' => 'de.systopia.campaign')),
          "value" => $first_contributions,
          "link" => ""
       );
@@ -205,10 +205,10 @@ class CRM_Campaign_KPI {
       // get average cost per first contribution
       $kpi['amount_average_first'] = array(
          "id" => "amount_average_first",
-         "title" => ts("Average Cost per First Contribution"),
+         "title" => ts("Average Cost per First Contribution", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "money",
          "vis_type" => "none",
-         "description" => ts("Average Cost per first contribution associated with this campaign"),
+         "description" => ts("Average Cost per first contribution associated with this campaign", array('domain' => 'de.systopia.campaign')),
          "value" => $total_costs / $first_contributions,
          "link" => ""
       );
@@ -218,10 +218,10 @@ class CRM_Campaign_KPI {
       // get average cost per second or later contribution
       $kpi['amount_average_second_or_later'] = array(
          "id" => "amount_average_second",
-         "title" => ts("Average Cost per Second or Later Contribution"),
+         "title" => ts("Average Cost per Second or Later Contribution", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "money",
          "vis_type" => "none",
-         "description" => ts("Average Cost per second or later contribution associated with this campaign"),
+         "description" => ts("Average Cost per second or later contribution associated with this campaign", array('domain' => 'de.systopia.campaign')),
          "value" => $second_or_later,
          "link" => ""
       );
@@ -230,10 +230,10 @@ class CRM_Campaign_KPI {
       // get ROI
       $kpi["roi"] = array(
          "id" => "roi",
-         "title" => ts("ROI"),
+         "title" => ts("ROI", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "number",
          "vis_type" => "none",
-         "description" => ts("Return on investment"),
+         "description" => ts("Return on investment", array('domain' => 'de.systopia.campaign')),
          "value" => $total_revenue / (($total_costs == 0.00) ? 1.00 : $total_costs),
          "link" => "https://en.wikipedia.org/wiki/Return_on_investment"
       );
@@ -247,10 +247,10 @@ class CRM_Campaign_KPI {
 
       $kpi["total_revenue_goal_pc"] = array(
          "id" => "total_revenue_goal_pc",
-         "title" => ts("Total Revenue Reached"),
+         "title" => ts("Total Revenue Reached", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "percentage",
          "vis_type" => "none",
-         "description" => ts("Total Revenue reached"),
+         "description" => ts("Total Revenue reached", array('domain' => 'de.systopia.campaign')),
          "value" => $total_revenue_goal_pc,
          "link" => ""
       );
@@ -312,10 +312,10 @@ class CRM_Campaign_KPI {
 
       $kpi["revenue_breakdown"] = array(
          "id" => "revenue_breakdown",
-         "title" => ts("Revenue Breakdown"),
+         "title" => ts("Revenue Breakdown", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "hidden",
          "vis_type" => "pie_chart",
-         "description" => ts("Revenue Breakdown"),
+         "description" => ts("Revenue Breakdown", array('domain' => 'de.systopia.campaign')),
          "value" => $revenue_combined,
          "link" => ""
       );
@@ -347,10 +347,10 @@ class CRM_Campaign_KPI {
 
       $kpi["donation_heartbeat"] = array(
          "id" => "donation_heartbeat",
-         "title" => ts("Donation Heartbeat"),
+         "title" => ts("Donation Heartbeat", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "hidden",
          "vis_type" => "line_graph",
-         "description" => ts("Donation Heartbeat"),
+         "description" => ts("Donation Heartbeat", array('domain' => 'de.systopia.campaign')),
          "value" => $all_contribs,
          "link" => ""
       );

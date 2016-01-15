@@ -3,7 +3,7 @@
   <div class="crm-block" ng-form="addExpenseForm" crm-ui-id-scope>
     <table>
       <tr>
-        <td>{{ts('Amount')}}</td>
+        <td>{{ts('Amount', {domain: 'de.systopia.campaign'})}}</td>
         <td>
           <input
            crm-ui-id="addExpenseForm.amount"
@@ -16,17 +16,17 @@
          </td>
       </tr>
       <tr>
-        <td>{{ts('Transaction Date')}}</td>
+        <td>{{ts('Transaction Date', {domain: 'de.systopia.campaign'})}}</td>
         <td><input id="td_picker" crm-ui-datepicker="{time: false, setDate: +0}" ng-model="model.transaction_date"/></td>
       </tr>
       <tr>
-        <td>{{ts('Category')}}</td>
+        <td>{{ts('Category', {domain: 'de.systopia.campaign'})}}</td>
         <td>
           <select id="addexpense_category" ng-model="model.expense_type_id" ng-options="cat.value as cat.label for (key, cat) in categories"></select>
         </td>
       </tr>
       <tr>
-        <td>{{ts('Description')}}</td>
+        <td>{{ts('Description', {domain: 'de.systopia.campaign'})}}</td>
         <td>
           <input
            crm-ui-id="addExpenseForm.description"
@@ -39,7 +39,7 @@
         </td>
       </tr>
       <tr>
-        <td colspan="2"><a class="button" crm-ui-id="addExpenseForm.submit" name="submit" ng-click="submit()" ng-class="{disabled: addExpenseForm.$invalid}">{{ts('Submit')}}</a></td>
+        <td colspan="2"><a class="button" crm-ui-id="addExpenseForm.submit" name="submit" ng-click="submit()" ng-class="{disabled: addExpenseForm.$invalid}">{{ts('Submit', {domain: 'de.systopia.campaign'})}}</a></td>
       </tr>
     </table>
   </div>
