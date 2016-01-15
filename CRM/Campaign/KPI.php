@@ -231,7 +231,7 @@ class CRM_Campaign_KPI {
       $kpi["roi"] = array(
          "id" => "roi",
          "title" => "ROI",
-         "kpi_type" => "number",
+         "kpi_type" => "percentage",
          "vis_type" => "none",
          "description" => "Return on investment",
          "value" => $total_revenue / (($total_costs == 0.00) ? 1.00 : $total_costs),
