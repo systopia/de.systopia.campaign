@@ -45,37 +45,37 @@
 
             <tr>
               <td>{{ts('Status', {domain: 'de.systopia.campaign'})}}</td>
-              <td>{{currentCampaign.status_id_text ? currentCampaign.status_id_text : ts('not set') }}</td>
-              <td><a crm-confirm="{message: ts('Are you sure you want to apply this status id to all subcampaigns?')}" on-yes="applyToChildren('status_id', currentCampaign.status_id)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
+              <td>{{currentCampaign.status_id_text ? currentCampaign.status_id_text : ts('not set', {domain: 'de.systopia.campaign'}) }}</td>
+              <td><a crm-confirm="{message: ts('Are you sure you want to apply this status id to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('status_id', currentCampaign.status_id)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
             </tr>
            <tr>
              <td>{{ts('Is Active', {domain: 'de.systopia.campaign'})}}</td>
-             <td>{{currentCampaign.is_active ? ts('Yes') : ts('No') }}</td>
-             <td><a crm-confirm="{message: ts('Are you sure you want to apply this status to all subcampaigns?')}" on-yes="applyToChildren('is_active', currentCampaign.is_active)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
+             <td>{{currentCampaign.is_active ? ts('Yes', {domain: 'de.systopia.campaign'}) : ts('No', {domain: 'de.systopia.campaign'}) }}</td>
+             <td><a crm-confirm="{message: ts('Are you sure you want to apply this status to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('is_active', currentCampaign.is_active)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
            </tr>
            <tr>
              <td>{{ts('External Identifier', {domain: 'de.systopia.campaign'})}}</td>
-             <td colspan="2">{{currentCampaign.external_identifier ? currentCampaign.external_identifier : ts('none')}}</td>
+             <td colspan="2">{{currentCampaign.external_identifier ? currentCampaign.external_identifier : ts('none', {domain: 'de.systopia.campaign'})}}</td>
            </tr>
            <tr>
              <td>{{ts('Start date', {domain: 'de.systopia.campaign'})}}</td>
-             <td>{{currentCampaign.start_date ? currentCampaign.start_date_date : ts('none')}}</td>
-             <td><a crm-confirm="{message: ts('Are you sure you want to apply this start date to all subcampaigns?')}" on-yes="applyToChildren('start_date', currentCampaign.start_date)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
+             <td>{{currentCampaign.start_date ? currentCampaign.start_date_date : ts('none', {domain: 'de.systopia.campaign'})}}</td>
+             <td><a crm-confirm="{message: ts('Are you sure you want to apply this start date to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('start_date', currentCampaign.start_date)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
            </tr>
            <tr>
              <td>{{ts('End date', {domain: 'de.systopia.campaign'})}}</td>
-             <td>{{currentCampaign.end_date ? currentCampaign.end_date_date : ts('none')}}</td>
-             <td><a crm-confirm="{message: ts('Are you sure you want to apply this end date to all subcampaigns?')}" on-yes="applyToChildren('end_date', currentCampaign.end_date)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
+             <td>{{currentCampaign.end_date ? currentCampaign.end_date_date : ts('none', {domain: 'de.systopia.campaign'})}}</td>
+             <td><a crm-confirm="{message: ts('Are you sure you want to apply this end date to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('end_date', currentCampaign.end_date)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
            </tr>
            <tr>
              <td>{{ts('Revenue Goal', {domain: 'de.systopia.campaign'})}}</td>
-             <td colspan="2">{{currentCampaign.goal_revenue ? (currentCampaign.goal_revenue | formatMoney) : ts('none')}}</td>
+             <td colspan="2">{{currentCampaign.goal_revenue ? (currentCampaign.goal_revenue | formatMoney) : ts('none', {domain: 'de.systopia.campaign'})}}</td>
            </tr>
          </table>
       </div>
    </div>
 
-   <div crm-ui-accordion="{title: ts('Campaign Information'), collapsed: true}" >
+   <div crm-ui-accordion="{title: ts('Campaign Information', {domain: 'de.systopia.campaign'}), collapsed: true}" >
       <div class="label">{{ts('Description', {domain: 'de.systopia.campaign'})}}</div>
       <div class="content">
          <div id="campaign_description">{{currentCampaign.description ? currentCampaign.description : "-"}}</div>
@@ -87,7 +87,7 @@
       <div class="clear"></div>
    </div>
 
-   <div crm-ui-accordion="{title: ts('KPI Charts')}" >
+   <div crm-ui-accordion="{title: ts('KPI Charts', {domain: 'de.systopia.campaign'})}" >
      <div id="kpivis">
        <div class="kpivisitem" ng-repeat="(key, value) in kpi | filterKPI">
          <div class="title"><h3>{{value.title}}</h3></div>
@@ -97,7 +97,7 @@
      </div>
    </div>
 
-   <div crm-ui-accordion="{title: ts('Key Performance Indicators (includes subcampaigns)')}" >
+   <div crm-ui-accordion="{title: ts('Key Performance Indicators (includes subcampaigns)', {domain: 'de.systopia.campaign'})}" >
       <table class="kpitable">
         <tr ng-repeat="(key, value) in kpi | preFilterKPI">
           <td>{{value.title}}</td>
@@ -106,7 +106,7 @@
       </table>
    </div>
 
-   <div crm-ui-accordion="{title: ts('Campaign Expenses (only this campaign)')}" >
+   <div crm-ui-accordion="{title: ts('Campaign Expenses (only this campaign)', {domain: 'de.systopia.campaign'})}" >
       <a ng-click="addExpense()" class="button addExpense">{{ts('Add Expense', {domain: 'de.systopia.campaign'})}}</a>
       <table class="expsumtable">
         <tr>
@@ -139,7 +139,7 @@
             <td>{{expense.description ? (expense.description | limitTo : 50) : ('-')}}{{expense.description.length > 50 ? '...' : ''}}</td>
             <td>{{expense.expense_type}}</td>
             <td>{{expense.transaction_date}}</td>
-            <td><a class="button" ng-click="editExpense(expense)">{{ts('Edit', {domain: 'de.systopia.campaign'})}}</a> <a crm-confirm="{message: ts('Are you sure you want to delete this expense?')}" on-yes="deleteExpense(expense)" class="button">{{ts('Delete', {domain: 'de.systopia.campaign'})}}</a></td>
+            <td><a class="button" ng-click="editExpense(expense)">{{ts('Edit', {domain: 'de.systopia.campaign'})}}</a> <a crm-confirm="{message: ts('Are you sure you want to delete this expense?', {domain: 'de.systopia.campaign'})}" on-yes="deleteExpense(expense)" class="button">{{ts('Delete', {domain: 'de.systopia.campaign'})}}</a></td>
          </tr>
          <tr ng-show="expenses.length < 1"><td colspan="5"><span class="centered">{{ts('No expenses found', {domain: 'de.systopia.campaign'})}}</span></td></tr>
       </table>
