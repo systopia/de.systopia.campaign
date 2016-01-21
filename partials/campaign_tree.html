@@ -1,10 +1,10 @@
 <div id="tree_container">
   <div id="actions">
-    <a href="{{campaign_link}}" class="button">View Campaign</a>
-    <a ng-if="parents.root" href="{{root_link}}" class="button">View Root</a>
-    <a ng-if="current_campaign.parent_id" href="{{parent_link}}" class="button">View Parent</a>
-    <a id="resetBtn" class="button">Reset View</a>
-    <a id="helpBtn" class="button fr" onclick="toggleHelp()">Help</a>
+    <a href="{{campaign_link}}" class="button">{{ts('View Campaign', {domain: 'de.systopia.campaign'})}}</a>
+    <a ng-if="parents.root" href="{{root_link}}" class="button">{{ts('View Root', {domain: 'de.systopia.campaign'})}}</a>
+    <a ng-if="current_campaign.parent_id" href="{{parent_link}}" class="button">{{ts('View Parent', {domain: 'de.systopia.campaign'})}}</a>
+    <a id="resetBtn" class="button">{{ts('Reset View', {domain: 'de.systopia.campaign'})}}</a>
+    <a id="helpBtn" class="button fr" onclick="toggleHelp()">{{ts('Help', {domain: 'de.systopia.campaign'})}}</a>
   </div>
   <div style="clear:both"></div>
   <div id="helptext" crm-ui-accordion="{title: ts('Help'), collapsed: false}" >

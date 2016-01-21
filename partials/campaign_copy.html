@@ -1,31 +1,31 @@
 <div id="campaign_container">
    <div id="campaign_summary">
-      <h1>Clone "{{currentCampaign.title}}"</h1>
+      <h1>{{ts('Clone', {domain: 'de.systopia.campaign'})}} "{{currentCampaign.title}}"</h1>
       <table class="cmpinfo">
         <tr>
-          <td>Include subtree</td>
+          <td>{{ts('Include subtree', {domain: 'de.systopia.campaign'})}}</td>
           <td><input type="checkbox" ng-model="form_model.depth" ng-true-value="999" ng-false-value="0"></td>
         </tr>
         <tr>
-          <td>Title Match Pattern</td>
+          <td>{{ts('Title Match Pattern', {domain: 'de.systopia.campaign'})}}</td>
           <td><input type="text" ng-model="form_model.titleSearch"></td>
         </tr>
         <tr>
-          <td>Title Replacement Pattern</td>
+          <td>{{ts('Title Replacement Pattern', {domain: 'de.systopia.campaign'})}}</td>
           <td><input type="text" ng-model="form_model.titleReplace"></td>
         </tr>
         <tr>
-          <td>Start Date Offset</td>
+          <td>{{ts('Start Date Offset', {domain: 'de.systopia.campaign'})}}</td>
           <td><input type="text" ng-model="form_model.startDateOffset"></td>
         </tr>
         <tr>
-          <td>End Date Offset</td>
+          <td>{{ts('End Date Offset', {domain: 'de.systopia.campaign'})}}</td>
           <td><input type="text" ng-model="form_model.endDateOffset"></td>
         </tr>
       </table>
    </div>
    <div id="actions">
-     <a ng-click="cloneCampaign()" class="button">Save</a>
-     <a href="{{campaign_link}}" class="button">Cancel</a>
+     <a ng-click="cloneCampaign()" class="button">{{ts('Save', {domain: 'de.systopia.campaign'})}}</a>
+     <a href="{{campaign_link}}" class="button">{{ts('Cancel', {domain: 'de.systopia.campaign'})}}</a>
    </div>
 </div>
