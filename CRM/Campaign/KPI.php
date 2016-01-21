@@ -213,7 +213,11 @@ class CRM_Campaign_KPI {
          "link" => ""
       );
 
-      $second_or_later = $amount_all - $first_contributions;
+      if ($amount_all - $first_contributions > 0) {
+         $avg_cost_per_second_or_later = $total_costs / ($amount_all - $first_contributions);
+      } else {
+         $avg_cost_per_second_or_later = 0;
+      }
 
       // get average cost per second or later contribution
       $kpi['amount_average_second_or_later'] = array(
@@ -222,7 +226,7 @@ class CRM_Campaign_KPI {
          "kpi_type" => "money",
          "vis_type" => "none",
          "description" => ts("Average Cost per second or later contribution associated with this campaign", array('domain' => 'de.systopia.campaign')),
-         "value" => $second_or_later,
+         "value" => $avg_cost_per_second_or_later,
          "link" => ""
       );
 
