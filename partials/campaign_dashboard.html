@@ -132,7 +132,7 @@
               <a href="" ng-click="order('transaction_date')">{{ts('Date', {domain: 'de.systopia.campaign'})}}</a>
               <span class="sortorder" ng-show="predicate === 'transaction_date'" ng-class="{reverse:reverse}"></span
             </th>
-            <th>Actions</th>
+            <th>{{ts('Actions', {domain: 'de.systopia.campaign'})}}</th>
          </tr>
          <tr ng-repeat="expense in expenses | orderBy:predicate:reverse">
             <td>{{expense.amount | formatMoney}}</td>
