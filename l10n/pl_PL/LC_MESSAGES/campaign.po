@@ -12,20 +12,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: \n"
 "Last-Translator: scardinius <scardinius@chords.pl>\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.4\n"
 "Language: pl_PL\n"
 
 #: CRM/Campaign/KPI.php
 msgid "Total Revenue"
-msgstr "Dochód całkowity"
+msgstr "Całkowity przychód"
 
 #: CRM/Campaign/KPI.php
 msgid "Total Revenue Goal"
-msgstr "Docelowy dochód całkowity"
+msgstr "Docelowy całkowity przychód"
 
 #: CRM/Campaign/KPI.php
 msgid "Number of Contributions (completed)"
-msgstr "Łączna liczba wpłat o statusie Zakończony"
+msgstr "Łączna liczba wpłat (Zakończone)"
 
 #: CRM/Campaign/KPI.php
 msgid "Number of completed contributions"
@@ -33,7 +33,7 @@ msgstr "Łączna liczba wpłat o statusie Zakończony"
 
 #: CRM/Campaign/KPI.php
 msgid "Average Amount of Contributions"
-msgstr "Średnia wysokość wpłaty o statusie Zakończony"
+msgstr "Średnia wysokość wpłaty"
 
 #: CRM/Campaign/KPI.php
 msgid "Average amount of completed contributions"
@@ -41,15 +41,15 @@ msgstr "Średnia wysokość wpłaty o statusie Zakończony"
 
 #: CRM/Campaign/KPI.php
 msgid "Number of Contributions (all but cancelled/failed)"
-msgstr "Łączna liczba wpłat o statusach innych niż Anulowany i Failed"
+msgstr "Łączna liczba wpłat innych niż anulowane"
 
 #: CRM/Campaign/KPI.php
 msgid "Total Costs"
-msgstr "Koszty całkowite"
+msgstr "Całkowite koszty"
 
 #: CRM/Campaign/KPI.php
 msgid "Sum of (known) expenses to this campaign"
-msgstr "Suma znanych kosztów tej kampanii"
+msgstr "Suma (znanych) kosztów tej kampanii"
 
 #: CRM/Campaign/KPI.php
 msgid "Number of First Contributions"
@@ -57,26 +57,23 @@ msgstr "Łączna liczba pierwszych wpłat (bez względu na status!)"
 
 #: CRM/Campaign/KPI.php
 msgid "Number of first contributions associated with this campaign"
-msgstr ""
-"Łączna liczba pierwszych wpłat (bez względu na status!) powiązanych z tą "
-"kampanią"
+msgstr "Łączna liczba pierwszych wpłat (bez względu na status!) powiązanych z tą kampanią"
 
 #: CRM/Campaign/KPI.php
 msgid "Average Cost per First Contribution"
-msgstr "Średni koszt wg pierwszych wpłat"
+msgstr "Średni koszt dla pierwszych wpłat"
 
 #: CRM/Campaign/KPI.php
 msgid "Average Cost per first contribution associated with this campaign"
-msgstr "Średni koszt wg pierwszych wpłat powiązanych z tą kampanią"
+msgstr "Średni koszt dla pierwszych wpłat powiązanych z tą kampanią"
 
 #: CRM/Campaign/KPI.php
 msgid "Average Cost per Second or Later Contribution"
-msgstr "Średni koszt wg drugich i kolejnych wpłat"
+msgstr "Średni koszt dla drugich i kolejnych wpłat"
 
 #: CRM/Campaign/KPI.php
-msgid ""
-"Average Cost per second or later contribution associated with this campaign"
-msgstr "Średni koszt wg drugich i kolejnych wpłat powiązanych z tą kampanią"
+msgid "Average Cost per second or later contribution associated with this campaign"
+msgstr "Średni koszt dla drugich i kolejnych wpłat powiązanych z tą kampanią"
 
 #: CRM/Campaign/KPI.php
 msgid "ROI"
@@ -88,7 +85,7 @@ msgstr "Zwrot z inwestycji"
 
 #: CRM/Campaign/KPI.php
 msgid "Total Revenue Reached"
-msgstr "Poziom osiągniętego dochodu całkowitego"
+msgstr "Stan osiągnięcia docelowego przychodu"
 
 #: CRM/Campaign/KPI.php
 msgid "Revenue Breakdown"
@@ -105,49 +102,47 @@ msgstr "de.systopia.campaign: \"cycle\" skasowany! id: %1"
 #: CRM/Campaign/Tree.php
 msgid "de.systopia.campaign: can't set self as parent! id: %1 -> %2"
 msgstr ""
-"de.systopia.campaign: Nie można ustawić kampanii samej siebie jako rodzica! "
-"id: %1 -> %2"
+"de.systopia.campaign: Nie można ustawić kampanii jako rodzica samej siebie! id: %1 -> %2"
 
 #: api/v3/CampaignExpense.php
 msgid "Contact associated with this expense"
-msgstr "Kontakt powiązany z tym kosztem"
+msgstr "Kontakt powiązany z tym wydatkiem"
 
 #: api/v3/CampaignExpense.php
 msgid "Date of the expense"
-msgstr "Data kosztu"
+msgstr "Data wydatku"
 
 #: api/v3/CampaignExpense.php
 msgid "Description of the expense"
-msgstr "Opis kosztu"
+msgstr "Opis wydatku"
 
 #: api/v3/CampaignExpense.php
 msgid "Total amount of the expense"
-msgstr "Całkowita wysokość kosztów"
+msgstr "Całkowita kwota wydatków"
 
 #: api/v3/CampaignExpense.php
 msgid "Currency of the expense"
-msgstr "Waluta kosztu"
+msgstr "Waluta wydatku"
 
 #: api/v3/CampaignExpense.php
 msgid "Financial account of the expense"
-msgstr "Konto finansowe kosztu"
+msgstr "Konto finansowe wydatku"
 
 #: api/v3/CampaignExpense.php
 msgid "Status of the expense (see option group contribution_status)"
-msgstr "Status kosztu (wg statusu kontrybucji)"
+msgstr "Status wydatku (wg statusu kontrybucji)"
 
 #: api/v3/CampaignExpense.php
-msgid ""
-"Refers to option group civicrm_campaign_expense_types for categorisation"
-msgstr "Kategoria kosztu kampanii (wg pola dodatkowego Campaign Expense Types)"
+msgid "Refers to option group civicrm_campaign_expense_types for categorisation"
+msgstr "Kategoria kosztu kampanii (wg grupy opcji Rodzaje wydatków kampanijnych)"
 
 #: api/v3/CampaignExpense.php
 msgid "A CampaignExpense with ID '%1' doesn't exist."
-msgstr "Koszt kampanii z ID '%1' nie istnieje."
+msgstr "Wydatek kampanii z ID '%1' nie istnieje."
 
 #: api/v3/CampaignExpense.php
 msgid "CampaignExpense ID"
-msgstr "CampaignExpense ID"
+msgstr "ID wydatku kampanijnego"
 
 #: campaign.php
 msgid "Parent ID"
@@ -163,11 +158,11 @@ msgstr "Zobacz"
 
 #: campaign.php js/campaign.js partials/campaign_tree.html
 msgid "View Campaign"
-msgstr "Zobacz raport kampanii"
+msgstr "Zobacz kampanię"
 
 #: campaign.php
 msgid "Campaign Expense Types"
-msgstr "Typy kosztów kampanii"
+msgstr "Rodzaje wydatków kampanijnych"
 
 #: campaign.php
 msgid "Default"
@@ -179,35 +174,35 @@ msgstr "de.systopia.campaign"
 
 #: js/campaign.js
 msgid "Error while fetching expenses"
-msgstr "Błąd podczas przetwarzania kosztów"
+msgstr "Błąd podczas przetwarzania wydatków"
 
 #: js/campaign.js
 msgid "Successfully removed expense %1"
-msgstr "Pomyślnie usunięto koszt %1"
+msgstr "Pomyślnie usunięto wydatek %1"
 
 #: js/campaign.js
 msgid "Expense deleted"
-msgstr "Koszt został skasowany"
+msgstr "Wydatek został skasowany"
 
 #: js/campaign.js
 msgid "Could not delete expense"
-msgstr "Nie można skasować kosztu"
+msgstr "Nie można skasować wydatku"
 
 #: js/campaign.js partials/campaign_dashboard.html
 msgid "Add Expense"
-msgstr "Dodaj koszt"
+msgstr "Dodaj wydatek"
 
 #: js/campaign.js
 msgid "Successfully added expense %1"
-msgstr "Pomyślnie dodano koszt %1"
+msgstr "Pomyślnie dodano wydatek %1"
 
 #: js/campaign.js
 msgid "Expense added"
-msgstr "Koszt został dodany"
+msgstr "Wydatek został dodany"
 
 #: js/campaign.js
 msgid "Could not add expense"
-msgstr "Nie można dodać kosztu"
+msgstr "Nie można dodać wydatku"
 
 #: js/campaign.js
 msgid "No Data"
@@ -275,7 +270,7 @@ msgstr "Kampanie nadrzędne"
 
 #: partials/campaign_dashboard.html
 msgid "This is a root campaign"
-msgstr "To jest kampania źródłowa/początkowa"
+msgstr "To jest kampania początkowa"
 
 #: partials/campaign_dashboard.html
 msgid "Subcampaign(s)"
@@ -307,8 +302,7 @@ msgstr "nie ustawiony"
 
 #: partials/campaign_dashboard.html
 msgid "Are you sure you want to apply this status id to all subcampaigns?"
-msgstr ""
-"Czy jesteś pewiem, że chcesz ustawić ten status id do wszystkich podkampanii?"
+msgstr "Czy jesteś pewiem, że chcesz ustawić ten status id do wszystkich podkampanii?"
 
 #: partials/campaign_dashboard.html
 msgid "Apply to Subcampaigns"
@@ -316,7 +310,7 @@ msgstr "Zastosuj do podkampanii"
 
 #: partials/campaign_dashboard.html
 msgid "Is Active"
-msgstr "Jest aktywny"
+msgstr "Aktywny"
 
 #: partials/campaign_dashboard.html
 msgid "Yes"
@@ -328,8 +322,7 @@ msgstr "Nie"
 
 #: partials/campaign_dashboard.html
 msgid "Are you sure you want to apply this status to all subcampaigns?"
-msgstr ""
-"Czy jesteś pewiem, że chcesz ustawić ten status do wszystkich podkampanii?"
+msgstr "Czy jesteś pewiem, że chcesz ustawić ten status dla wszystkich podkampanii?"
 
 #: partials/campaign_dashboard.html
 msgid "External Identifier"
@@ -342,8 +335,7 @@ msgstr "Data początkowa"
 #: partials/campaign_dashboard.html
 msgid "Are you sure you want to apply this start date to all subcampaigns?"
 msgstr ""
-"Czy jesteś pewiem, że chcesz ustawić tę datę początkową do wszystkich "
-"podkampanii?"
+"Czy jesteś pewiem, że chcesz ustawić tę datę początkową dla wszystkich podkampanii?"
 
 #: partials/campaign_dashboard.html
 msgid "End date"
@@ -351,9 +343,7 @@ msgstr "Data końcowa"
 
 #: partials/campaign_dashboard.html
 msgid "Are you sure you want to apply this end date to all subcampaigns?"
-msgstr ""
-"Czy jesteś pewiem, że chcesz ustawić tę datę końcową do wszystkich "
-"podkampanii?"
+msgstr "Czy jesteś pewien, że chcesz ustawić tę datę końcową do wszystkich podkampanii?"
 
 #: partials/campaign_dashboard.html
 msgid "Revenue Goal"
@@ -377,19 +367,19 @@ msgstr "Wykresy wskaźników KPI"
 
 #: partials/campaign_dashboard.html
 msgid "Key Performance Indicators (includes subcampaigns)"
-msgstr "Wskaźniki wydajności KPI (z uwzględnieniem podkampanii)"
+msgstr "Wskaźniki KPI (z uwzględnieniem podkampanii)"
 
 #: partials/campaign_dashboard.html
 msgid "Campaign Expenses (only this campaign)"
-msgstr "Koszty kampanii (tyko dla tej kampanii)"
+msgstr "Wydatki kampanii (tyko dla tej kampanii)"
 
 #: partials/campaign_dashboard.html
 msgid "Costs (only this campaign)"
-msgstr "Koszty (tylko dla tej kampanii)"
+msgstr "Wydatki (tylko dla tej kampanii)"
 
 #: partials/campaign_dashboard.html partials/campaign_expense.html
 msgid "Amount"
-msgstr "Ilość"
+msgstr "Kwota"
 
 #: partials/campaign_dashboard.html partials/campaign_expense.html
 msgid "Category"
@@ -409,7 +399,7 @@ msgstr "Edytuj"
 
 #: partials/campaign_dashboard.html
 msgid "Are you sure you want to delete this expense?"
-msgstr "Czy jesteś pewien, że chcesz skasować ten koszt?"
+msgstr "Czy jesteś pewien, że chcesz skasować ten wydatek?"
 
 #: partials/campaign_dashboard.html
 msgid "Delete"
@@ -417,7 +407,7 @@ msgstr "Skasuj"
 
 #: partials/campaign_dashboard.html
 msgid "No expenses found"
-msgstr "Nie znaleziono żadnego kosztu"
+msgstr "Nie znaleziono wydatków"
 
 #: partials/campaign_expense.html
 msgid "Transaction Date"
