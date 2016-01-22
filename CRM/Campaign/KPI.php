@@ -77,7 +77,7 @@ class CRM_Campaign_KPI {
          "title" => ts("Total Revenue", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "money",
          "vis_type" => "none",
-         "description" => ts("Total revenue", array('domain' => 'de.systopia.campaign')),
+         "description" => ts("Total Revenue", array('domain' => 'de.systopia.campaign')),
          "value" => isset($total_revenue) ? $total_revenue : 0.00,
          "link" => ""
       );
@@ -99,7 +99,7 @@ class CRM_Campaign_KPI {
          "title" => ts("Total Revenue Goal", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "money",
          "vis_type" => "none",
-         "description" => ts("Total revenue goal", array('domain' => 'de.systopia.campaign')),
+         "description" => ts("Total Revenue Goal", array('domain' => 'de.systopia.campaign')),
          "value" => isset($total_revenue_goal) ? $total_revenue_goal : 0.00,
          "link" => ""
       );
@@ -254,7 +254,7 @@ class CRM_Campaign_KPI {
          "title" => ts("Total Revenue Reached", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "percentage",
          "vis_type" => "none",
-         "description" => ts("Total Revenue reached", array('domain' => 'de.systopia.campaign')),
+         "description" => ts("Total Revenue Reached", array('domain' => 'de.systopia.campaign')),
          "value" => $total_revenue_goal_pc,
          "link" => ""
       );
