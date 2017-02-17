@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/campaign/dashboard</path>
+    <page_callback>CRM_CampaignTree_Page_Dashboard</page_callback>
+    <title>Dashboard</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/campaign/search</path>
+    <page_callback>CRM_CampaignTree_Form_Search</page_callback>
+    <title>AdvancedSearch</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/ajax/campaign/list</path>
+    <page_callback>CRM_CampaignTree_Page_AJAX::getCampaignList</page_callback>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>
