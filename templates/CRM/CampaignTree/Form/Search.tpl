@@ -23,6 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{crmStyle ext=de.systopia.campaign file=campaigntree.css}
 <div class="crm-block crm-form-block crm-campaign-search-form-block">
 
   <h3>{ts}Find Campaigns{/ts}</h3>
@@ -306,23 +307,26 @@
                     "success": function(response){
                         var appendHTML = '';
                         $.each( response, function( i, val ) {
-                            appendHTML += '<tr id="row_'+ val.campaign_id +'_'+parent_id+'" data-entity="campaign" data-id="'+ val.campaign_id +'" class="parent_is_' + parent_id + ' crm-row-child ' + val.class.split(',')[1] + '">';
+                            appendHTML += '<tr id="row_'+ val.id +'_'+parent_id+'" data-entity="campaign" data-id="'+ val.id +'" class="parent_is_' + parent_id + ' crm-row-child ' + val.class.split(',')[1] + '">';
                             if ( val.is_parent ) {
-                                appendHTML += '<td class="crm-campaign-name ' + levelClass + '">' + '{/literal}<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}' + val.campaign_name + '</td>';
+                                appendHTML += '<td class="crm-campaign-name ' + levelClass + '">' + '{/literal}<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}' + val.name + '</td>';
                             }
                             else {
-                                appendHTML += '<td class="crm-campaign-name ' + levelClass + '"><span class="crm-no-children"></span>' + val.campaign_name + '</td>';
+                                appendHTML += '<td class="crm-campaign-name ' + levelClass + '"><span class="crm-no-children"></span>' + val.name + '</td>';
                             }
-                            appendHTML += '<td class="right">' + val.count + "</td>";
-                            appendHTML += "<td>" + val.created_by + "</td>";
                             appendHTML += '<td class="crm-editable crmf-description" data-type="textarea">' + (val.campaign_description || '') + "</td>";
-                            appendHTML += "<td>" + val.campaign_type + "</td>";
-                            appendHTML += '<td class="crm-editable crmf-visibility" data-type="select">' + val.visibility + "</td>";
+                            appendHTML += '<td class="crm-campaign-start_date">' + val.start_date + "</td>";
+                            appendHTML += '<td class="crm-campaign-start_date">' + val.end_date + "</td>";
+                            appendHTML += '<td class="crm-campaign-type">' + val.type + "</td>";
+                            appendHTML += '<td class="crm-campaign-status">' + val.status + "</td>";
+                            appendHTML += '<td class="crm-campaign-created_by">' + val.created_by + "</td>";
+                            appendHTML += '<td class="crm-campaign-is_active">' + val.is_active + "</td>";
                             appendHTML += "<td>" + val.links + "</td>";
                             appendHTML += "</tr>";
                         });
                         $( rowID ).after( appendHTML );
                         $( rowID ).next().trigger('crmLoad');
+
                     }
                 });
             }

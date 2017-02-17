@@ -36,13 +36,13 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 {
 
   /**
-   * wrapper for ajax group selector.
+   * wrapper for ajax campaign selector.
    *
    * @param array $params
    *   Associated array for params record id.
    *
    * @return array
-   *   associated array of group list
+   *   associated array of campaign list
    *   -rp = rowcount
    *   -page= offset
    * @todo there seems little reason for the small number of functions that call this to pass in
@@ -51,7 +51,6 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
   static public function getCampaignListSelector(&$params)
   {
     // format the params
-    CRM_Core_Error::debug_log_message('getCampaignListSelector params: ' . print_r($params, true));
     $params['offset'] = ($params['page'] - 1) * $params['rp'];
     $params['rowCount'] = $params['rp'];
     $params['sort'] = CRM_Utils_Array::value('sortBy', $params);
@@ -65,11 +64,6 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
     }
     unset($campaigns['isCampaignEnabled']);
     unset($campaigns['hasAccessCampaign']);
-    //skip total if we are making call to show only children
-    if (empty($params['parent_id'])) {
-      // add total
-      //$params['total'] = self::getCampaignCount();//CRM_Contact_BAO_Group::getGroupCount($params);
-    }
 
     $params['total'] = 0;
     // format params and add links
@@ -82,10 +76,10 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 
         // append parent names if in search mode
         if (empty($params['parent_id']) && !empty($value['parents'])) {
-          $groupIds = explode(',', $value['parents']);
+          $campaignIds = explode(',', $value['parents']);
           $title = array();
-          foreach ($groupIds as $gId) {
-            $title[] = 'fixme';//$allGroups[$gId];
+          foreach ($campaignIds as $cId) {
+            $title[] = self::getCampaign($cId)['title'];
           }
           $campaignList[$id]['name'] .= '<div class="crm-row-parent-name"><em>' . ts('Child of') . '</em>: ' . implode(', ', $title) . '</div>';
           $value['class'] = array_diff($value['class'], array('crm-row-parent'));
@@ -100,7 +94,15 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
           $campaignList[$id]['type'] = '';
         }
         $campaignList[$id]['start_date'] = $value['start_date'];
+        if ($campaignList[$id]['start_date'] == '') {
+          // Makes we don't display "null" on datatable
+          $campaignList[$id]['start_date'] = '';
+        }
         $campaignList[$id]['end_date'] = $value['end_date'];
+        if ($campaignList[$id]['end_date'] == '') {
+          // Makes we don't display "null" on datatable
+          $campaignList[$id]['end_date'] = '';
+        }
         $campaignList[$id]['status'] = $value['status'];
         $campaignList[$id]['links'] = $value['action'];
         $campaignList[$id]['created_by'] = CRM_Utils_Array::value('created_by', $value);
@@ -113,7 +115,6 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 
         $campaignList[$id]['is_parent'] = $value['is_parent'];
       }
-      //CRM_Core_Error::debug_log_message('getCampaignListSelector: '.print_r($campaignList,true));
       return $campaignList;
     }
   }
@@ -135,10 +136,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 
     $config = CRM_Core_Config::singleton(); // Need this for dateformat
 
-    CRM_Core_Error::debug_log_message('campaignTree BAO getCampaignList params: '.print_r($params,true));
     $whereClause = self::whereClause($params, FALSE);
-    CRM_Core_Error::debug_log_message('whereClause: '.print_r($whereClause, true));
-    //$this->pagerAToZ( $whereClause, $params );
 
     if (!empty($params['rowCount']) &&
       $params['rowCount'] > 0
@@ -167,7 +165,6 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 
     $object = CRM_Core_DAO::executeQuery($query, $params, TRUE, 'CRM_Campaign_DAO_Campaign');
     $params['total'] = self::getCampaignCount();
-    //CRM_Core_Error::debug_log_message(print_r($query, true));
 
     $campaignPermissions = array(CRM_Core_Permission::VIEW);
     if (CRM_Core_Permission::check(array('administer CiviCampaign', 'manage campaign'))) {
@@ -180,7 +177,6 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 
     $count = 0;
     while ($object->fetch()) {
-      // TODO Add permissions??
       $values[$object->id] = array(
         'class' => array(),
         'count' => '0',
@@ -241,7 +237,6 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 
       // If group has children, add class for link to view children
       $values[$object->id]['is_parent'] = FALSE;
-      //FIXME would be nice if civicrm_campaign had a "children" field
       if (self::isParentCampaign($object->id, self::getCampaignAllParentIds())) {
         $values[$object->id]['class'][] = "crm-campaign-parent";
         $values[$object->id]['is_parent'] = TRUE;
@@ -253,21 +248,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       }
 
     }
-    // TODO Add child counts?
-    //    $values[$dao->group_id]['count'] = $dao->count;
 
-    // CRM-16905 - Sort by count cannot be done with sql
-    /*if (!empty($params['sort']) && strpos($params['sort'], 'count') === 0) {
-      usort($values, function($a, $b) {
-        return $a['count'] - $b['count'];
-      });
-      if (strpos($params['sort'], 'desc')) {
-        $values = array_reverse($values, TRUE);
-      }
-      return array_slice($values, $params['offset'], $params['rowCount']);
-    }*/
-
-    CRM_Core_Error::debug_log_message('getCampaignList: ' . print_r($values, true)); //MJWDEBUG
     return $values;
   }
 
@@ -333,6 +314,28 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
     }
 
     return $parents;
+  }
+
+  /*
+   * Get a campaign
+   *
+   * @param int id of campaign
+   * @return array All values for campaign with id
+   */
+  public static function getCampaign($id) {
+    $query = "
+            SELECT  camp.*, createdBy.sort_name as created_by
+            FROM  civicrm_campaign camp
+            LEFT JOIN civicrm_contact createdBy
+            ON createdBy.id = camp.created_id
+            WHERE camp.id = %1";
+
+    $values = array();
+    $object = CRM_Core_DAO::executeQuery($query, array(1=> $id), TRUE, 'CRM_Campaign_DAO_Campaign');
+    // We only expect one result as id is unique
+    $object->fetch();
+    CRM_Core_DAO::storeValues($object, $values);
+    return $values;
   }
 
   public static function isParentCampaign($id, $parents)
@@ -454,7 +457,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 
     $parentsOnly = CRM_Utils_Array::value('parentsOnly', $params);
     if ($parentsOnly) {
-      $clauses[] = "(EXISTS (SELECT parent_id FROM `civicrm_campaign` camp2 WHERE camp2.parent_id = camp.id))";
+      $clauses[] = "(camp.parent_id IS NULL)";
     }
 
     // only show child groups of a specific parent group
@@ -477,7 +480,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
     if (empty($clauses)) {
       $clauses[] = '(camp.is_active = 0 OR camp.is_active = 1 )';
     }
-    //FIXME $clauses[] = self::getPermissionClause();
+    //FIXME Do we need a permission clause?
 
     return implode(' AND ', $clauses);
   }
