@@ -38,15 +38,15 @@ class CRM_CampaignTree_Form_Search extends CRM_Core_Form {
 
     $campaignShow = array(ts('Root') => 1, ts('Parent') => 2, ts('Child') => 3);
     $this->addCheckBox('show',
-      ts('Show'),
+      ts('Show Campaigns:'),
       $campaignShow,
       NULL, NULL, NULL, NULL, '&nbsp;&nbsp;&nbsp;'
     );
 
     //Active
-    $campaignActive = array(ts('Yes') => 1, ts('No') => 2);
+    $campaignActive = array(ts('Active') => 1, ts('Disabled') => 2);
     $this->addCheckBox('active',
-      ts('Active?'),
+      ts('Show Campaigns:'),
       $campaignActive,
       NULL, NULL, NULL, NULL, '&nbsp;&nbsp;&nbsp;'
     );

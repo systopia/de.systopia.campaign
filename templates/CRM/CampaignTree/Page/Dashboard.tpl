@@ -1,6 +1,40 @@
-<div class="action-link">
-    <a href="{crmURL p='civicrm/campaign/add' q='reset=1' h=0 }" class="button"><span><div
-                    class="icon ui-icon-circle-plus"></div>{ts}Add Campaign{/ts}</span></a>
-</div>
+{*
+ +--------------------------------------------------------------------+
+ | CiviCRM version 4.6                                                |
+ +--------------------------------------------------------------------+
+ | Copyright CiviCRM LLC (c) 2004-2017                                |
+ +--------------------------------------------------------------------+
+ | This file is a part of CiviCRM.                                    |
+ |                                                                    |
+ | CiviCRM is free software; you can copy, modify, and distribute it  |
+ | under the terms of the GNU Affero General Public License           |
+ | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
+ |                                                                    |
+ | CiviCRM is distributed in the hope that it will be useful, but     |
+ | WITHOUT ANY WARRANTY; without even the implied warranty of         |
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
+ | See the GNU Affero General Public License for more details.        |
+ |                                                                    |
+ | You should have received a copy of the GNU Affero General Public   |
+ | License and the CiviCRM Licensing Exception along                  |
+ | with this program; if not, contact CiviCRM LLC                     |
+ | at info[AT]civicrm[DOT]org. If you have questions about the        |
+ | GNU Affero General Public License or the licensing of CiviCRM,     |
+ | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
+ +--------------------------------------------------------------------+
+*}
 
-{include file="CRM/CampaignTree/Form/Search.tpl"}
+{* CiviCampaign DashBoard (launch page) *}
+
+{if !empty($subPageType)}
+    {* load campaign/survey/petition tab *}
+    {if ($subPageType == 'Campaign')}
+        {include file="CRM/CampaignTree/Form/Search.tpl"}
+    {else}
+        {include file="CRM/Campaign/Form/Search/$subPageType.tpl"}
+    {/if}
+{else}
+    {include file="CRM/common/TabHeader.tpl"}
+    <div class="clear"></div>
+{/if}
+

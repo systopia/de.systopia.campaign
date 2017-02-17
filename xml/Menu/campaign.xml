@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <menu>
   <item>
-    <path>civicrm/campaign/dashboard</path>
+    <path>civicrm/campaign</path>
     <page_callback>CRM_CampaignTree_Page_Dashboard</page_callback>
     <title>Dashboard</title>
     <access_arguments>access CiviCRM</access_arguments>

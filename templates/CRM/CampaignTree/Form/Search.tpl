@@ -24,9 +24,35 @@
  +--------------------------------------------------------------------+
 *}
 {crmStyle ext=de.systopia.campaign file=campaigntree.css}
-<div class="crm-block crm-form-block crm-campaign-search-form-block">
 
-  <h3>{ts}Find Campaigns{/ts}</h3>
+{if !$hasCampaigns}
+<div class="messages status no-popup">
+    <div class="icon inform-icon"></div>
+    &nbsp;
+    {ts}None found.{/ts}
+</div>
+<div class="action-link">
+    <a href="{crmURL p='civicrm/campaign/add' q='reset=1' h=0 }" class="button"><span><div
+                    class="icon ui-icon-circle-plus"></div>{ts}Add Campaign{/ts}</span></a>
+</div>
+{else}
+<div class="action-link">
+    <a href="{crmURL p='civicrm/campaign/add' q='reset=1' h=0 }" class="button"><span><div
+                    class="icon ui-icon-circle-plus"></div>{ts}Add Campaign{/ts}</span></a>
+</div>
+{* build search form here *}
+
+{* Search form and results for campaigns *}
+<div class="crm-block crm-form-block crm-campaign-search-form-block">
+    <div id="{$searchForm}"
+         class="crm-accordion-wrapper crm-campaign_search_form-accordion {if $force and !$buildSelector}collapsed{/if}">
+        <div class="crm-accordion-header">
+            {ts}Find Campaigns{/ts}
+        </div>
+        <!-- /.crm-accordion-header -->
+
+        <div class="crm-accordion-body">
+
   <table class="form-layout">
     <tr>
       <td>
@@ -52,6 +78,7 @@
           {$form.end_date.label}<br />
           {include file="CRM/common/jcalendar.tpl" elementName=end_date}
       </td>
+      </tr><tr>
         <td id="campaign-show-block">
           {$form.show.label}<br />
           {$form.show.html}<br />
@@ -95,6 +122,8 @@
     </tr>
   </table>
 </div>
+    </div>
+</div>
 <table class="crm-campaign-selector">
   <thead>
   <tr>
@@ -111,6 +140,7 @@
   </tr>
   </thead>
 </table>
+{/if} {* end of search form build *}
 
 {* handle enable/disable actions*}
 {include file="CRM/common/enableDisableApi.tpl"}
@@ -227,7 +257,6 @@
                         if ( $('.crm-campaign-search-form-block #active_1').prop('checked') ) {
                             showActive = '1';
                         }
-
                         if ( $('.crm-campaign-search-form-block #active_2').prop('checked') ) {
                             if ( showActive ) {
                                 showActive = '3';
@@ -236,14 +265,24 @@
                             }
                         }
 
+                        var show = 0;
+                        if ( $('.crm-campaign-search-form-block #show_1').prop('checked') ) {
+                            show += 1;
+                        }
+                        if ( $('.crm-campaign-search-form-block #show_2').prop('checked') ) {
+                            show += 2;
+                        }
+                        if ( $('.crm-campaign-search-form-block #show_3').prop('checked') ) {
+                            show += 4;
+                        }
                         aoData.push(
                             {name:'title', value: $('.crm-campaign-search-form-block #title').val()},
                             {name:'description', value: $('.crm-campaign-search-form-block #description').val()},
                             {name:'start_date', value: $('.crm-campaign-search-form-block #start_date').val()},
                             {name:'end_date', value: $('.crm-campaign-search-form-block #end_date').val()},
-                            {name:'show', value: $('.crm-campaign-search-form-block #show').val()},
-                            {name:'campaign_type', value: $('.crm-campaign-search-form-block #type').val()},
-                            {name:'campaign_status', value: $('.crm-campaign-search-form-block #status').val()},
+                            {name:'show', value: show},
+                            {name:'campaign_type', value: $('.crm-campaign-search-form-block #type_id').val()},
+                            {name:'campaign_status', value: $('.crm-campaign-search-form-block #status_id').val()},
                             {name:'created_by', value: $('.crm-campaign-search-form-block #created_by').val()},
                             {name:'external_id', value: $('.crm-campaign-search-form-block #external_id').val()},
                             {name:'showActive', value: showActive}

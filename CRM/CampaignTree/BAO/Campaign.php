@@ -396,7 +396,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       if (is_array($campaign_type)) {
         $campaign_type = implode(' , ', $campaign_type);
       }
-      $where[] = "( camp.campaign_type_id IN ( {$campaign_type} ) )";
+      $clauses[] = "( camp.campaign_type_id IN ( {$campaign_type} ) )";
     }
 
     $campaign_status = CRM_Utils_Array::value('campaign_status', $params);
@@ -404,12 +404,12 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       if (is_array($campaign_status)) {
         $campaign_status = implode(' , ', $campaign_status);
       }
-      $where[] = "( camp.status_id IN ( {$campaign_status} ) )";
+      $clauses[] = "( camp.status_id IN ( {$campaign_status} ) )";
     }
 
-    $external_id = CRM_Utils_Array::value('$external_id', $params);
+    $external_id = CRM_Utils_Array::value('external_id', $params);
     if ($external_id) {
-      $clauses[] = "camp.external_id LIKE %5";
+      $clauses[] = "camp.external_identifier LIKE %5";
       if (strpos($external_id, '%') !== FALSE) {
         $params[5] = array($external_id, 'String', FALSE);
       }
@@ -455,6 +455,25 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       }
     }
 
+    // this is a bitmask: 1=root; 2=parents; 4=children
+    $show = CRM_Utils_Array::value('show', $params);
+    if ($show & 1) {
+      // show root campaigns
+      $showClauses[] = "(camp.parent_id IS NULL)";
+    }
+    if ($show & 2) {
+      // show parent campaigns
+      $showClauses[] = "(EXISTS (SELECT parent_id FROM `civicrm_campaign` camp2 WHERE  (camp2.parent_id = camp.id) AND camp.parent_id IS NOT NULL))";
+
+    }
+    if ($show & 4) {
+      // show child campaigns
+      $showClauses[] = "(NOT EXISTS (SELECT parent_id FROM `civicrm_campaign` camp2 WHERE camp2.parent_id = camp.id))";
+    }
+    if (isset($showClauses)) {
+      $clauses[] = implode(' OR ', $showClauses);
+    }
+
     $parentsOnly = CRM_Utils_Array::value('parentsOnly', $params);
     if ($parentsOnly) {
       $clauses[] = "(camp.parent_id IS NULL)";
@@ -497,13 +516,14 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
     $links = array(
       CRM_Core_Action::VIEW => array(
         'name' => ts('View'),
-        'url' => 'a/#/campaign/'. $objectId .'/view',
+        'url' => CRM_Utils_System::url('civicrm/a/#/campaign/'. $objectId .'/view'),
         'qs' => '',
+        'class' => 'no-popup',
         'title' => ts('View Campaign'),
       ),
       CRM_Core_Action::UPDATE => array(
         'name' => ts('Edit'),
-        'url' => 'civicrm/campaign/add',
+        'url' => CRM_Utils_System::url('civicrm/campaign/add'),
         'qs' => 'reset=1&action=update&id=%%id%%',
         'title' => ts('Update Campaign'),
       ),
@@ -519,7 +539,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       ),
       CRM_Core_Action::DELETE => array(
         'name' => ts('Delete'),
-        'url' => 'civicrm/campaign/add',
+        'url' => CRM_Utils_System::url('civicrm/campaign/add'),
         'qs' => 'action=delete&reset=1&id=%%id%%',
         'title' => ts('Delete Campaign'),
       ),
