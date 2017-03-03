@@ -181,4 +181,5 @@ linegraph .axis line {
 
 .campaign-icon {
     max-width: 20px;
+    vertical-align: middle;
 }
