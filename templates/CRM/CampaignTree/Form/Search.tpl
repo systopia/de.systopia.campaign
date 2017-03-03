@@ -336,8 +336,8 @@
                 $('.parent_is_' + parent_id).hide();
                 $('.parent_is_' + parent_id).each(function(i, obj) {
                     // also hide children of children
-                    var gID = $(this).find('td:nth-child(2)').text();
-                    $('.parent_is_' + gID).hide();
+                    var level3ParentId = $(this).prop('id').split('_')[1]; // eg. row_2_1 we want the "2"
+                    $('.parent_is_' + level3ParentId).hide();
                 });
             }
         });
