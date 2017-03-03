@@ -274,3 +274,14 @@ function campaign_civicrm_alterAPIPermissions($entity, $action, &$params, &$perm
   $permissions['campaign_tree']['clone'] = array('manage campaign');
 }
 
+/**
+ * Implements hook_coreResourceList
+ *
+ * @param array $list
+ * @param string $region
+ */
+function campaign_civicrm_coreResourceList(&$list, $region) {
+  Civi::resources()
+    ->addStyleFile('de.systopia.campaign', 'css/campaign.css', 0, $region);
+}
+

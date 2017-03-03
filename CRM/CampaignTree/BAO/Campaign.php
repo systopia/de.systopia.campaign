@@ -114,6 +114,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
         }
 
         $campaignList[$id]['is_parent'] = $value['is_parent'];
+        $campaignList[$id]['external_id'] = CRM_Utils_Array::value('external_id', $value);
       }
       return $campaignList;
     }
@@ -237,16 +238,24 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 
       // If group has children, add class for link to view children
       $values[$object->id]['is_parent'] = FALSE;
-      if (self::isParentCampaign($object->id, self::getCampaignAllParentIds())) {
+      // A root campaign can be a parent but not a child
+      if (self::isRootCampaign($object->id)) {
+        $values[$object->id]['class'][] = "crm-campaign-root";
+        $values[$object->id]['is_parent'] = TRUE;
+      }
+      // A parent campaign can be a parent and a child
+      if (self::isParentCampaign($object->id)) {
         $values[$object->id]['class'][] = "crm-campaign-parent";
         $values[$object->id]['is_parent'] = TRUE;
       }
-
-      // If group is a child, add child class
+      // If group is a child, add child class (it can also be a parent)
       if (array_key_exists('parent_id', $values[$object->id])) {
         $values[$object->id]['class'][] = "crm-campaign-child";
       }
 
+      if ($object->external_identifier) {
+        $values[$object->id]['external_id'] = $object->external_identifier;
+      }
     }
 
     return $values;
@@ -338,12 +347,38 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
     return $values;
   }
 
-  public static function isParentCampaign($id, $parents)
+  /**
+   * @param $id
+   * @return bool True if campaign is a parent campaign
+   */
+  public static function isParentCampaign($id)
   {
+    $parents = self::getCampaignAllParentIds();
     foreach ($parents as $p) {
       if (isset($p['id']) && $p['id'] == $id) {
         return true;
       }
+    }
+    return false;
+  }
+
+  /**
+   * A campaign is a root campaign if it has children and parent_id is NOT set
+   * @param $id
+   * @param $parents
+   *
+   * @return boolean
+   */
+  public static function isRootCampaign($id)
+  {
+    $parents = self::getCampaignAllParentIds();
+    $parent_id = CRM_Core_DAO::singleValueQuery('SELECT parent_id FROM `civicrm_campaign` WHERE id='.$id);
+    if ($parent_id) {
+      CRM_Core_Error::debug_log_message('parent_id: '.$parent_id. ' id: '.$id. ' not a root campaign');
+      return false;
+    }
+    if (self::isParentCampaign($id)) {
+      return true;
     }
     return false;
   }

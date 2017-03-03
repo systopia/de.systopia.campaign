@@ -23,8 +23,6 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{crmStyle ext=de.systopia.campaign file=campaigntree.css}
-
 {if !$hasCampaigns}
 <div class="messages status no-popup">
     <div class="icon inform-icon"></div>
@@ -134,7 +132,7 @@
     <th class='crm-campaign-campaign_type'>{ts}Type{/ts}</th>
     <th class='crm-campaign-status'>{ts}Status{/ts}</th>
     <th class='crm-campaign-created_by'>{ts}Created By{/ts}</th>
-    <th class='crm-campaign-is_active'>{ts}Active?{/ts}</th>
+    <th class='crm-campaign-external_id'>{ts}External ID{/ts}</th>
     <th class='crm-campaign-campaign_links nosort'>&nbsp;</th>
     <th class='hiddenElement'>&nbsp;</th>
   </tr>
@@ -200,8 +198,9 @@
                     {sClass:'crm-campaign-type'},
                     {sClass:'crm-campaign-status'},
                     {sClass:'crm-campaign-created_by'},
-                    {sClass:'crm-campaign-is_active'},
+                    {sClass:'crm-campaign-external_id'},
                     {sClass:'crm-campaign-action', bSortable: false},
+                    {sClass:'hiddenElement', bSortable:false},
                     {sClass:'hiddenElement', bSortable:false}
                 ],
                 "bProcessing": true,
@@ -232,7 +231,7 @@
                     $(nRow).addClass(cl).attr({id: 'row_' + id, 'data-id': id, 'data-entity': 'campaign'});
 
                     //handled disabled rows.
-                    var isActive = Boolean(aData[7]);
+                    var isActive = Boolean(aData[9]);
                     if (!isActive) {
                         $(nRow).addClass('disabled');
                     }
@@ -241,6 +240,19 @@
                         if ($(nRow).hasClass('crm-campaign-parent')) {
                             $(nRow).find('td:first').prepend('{/literal}<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}');
                         }
+                    }
+
+                    if ($(nRow).hasClass('crm-campaign-root')) {
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-root" title="{ts}Root Campaign{/ts}"/><img class="campaign-icon" src="' +
+                            CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-root.png" /></span>{literal}');
+                    }
+                    else if ($(nRow).hasClass('crm-campaign-parent')) {
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-parent" title="{ts}Parent Campaign{/ts}"/><img class="campaign-icon" src="' +
+                            CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-parent.png" /></span>{literal}');
+                    }
+                    else if ($(nRow).hasClass('crm-campaign-child')) {
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}"/><img class="campaign-icon" src="' +
+                            CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-child.png" /></span>{literal}');
                     }
                     return nRow;
                 },
@@ -348,10 +360,16 @@
                         $.each( response, function( i, val ) {
                             appendHTML += '<tr id="row_'+ val.id +'_'+parent_id+'" data-entity="campaign" data-id="'+ val.id +'" class="parent_is_' + parent_id + ' crm-row-child ' + val.class.split(',')[1] + '">';
                             if ( val.is_parent ) {
-                                appendHTML += '<td class="crm-campaign-name ' + levelClass + '">' + '{/literal}<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}' + val.name + '</td>';
+                                appendHTML += '<td class="crm-campaign-name ' + levelClass + '">'{/literal} +
+                                               '<span class="campaign-icon-parent" title="{ts}Parent Campaign{/ts}"/><img class="campaign-icon" src="' +
+                                               CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-parent.png" /></span>' +
+                                               '<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}' + val.name + '</td>';
                             }
                             else {
-                                appendHTML += '<td class="crm-campaign-name ' + levelClass + '"><span class="crm-no-children"></span>' + val.name + '</td>';
+                                appendHTML += '<td class="crm-campaign-name ' + levelClass + '">'{/literal} +
+                                               '<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}"/><img class="campaign-icon" src="' +
+                                               CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-child.png" /></span>' +
+                                               '<span class="crm-no-children"></span>{literal}' + val.name + '</td>';
                             }
                             appendHTML += '<td class="crm-editable crmf-description" data-type="textarea">' + (val.campaign_description || '') + "</td>";
                             appendHTML += '<td class="crm-campaign-start_date">' + val.start_date + "</td>";
@@ -359,7 +377,7 @@
                             appendHTML += '<td class="crm-campaign-type">' + val.type + "</td>";
                             appendHTML += '<td class="crm-campaign-status">' + val.status + "</td>";
                             appendHTML += '<td class="crm-campaign-created_by">' + val.created_by + "</td>";
-                            appendHTML += '<td class="crm-campaign-is_active">' + val.is_active + "</td>";
+                            appendHTML += '<td class="crm-campaign-external_id">' + val.external_id + "</td>";
                             appendHTML += "<td>" + val.links + "</td>";
                             appendHTML += "</tr>";
                         });

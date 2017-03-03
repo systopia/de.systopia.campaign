@@ -85,9 +85,10 @@ class CRM_CampaignTree_Page_AJAX {
         'type',
         'status',
         'created_by',
-        'is_active',
+        'external_id',
         'links',
-        'class',
+        'is_active',
+        'class', // This one MUST always be at the end, as the js code in search.tpl looks for the class in the last element
       );
 
       header('Content-Type: application/json');

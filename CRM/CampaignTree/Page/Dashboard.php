@@ -57,13 +57,15 @@ class CRM_CampaignTree_Page_Dashboard extends CRM_Core_Page {
       //build the tabs.
       $this->buildTabs();
     }
-    CRM_Core_Resources::singleton()
-      ->addScriptFile('civicrm', 'templates/CRM/common/TabHeader.js', 1, 'html-header')
-      ->addSetting(array(
+    $res = CRM_Core_Resources::singleton();
+    $res->addScriptFile('civicrm', 'templates/CRM/common/TabHeader.js', 1, 'html-header');
+    $res->addSetting(array(
         'tabSettings' => array(
           'active' => strtolower(CRM_Utils_Array::value('subPage', $_GET, 'campaign')),
-        ),
-      ));
+        )));
+    $res->addVars('campaigntree', array(
+      'baseUrl' => $res->getUrl('de.systopia.campaign'),
+    ));
   }
 
   /**
