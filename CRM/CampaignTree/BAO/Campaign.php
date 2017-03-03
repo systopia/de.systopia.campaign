@@ -374,7 +374,6 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
     $parents = self::getCampaignAllParentIds();
     $parent_id = CRM_Core_DAO::singleValueQuery('SELECT parent_id FROM `civicrm_campaign` WHERE id='.$id);
     if ($parent_id) {
-      CRM_Core_Error::debug_log_message('parent_id: '.$parent_id. ' id: '.$id. ' not a root campaign');
       return false;
     }
     if (self::isParentCampaign($id)) {
