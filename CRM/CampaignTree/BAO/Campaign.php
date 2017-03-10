@@ -65,12 +65,10 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
     unset($campaigns['isCampaignEnabled']);
     unset($campaigns['hasAccessCampaign']);
 
-    $params['total'] = 0;
     // format params and add links
     $campaignList = array();
     if (!empty($campaigns)) {
       foreach ($campaigns as $id => $value) {
-        $params['total']++;
         $campaignList[$id]['id'] = $value['id'];
         $campaignList[$id]['name'] = $value['title'];
 
@@ -126,7 +124,6 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       'hasAccessCampaign' => FALSE,
       'isCampaignEnabled' => FALSE,
     );
-
     //do check for component.
     $values['isCampaignEnabled'] = $isValid = CRM_Campaign_BAO_Campaign::isCampaignEnable();
     //do check for permissions.
@@ -165,7 +162,11 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
             {$limit}";
 
     $object = CRM_Core_DAO::executeQuery($query, $params, TRUE, 'CRM_Campaign_DAO_Campaign');
-    $params['total'] = self::getCampaignCount();
+    //skip total if we are making call to show only children
+    if (empty($params['parent_id'])) {
+      // add total
+      $params['total'] = self::getCampaignCount($params);
+    }
 
     $campaignPermissions = array(CRM_Core_Permission::VIEW);
     if (CRM_Core_Permission::check(array('administer CiviCampaign', 'manage campaign'))) {
@@ -262,37 +263,6 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
   }
 
   /**
-   * Get the campaign count.
-   *
-   * @param bool $rootCount return root campaign count (default: false)
-   * @param bool $parentCount return parent campaign count (default: false)
-   * @param bool $childCount return parent campaign count (default: false)
-   *
-   * @return int count
-   */
-  public static function getCampaignCount($rootCount = false, $parentCount = false, $childCount = false)
-  {
-    $count = 0;
-    if (!$rootCount && !$parentCount && !$childCount) {
-      $count += (int)CRM_Core_DAO::singleValueQuery('SELECT COUNT(*) FROM civicrm_campaign camp');
-    } else {
-      if ($rootCount) {
-        // root has no parent ID
-        $count += (int)CRM_Core_DAO::singleValueQuery('SELECT COUNT(*) FROM civicrm_campaign camp WHERE camp.parent_id IS NULL');
-      }
-      if ($parentCount) {
-        // parent has 1 or more children which specify it as parent_id
-        $count += (int)CRM_Core_DAO::singleValueQuery('SELECT COUNT(distinct(parent_id)) FROM `civicrm_campaign` camp WHERE camp.parent_id IS NOT NULL');
-      }
-      if ($childCount) {
-        // child is not a parent
-        $count += (int)CRM_Core_DAO::singleValueQuery('SELECT COUNT(*) FROM `civicrm_campaign` camp1 WHERE NOT EXISTS ( SELECT * FROM `civicrm_campaign` camp2 WHERE camp2.parent_id = camp1.id )');
-      }
-    }
-    return $count;
-  }
-
-  /**
    * Get all parent campaign IDs
    *
    * @return array
@@ -380,6 +350,23 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       return true;
     }
     return false;
+  }
+
+  /**
+   * @param array $params
+   *
+   * @return NULL|string
+   */
+  public static function getCampaignCount(&$params) {
+    $whereClause = self::whereClause($params, FALSE);
+    $query = "SELECT COUNT(*) FROM civicrm_campaign camp";
+
+    if (!empty($params['created_by'])) {
+      $query .= " INNER JOIN civicrm_contact createdBy
+       ON createdBy.id = camp.created_id";
+    }
+    $query .= " WHERE {$whereClause}";
+    return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 
   /**
@@ -508,8 +495,8 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       $clauses[] = implode(' OR ', $showClauses);
     }
 
-    $parentsOnly = CRM_Utils_Array::value('parentsOnly', $params);
-    if ($parentsOnly) {
+    $rootOnly = CRM_Utils_Array::value('rootOnly', $params);
+    if ($rootOnly) {
       $clauses[] = "(camp.parent_id IS NULL)";
     }
 

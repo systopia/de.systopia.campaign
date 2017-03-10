@@ -78,6 +78,11 @@ class CRM_CampaignTree_Form_Search extends CRM_Core_Form {
         'name' => ts('Search'),
         'isDefault' => TRUE,
       ),
+      array(
+        'type' => 'cancel',
+        'name' => ts('Reset'),
+        'isDefault' => FALSE,
+      ),
     ));
 
     parent::buildQuickForm();

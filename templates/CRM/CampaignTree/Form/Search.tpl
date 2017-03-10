@@ -147,12 +147,21 @@
 <script type="text/javascript">
     CRM.$(function($) {
         // for CRM-11310 and CRM-10635 : processing just parent groups on initial display
-        // passing '1' for parentsOnlyArg to show parent child heirarchy structure display
+        // passing '1' for rootOnlyArg to show parent child heirarchy structure display
         // on initial load of manage group page and
         // also to handle search filtering for initial load of same page.
         buildCampaignSelector(true, 1);
         $('#_qf_Search_refresh').click( function() {
             buildCampaignSelector( true );
+        });
+        $('#_qf_Search_refresh-bottom').click( function() {
+            buildCampaignSelector( true );
+        });
+        $('#_qf_Search_cancel').click( function() {
+            location.reload();
+        });
+        $('#_qf_Search_cancel-bottom').click( function() {
+            location.reload();
         });
         // Add livePage functionality
         $('#crm-container')
@@ -163,21 +172,21 @@
                 $('table.crm-campaign-selector', $context).dataTable().fnDraw();
             });
 
-        function buildCampaignSelector( filterSearch, parentsOnlyArg ) {
+        function buildCampaignSelector( filterSearch, rootOnlyArg ) {
             if ( filterSearch ) {
                 if (typeof crmCampaignSelector !== 'undefined') {
                     crmCampaignSelector.fnDestroy();
                 }
-                var parentsOnly = 0;
+                var rootOnly = 0;
                 var ZeroRecordText = '<div class="status messages">{/literal}{ts escape="js"}No matching Campaigns found for your search criteria. Suggestions:{/ts}{literal}<div class="spacer"></div><ul><li>{/literal}{ts escape="js"}Check your spelling.{/ts}{literal}</li><li>{/literal}{ts escape="js"}Try a different spelling or use fewer letters.{/ts}{literal}</li><li>{/literal}{ts escape="js"}Make sure you have enough privileges in the access control system.{/ts}{literal}</li></ul></div>';
             } else {
-                var parentsOnly = 1;
+                var rootOnly = 1;
                 var ZeroRecordText = {/literal}'{ts escape="js"}<div class="status messages">No Campaigns have been created for this site.{/ts}</div>'{literal};
             }
 
             // this argument should only be used on initial display i.e onPageLoad
-            if (typeof parentsOnlyArg !== 'undefined') {
-                parentsOnly = parentsOnlyArg;
+            if (typeof rootOnlyArg !== 'undefined') {
+                rootOnly = rootOnlyArg;
             }
 
             var columns = '';
@@ -236,7 +245,7 @@
                         $(nRow).addClass('disabled');
                     }
 
-                    if (parentsOnly) {
+                    if (rootOnly) {
                         if ($(nRow).hasClass('crm-campaign-parent')) {
                             $(nRow).find('td:first').prepend('{/literal}<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}');
                         }
@@ -261,7 +270,7 @@
                     $('.crm-editable').crmEditable();
                 },
                 "fnServerData": function ( sSource, aoData, fnCallback ) {
-                    aoData.push( {name:'parentsOnly', value: parentsOnly }
+                    aoData.push( {name:'rootOnly', value: rootOnly }
                     );
                     if ( filterSearch ) {
 
