@@ -628,13 +628,18 @@
                      var dom_node = d3.select('#node_' + nd.id);
                      var isVisible = (dom_node.style("visibility") != "hidden");
                      if(isVisible) {
-                       //get distance
-                       var xdist = Math.abs(selectedNode.x - nd.x);
-                       var ydist = Math.abs(selectedNode.y - nd.y);
-                       var dist =  Math.sqrt((xdist*xdist)+(ydist*ydist));
+                       // Check we didn't just click the node, if vertically below root node this sets y=0
+                       //   for selectedNode which triggers a connection to root node. To actually connect root node
+                       //   you must be off by 1 pixel (in x or y) with this workaround.
+                       if(!((selectedNode.y == 0) && (selectedNode.x == nd.x))) {
+                         //get distance
+                         var xdist = Math.abs(selectedNode.x - nd.x);
+                         var ydist = Math.abs(selectedNode.y - nd.y);
+                         var dist = Math.sqrt((xdist * xdist) + (ydist * ydist));
 
-                       if(dist <= 30) {
-                          nodeTarget = nd;
+                         if (dist <= 30) {
+                           nodeTarget = nd;
+                         }
                        }
                      }
 
