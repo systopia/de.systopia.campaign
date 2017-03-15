@@ -32,9 +32,12 @@
  * $Id$
  *
  */
+
+// Cache of all campaign parent IDs
+$_cache_campaign_all_parent_ids = NULL;
+
 class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 {
-
   /**
    * wrapper for ajax campaign selector.
    *
@@ -48,7 +51,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
    * @todo there seems little reason for the small number of functions that call this to pass in
    * params that then need to be translated in this function since they are coding them when calling
    */
-  static public function getCampaignListSelector(&$params)
+  public static function getCampaignListSelector(&$params)
   {
     // format the params
     $params['offset'] = ($params['page'] - 1) * $params['rp'];
@@ -73,7 +76,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
         $campaignList[$id]['name'] = $value['title'];
 
         // append parent names if in search mode
-        if (empty($params['parent_id']) && !empty($value['parents'])) {
+        /*if (empty($params['parent_id']) && !empty($value['parents'])) {
           $campaignIds = explode(',', $value['parents']);
           $title = array();
           foreach ($campaignIds as $cId) {
@@ -81,7 +84,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
           }
           $campaignList[$id]['name'] .= '<div class="crm-row-parent-name"><em>' . ts('Child of') . '</em>: ' . implode(', ', $title) . '</div>';
           $value['class'] = array_diff($value['class'], array('crm-row-parent'));
-        }
+        }*/
         $value['class'][] = 'crm-entity';
         $campaignList[$id]['class'] = $value['id'] . ',' . implode(' ', $value['class']);
 
@@ -259,6 +262,9 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       }
     }
 
+    // Clear caches for next run
+    $_cache_campaign_all_parent_ids = NULL;
+
     return $values;
   }
 
@@ -270,17 +276,11 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
   public static function getCampaignAllParentIds()
   {
     // get all parent campaigns
-    $query = '
-      SELECT    camp.id,
-                camp.title,
-                camp.parent_id
-      FROM  civicrm_campaign camp
-      Order By  camp.id;';
+    $query = 'SELECT id FROM civicrm_campaign;';
 
-    $queryCount = '
-      SELECT count(camp.parent_id)
-      FROM   civicrm_campaign camp
-      WHERE  camp.parent_id = %1';
+    $queryCount = 'SELECT count(parent_id) 
+                   FROM civicrm_campaign 
+                   WHERE  parent_id = %1';
 
     $parents = array();
 
@@ -288,44 +288,23 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
     while ($campaign->fetch()) {
       $count = CRM_Core_DAO::singleValueQuery($queryCount, array(1 => array($campaign->id, 'String')));
       if ($count > 0) {
-        $parents[] = array('id' => $campaign->id, 'title' => $campaign->title, 'parent_id' => $campaign->title);
+        $parents[] = $campaign->id;
       }
     }
 
     return $parents;
   }
 
-  /*
-   * Get a campaign
-   *
-   * @param int id of campaign
-   * @return array All values for campaign with id
-   */
-  public static function getCampaign($id) {
-    $query = "
-            SELECT  camp.*, createdBy.sort_name as created_by
-            FROM  civicrm_campaign camp
-            LEFT JOIN civicrm_contact createdBy
-            ON createdBy.id = camp.created_id
-            WHERE camp.id = %1";
-
-    $values = array();
-    $object = CRM_Core_DAO::executeQuery($query, array(1=> $id), TRUE, 'CRM_Campaign_DAO_Campaign');
-    // We only expect one result as id is unique
-    $object->fetch();
-    CRM_Core_DAO::storeValues($object, $values);
-    return $values;
-  }
-
-  /**
-   * @param $id
-   * @return bool True if campaign is a parent campaign
-   */
   public static function isParentCampaign($id)
   {
-    $parents = self::getCampaignAllParentIds();
-    foreach ($parents as $p) {
-      if (isset($p['id']) && $p['id'] == $id) {
+    global $_cache_campaign_all_parent_ids;
+    // Get list of parent IDs if not already cached
+    if ($_cache_campaign_all_parent_ids === NULL) {
+      $_cache_campaign_all_parent_ids = self::getCampaignAllParentIds();
+    }
+
+    foreach ($_cache_campaign_all_parent_ids as $p) {
+      if ($p == $id) {
         return true;
       }
     }
@@ -341,7 +320,6 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
    */
   public static function isRootCampaign($id)
   {
-    $parents = self::getCampaignAllParentIds();
     $parent_id = CRM_Core_DAO::singleValueQuery('SELECT parent_id FROM `civicrm_campaign` WHERE id='.$id);
     if ($parent_id) {
       return false;
