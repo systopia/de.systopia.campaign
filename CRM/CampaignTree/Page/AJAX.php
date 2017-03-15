@@ -88,7 +88,6 @@ class CRM_CampaignTree_Page_AJAX {
       );
       foreach ($flatSearch as $p) {
         if (!empty($params[$p])) {
-          CRM_Core_Error::debug_log_message($p.':'. $params[$p].':');
           $params['rootOnly'] = 0;
         }
       }

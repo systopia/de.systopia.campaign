@@ -275,7 +275,7 @@
                             }
                         }
 
-                        var show = '';
+                        var show = 0;
                         if ( $('.crm-campaign-search-form-block #show_1').prop('checked') ) {
                             show += 1;
                         }
