@@ -263,6 +263,10 @@
                         $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}"/><img class="campaign-icon" src="' +
                             CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-child.png" /></span>{literal}');
                     }
+                    else {
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-other" title="{ts}Campaign{/ts}"/><img class="campaign-icon" src="' +
+                            CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-other.png" /></span>{literal}');
+                    }
                     return nRow;
                 },
                 "fnDrawCallback": function() {
