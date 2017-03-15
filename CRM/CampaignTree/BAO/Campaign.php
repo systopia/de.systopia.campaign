@@ -391,7 +391,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       $params[4] = array($end_date, 'String');
     }
 
-    $campaign_type = CRM_Utils_Array::value('campaign_type', $params);
+    $campaign_type = CRM_Utils_Array::value('type', $params);
     if ($campaign_type) {
       if (is_array($campaign_type)) {
         $campaign_type = implode(' , ', $campaign_type);
@@ -399,7 +399,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       $clauses[] = "( camp.campaign_type_id IN ( {$campaign_type} ) )";
     }
 
-    $campaign_status = CRM_Utils_Array::value('campaign_status', $params);
+    $campaign_status = CRM_Utils_Array::value('status', $params);
     if ($campaign_status) {
       if (is_array($campaign_status)) {
         $campaign_status = implode(' , ', $campaign_status);
@@ -455,28 +455,33 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       }
     }
 
-    // this is a bitmask: 1=root; 2=parents; 4=children
-    $show = CRM_Utils_Array::value('show', $params);
-    if ($show & 1) {
-      // show root campaigns
-      $showClauses[] = "(camp.parent_id IS NULL)";
-    }
-    if ($show & 2) {
-      // show parent campaigns
-      $showClauses[] = "(EXISTS (SELECT parent_id FROM `civicrm_campaign` camp2 WHERE  (camp2.parent_id = camp.id) AND camp.parent_id IS NOT NULL))";
-
-    }
-    if ($show & 4) {
-      // show child campaigns
-      $showClauses[] = "(NOT EXISTS (SELECT parent_id FROM `civicrm_campaign` camp2 WHERE camp2.parent_id = camp.id))";
-    }
-    if (isset($showClauses)) {
-      $clauses[] = implode(' OR ', $showClauses);
-    }
-
     $rootOnly = CRM_Utils_Array::value('rootOnly', $params);
     if ($rootOnly) {
       $clauses[] = "(camp.parent_id IS NULL)";
+    }
+    else {
+      // this is a bitmask: 1=root; 2=parents; 4=children, 8=other
+      $show = CRM_Utils_Array::value('show', $params);
+      if ($show & 1) {
+        // show root campaigns (no parent_id AND has children)
+        $showClauses[] = "((camp.parent_id IS NULL) AND EXISTS (SELECT parent_id FROM `civicrm_campaign` camp2 WHERE camp2.parent_id = camp.id))";
+      }
+      if ($show & 2) {
+        // show parent campaigns (parent_id set AND has children)
+        $showClauses[] = "((camp.parent_id IS NOT NULL) AND EXISTS (SELECT parent_id FROM `civicrm_campaign` camp2 WHERE camp2.parent_id = camp.id))";
+      }
+      if ($show & 4) {
+        // show child campaigns (parent_id set AND has no children)
+        $showClauses[] = "((camp.parent_id IS NOT NULL) AND NOT EXISTS (SELECT parent_id FROM `civicrm_campaign` camp2 WHERE camp2.parent_id = camp.id))";
+      }
+      if ($show & 8) {
+        // show other campaigns (parent_id NOT set AND has no children)
+        $showClauses[] = "((camp.parent_id IS NULL) AND NOT EXISTS (SELECT parent_id FROM `civicrm_campaign` camp2 WHERE camp2.parent_id = camp.id))";
+      }
+
+      if (isset($showClauses)) {
+        $clauses[] = implode(' OR ', $showClauses);
+      }
     }
 
     // only show child groups of a specific parent group

@@ -70,6 +70,29 @@ class CRM_CampaignTree_Page_AJAX {
         $params['sortBy'] = $sort . ' ' . $sortOrder;
       }
 
+      // Search mode - some search parameters it makes sense to use tree view, some it does not
+      // When displayed in flatSearch there may be duplicates in the list
+      $params['rootOnly'] = 1;
+
+      $flatSearch = array(
+        'title', // name
+        'description',
+        'start_date',
+        'end_date',
+        'show',
+        'showActive',
+        'type',
+        'status',
+        'created_by',
+        'external_id',
+      );
+      foreach ($flatSearch as $p) {
+        if (!empty($params[$p])) {
+          CRM_Core_Error::debug_log_message($p.':'. $params[$p].':');
+          $params['rootOnly'] = 0;
+        }
+      }
+
       $params['page'] = ($offset / $rowCount) + 1;
       $params['rp'] = $rowCount;
 

@@ -146,11 +146,7 @@
 {literal}
 <script type="text/javascript">
     CRM.$(function($) {
-        // for CRM-11310 and CRM-10635 : processing just parent groups on initial display
-        // passing '1' for rootOnlyArg to show parent child heirarchy structure display
-        // on initial load of manage group page and
-        // also to handle search filtering for initial load of same page.
-        buildCampaignSelector(true, 1);
+        buildCampaignSelector( true );
         $('#_qf_Search_refresh').click( function() {
             buildCampaignSelector( true );
         });
@@ -172,21 +168,14 @@
                 $('table.crm-campaign-selector', $context).dataTable().fnDraw();
             });
 
-        function buildCampaignSelector( filterSearch, rootOnlyArg ) {
+        function buildCampaignSelector( filterSearch ) {
             if ( filterSearch ) {
                 if (typeof crmCampaignSelector !== 'undefined') {
                     crmCampaignSelector.fnDestroy();
                 }
-                var rootOnly = 0;
                 var ZeroRecordText = '<div class="status messages">{/literal}{ts escape="js"}No matching Campaigns found for your search criteria. Suggestions:{/ts}{literal}<div class="spacer"></div><ul><li>{/literal}{ts escape="js"}Check your spelling.{/ts}{literal}</li><li>{/literal}{ts escape="js"}Try a different spelling or use fewer letters.{/ts}{literal}</li><li>{/literal}{ts escape="js"}Make sure you have enough privileges in the access control system.{/ts}{literal}</li></ul></div>';
             } else {
-                var rootOnly = 1;
                 var ZeroRecordText = {/literal}'{ts escape="js"}<div class="status messages">No Campaigns have been created for this site.{/ts}</div>'{literal};
-            }
-
-            // this argument should only be used on initial display i.e onPageLoad
-            if (typeof rootOnlyArg !== 'undefined') {
-                rootOnly = rootOnlyArg;
             }
 
             var columns = '';
@@ -245,10 +234,8 @@
                         $(nRow).addClass('disabled');
                     }
 
-                    if (rootOnly) {
-                        if ($(nRow).hasClass('crm-campaign-parent')) {
-                            $(nRow).find('td:first').prepend('{/literal}<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}');
-                        }
+                    if ($(nRow).hasClass('crm-campaign-parent')) {
+                        $(nRow).find('td:first').prepend('{/literal}<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}');
                     }
 
                     if ($(nRow).hasClass('crm-campaign-root')) {
@@ -274,8 +261,6 @@
                     $('.crm-editable').crmEditable();
                 },
                 "fnServerData": function ( sSource, aoData, fnCallback ) {
-                    aoData.push( {name:'rootOnly', value: rootOnly }
-                    );
                     if ( filterSearch ) {
 
                         var showActive = '';
@@ -290,7 +275,7 @@
                             }
                         }
 
-                        var show = 0;
+                        var show = '';
                         if ( $('.crm-campaign-search-form-block #show_1').prop('checked') ) {
                             show += 1;
                         }
@@ -300,14 +285,17 @@
                         if ( $('.crm-campaign-search-form-block #show_3').prop('checked') ) {
                             show += 4;
                         }
+                        if ( $('.crm-campaign-search-form-block #show_4').prop('checked') ) {
+                            show += 8;
+                        }
                         aoData.push(
                             {name:'title', value: $('.crm-campaign-search-form-block #title').val()},
                             {name:'description', value: $('.crm-campaign-search-form-block #description').val()},
                             {name:'start_date', value: $('.crm-campaign-search-form-block #start_date').val()},
                             {name:'end_date', value: $('.crm-campaign-search-form-block #end_date').val()},
                             {name:'show', value: show},
-                            {name:'campaign_type', value: $('.crm-campaign-search-form-block #type_id').val()},
-                            {name:'campaign_status', value: $('.crm-campaign-search-form-block #status_id').val()},
+                            {name:'type', value: $('.crm-campaign-search-form-block #type_id').val()},
+                            {name:'status', value: $('.crm-campaign-search-form-block #status_id').val()},
                             {name:'created_by', value: $('.crm-campaign-search-form-block #created_by').val()},
                             {name:'external_id', value: $('.crm-campaign-search-form-block #external_id').val()},
                             {name:'showActive', value: showActive}

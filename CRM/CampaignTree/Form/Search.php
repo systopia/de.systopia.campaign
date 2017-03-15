@@ -36,7 +36,7 @@ class CRM_CampaignTree_Form_Search extends CRM_Core_Form {
     //campaign end date.
     $this->addDate('end_date', ts('End Date'), FALSE, array('formatType' => 'searchDate', 'name' => 'end_date'));
 
-    $campaignShow = array(ts('Root') => 1, ts('Parent') => 2, ts('Child') => 3);
+    $campaignShow = array(ts('Root') => 1, ts('Parent') => 2, ts('Child') => 3, ts('Other') => 4);
     $this->addCheckBox('show',
       ts('Show Campaigns:'),
       $campaignShow,
