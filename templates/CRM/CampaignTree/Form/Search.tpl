@@ -384,7 +384,7 @@
                                                CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-child.png" /></span>' +
                                                '<span class="crm-no-children"></span>{literal}' + val.name + '</td>';
                             }
-                            appendHTML += '<td class="crm-editable crmf-description" data-type="textarea">' + (val.campaign_description || '') + "</td>";
+                            appendHTML += '<td class="crm-editable crmf-description" data-type="textarea">' + (val.description || '') + "</td>";
                             appendHTML += '<td class="crm-campaign-start_date">' + val.start_date + "</td>";
                             appendHTML += '<td class="crm-campaign-start_date">' + val.end_date + "</td>";
                             appendHTML += '<td class="crm-campaign-type">' + val.type + "</td>";

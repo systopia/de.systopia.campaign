@@ -189,7 +189,8 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       CRM_Core_DAO::storeValues($object, $values[$object->id]);
 
       if (in_array(CRM_Core_Permission::EDIT, $campaignPermissions)) {
-        $values[$object->id]['title'] = '<span class="crm-editable crmf-title">' . $values[$object->id]['title'] . '</span>';
+        //$values[$object->id]['title'] = '<span class="crm-editable crmf-title">' . $values[$object->id]['title'] . '</span>';
+        $values[$object->id]['title'] = '<a href="/civicrm/a/#/campaign/'.$object->id.'/view" class="action-item crm-hover-button no-popup" title="View Campaign">'.$values[$object->id]['title'].'</a>';
         $values[$object->id]['description'] = '<div class="crm-editable crmf-description" data-type="textarea">' . $values[$object->id]['description'] . '</div>';
       }
 
