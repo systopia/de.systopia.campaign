@@ -480,7 +480,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       }
 
       if (isset($showClauses)) {
-        $clauses[] = implode(' OR ', $showClauses);
+        $clauses[] = '(' . implode(' OR ', $showClauses) . ')';
       }
     }
 
