@@ -56,7 +56,13 @@ class CRM_Campaign_Stat {
                          WHERE parent_id IN (SELECT id FROM civicrm_campaign WHERE parent_id = %1)
                        ) c ON c.id = a.campaign_id
                   WHERE a.is_test = 0
-                GROUP BY a.activity_type_id, a.status_id, s.grouping) t1
+                GROUP BY a.activity_type_id, a.status_id, s.grouping
+                UNION
+                SELECT at2.activity_type_id, as2.status_id, as2.grouping, 0 AS counter
+                FROM civicrm_campaign_config_activity_type at2
+                  JOIN civicrm_campaign_config_activity_status as2 ON as2.activity_type_id = at2.activity_type_id
+                WHERE at2.is_fixed = 1
+                ) t1
                 JOIN civicrm_campaign_config_status_sequence ss ON t1.grouping = ss.grouping
                 JOIN (SELECT
                   value id, name
