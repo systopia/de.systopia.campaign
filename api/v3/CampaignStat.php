@@ -59,3 +59,25 @@ function civicrm_api3_campaign_stat_activity_report($params) {
     return civicrm_api3_create_error('Problem with generating stats for campaign', $data);
   }
 }
+
+function _civicrm_api3_campaign_stat_activity_sequence(&$params) {
+}
+
+function civicrm_api3_campaign_stat_activity_sequence($params) {
+  try {
+    $query = "SELECT grouping FROM civicrm_campaign_config_status_sequence ORDER BY sequence";
+    $dao = CRM_Core_DAO::executeQuery($query);
+    return civicrm_api3_create_success($dao->fetchAll(), $params);
+  } catch (Exception $exception) {
+    $data = array(
+      'params' => $params,
+      'exception' => array(
+        'message' => $exception->getMessage(),
+        'file' => $exception->getFile(),
+        'line' => $exception->getLine(),
+        'object' => $exception,
+      ),
+    );
+    return civicrm_api3_create_error('Problem with getting sequence', $data);
+  }
+}
