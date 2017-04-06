@@ -240,19 +240,19 @@
 
                     if ($(nRow).hasClass('crm-campaign-root')) {
                         $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-root" title="{ts}Root Campaign{/ts}"/><img class="campaign-icon" src="' +
-                            CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-root.png" /></span>{literal}');
+                            CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-root_20x20.png" /></span>{literal}');
                     }
                     else if ($(nRow).hasClass('crm-campaign-parent')) {
                         $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-parent" title="{ts}Parent Campaign{/ts}"/><img class="campaign-icon" src="' +
-                            CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-parent.png" /></span>{literal}');
+                            CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-parent_20x20.png" /></span>{literal}');
                     }
                     else if ($(nRow).hasClass('crm-campaign-child')) {
                         $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}"/><img class="campaign-icon" src="' +
-                            CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-child.png" /></span>{literal}');
+                            CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-child_20x20.png" /></span>{literal}');
                     }
                     else {
                         $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-other" title="{ts}Campaign{/ts}"/><img class="campaign-icon" src="' +
-                            CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-other.png" /></span>{literal}');
+                            CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-other_20x20.png" /></span>{literal}');
                     }
                     return nRow;
                 },
@@ -363,13 +363,13 @@
                             if ( val.is_parent ) {
                                 appendHTML += '<td class="crm-campaign-name ' + levelClass + '">'{/literal} +
                                                '<span class="campaign-icon-parent" title="{ts}Parent Campaign{/ts}"/><img class="campaign-icon" src="' +
-                                               CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-parent.png" /></span>' +
+                                               CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-parent_20x20.png" /></span>' +
                                                '<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}' + val.name + '</td>';
                             }
                             else {
                                 appendHTML += '<td class="crm-campaign-name ' + levelClass + '">'{/literal} +
                                                '<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}"/><img class="campaign-icon" src="' +
-                                               CRM.vars.campaigntree.baseUrl + '/css/campaign-icon-child.png" /></span>' +
+                                               CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-child_20x20.png" /></span>' +
                                                '<span class="crm-no-children"></span>{literal}' + val.name + '</td>';
                             }
                             appendHTML += '<td class="crm-editable crmf-description" data-type="textarea">' + (val.description || '') + "</td>";
