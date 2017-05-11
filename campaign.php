@@ -169,7 +169,7 @@ function campaign_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &
           'name' => ts('View', array('domain' => 'de.systopia.campaign')),
           'title' => ts('View Campaign', array('domain' => 'de.systopia.campaign')),
           'class' => 'no-popup',
-          'url' => 'a/#/campaign/'. $objectId .'/view',
+          'url' => CRM_Utils_System::url("civicrm/a/#/campaign/{$objectId}/view"),
       );
 
       array_unshift($links, $viewLink);
@@ -272,5 +272,17 @@ function campaign_civicrm_alterAPIPermissions($entity, $action, &$params, &$perm
   $permissions['campaign_tree']['gettree'] = array('manage campaign');
   $permissions['campaign_tree']['setnodeparent'] = array('manage campaign');
   $permissions['campaign_tree']['clone'] = array('manage campaign');
+  $permissions['campaign_tree']['getcustominfo'] = array('manage campaign');
+}
+
+/**
+ * Implements hook_coreResourceList
+ *
+ * @param array $list
+ * @param string $region
+ */
+function campaign_civicrm_coreResourceList(&$list, $region) {
+  Civi::resources()
+    ->addStyleFile('de.systopia.campaign', 'css/campaign.css', 0, $region);
 }
 

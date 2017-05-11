@@ -156,3 +156,30 @@ linegraph .axis line {
     stroke-width: 1;
     shape-rendering: crispEdges;
 }
+
+/* alter display of parent and child groups in Manage Groups selector */
+/* from civicrm.css: #crm-container .crm-group-parent td.crm-group-name { */
+#crm-container td.crm-campaign-name {
+    padding-left: 20px;
+    text-indent: -20px;
+}
+
+/* from civicrm.css: #crm-container .crm-group-child td.crm-group-name.level_2 { */
+#crm-container td.crm-campaign-name.level_2 {
+    padding-left: 40px;
+    text-indent: -20px;
+}
+/* from civicrm.css: #crm-container .crm-group-child td.crm-group-name.level_3 { */
+#crm-container td.crm-campaign-name.level_3 {
+    padding-left: 60px;
+    text-indent: -20px;
+}
+/* from civicrm.css: #crm-container .crm-group-name span.crm-editable-enabled { */
+#crm-container .crm-campaign-name span.crm-editable-enabled {
+    text-indent: 0;
+}
+
+.campaign-icon {
+    max-width: 20px;
+    vertical-align: middle;
+}

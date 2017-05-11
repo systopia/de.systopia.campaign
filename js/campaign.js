@@ -45,7 +45,10 @@
           },
           expenses: function($route, crmApi) {
              return crmApi('CampaignExpense', 'get', {campaign_id: $route.current.params.id});
-          }
+          },
+          customInfo: function($route, crmApi) {
+            return crmApi('CampaignTree', 'getcustominfo', {entity_id: $route.current.params.id});
+          },
         }
       });
 
@@ -95,10 +98,11 @@
   'kpi',
   'expenseSum',
   'expenses',
+  'customInfo',
   'dialogService',
   'crmApi',
   '$interval',
-   function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi, expenseSum, expenses, dialogService, crmApi, $interval) {
+   function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi, expenseSum, expenses, customInfo, dialogService, crmApi, $interval) {
      $scope.ts = CRM.ts('de.systopia.campaign');
      $scope.currentCampaign = currentCampaign;
      $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
@@ -109,6 +113,7 @@
      $scope.parents = parents.parents.reverse();
      $scope.expenseSum = expenseSum.values;
      $scope.expenses = [];
+     $scope.customInfo = customInfo;
 
      crmApi('OptionValue', 'get', {"option_group_id": "campaign_status", "return": "value,label"}).then(function (apiResult) {
        $scope.campaign_status = apiResult.values;
@@ -231,6 +236,23 @@
       });
    };
   }]);
+
+  campaign.filter("filterCustomInfo", function(){
+   return function(items){
+     var filtered = [];
+     for (var item in items) {
+       if (items.hasOwnProperty(item)) {
+         var current_item = items[item];
+         // skip array values (can't be displayed)
+         if(Array.isArray(current_item.value)) {
+           continue;
+         }
+         filtered.push(current_item);
+       }
+     }
+     return filtered;
+    }
+  });
 
   campaign.filter("preFilterKPI", function(){
    return function(items){

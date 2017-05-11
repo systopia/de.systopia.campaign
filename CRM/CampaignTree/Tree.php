@@ -31,11 +31,10 @@ class CRM_Campaign_Tree {
    *
    *
    * @param integer $id campaign id
-   * @param integet $depth maximum depth
+   * @param integer $depth maximum depth
    *
    * @return array
    */
-
    public static function getCampaignIds($id, $depth) {
       // get all sub campaigns of current id
       $query = "
@@ -117,7 +116,7 @@ class CRM_Campaign_Tree {
    *
    *
    * @param integer $id campaign id
-   * @param integet $depth maximum depth
+   * @param integer $depth maximum depth
    *
    * @return array
    */
@@ -198,7 +197,7 @@ class CRM_Campaign_Tree {
    *
    *
    * @param integer $id campaign id
-   * @param integet $parentid new parent id
+   * @param integer $parentid new parent id
    *
    * @return empty
    */
@@ -268,6 +267,4 @@ class CRM_Campaign_Tree {
       }
       return $result["id"];
   }
-
-
 }
