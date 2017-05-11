@@ -169,7 +169,7 @@ function campaign_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &
           'name' => ts('View', array('domain' => 'de.systopia.campaign')),
           'title' => ts('View Campaign', array('domain' => 'de.systopia.campaign')),
           'class' => 'no-popup',
-          'url' => 'a/#/campaign/'. $objectId .'/view',
+          'url' => CRM_Utils_System::url("civicrm/a/#/campaign/{$objectId}/view"),
       );
 
       array_unshift($links, $viewLink);
