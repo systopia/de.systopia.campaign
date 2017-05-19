@@ -280,8 +280,8 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
     // get all parent campaigns
     $query = 'SELECT id FROM civicrm_campaign;';
 
-    $queryCount = 'SELECT count(parent_id) 
-                   FROM civicrm_campaign 
+    $queryCount = 'SELECT count(parent_id)
+                   FROM civicrm_campaign
                    WHERE  parent_id = %1';
 
     $parents = array();
@@ -529,8 +529,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       ),
       CRM_Core_Action::UPDATE => array(
         'name' => ts('Edit'),
-        'url' => CRM_Utils_System::url('civicrm/campaign/add'),
-        'qs' => 'reset=1&action=update&id=%%id%%',
+        'url' => CRM_Utils_System::url('civicrm/campaign/add', "reset=1&action=update&id={$objectId}"),
         'title' => ts('Update Campaign'),
       ),
       CRM_Core_Action::DISABLE => array(
