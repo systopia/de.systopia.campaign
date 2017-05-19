@@ -315,16 +315,17 @@ class CRM_Campaign_KPI {
       $revenue_combined = array();
       $revenue_combined[] = $revenue_current;
       $revenue_combined = array_merge($revenue_combined, $revenue_subcampaigns);
-
-      $kpi["revenue_breakdown"] = array(
-         "id" => "revenue_breakdown",
-         "title" => ts("Revenue Breakdown", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "hidden",
-         "vis_type" => "pie_chart",
-         "description" => ts("Revenue Breakdown", array('domain' => 'de.systopia.campaign')),
-         "value" => $revenue_combined,
-         "link" => ""
-      );
+      if ($revenue_current['value'] || !empty($revenue_subcampaigns)) {
+         $kpi["revenue_breakdown"] = array(
+            "id" => "revenue_breakdown",
+            "title" => ts("Revenue Breakdown", array('domain' => 'de.systopia.campaign')),
+            "kpi_type" => "hidden",
+            "vis_type" => "pie_chart",
+            "description" => ts("Revenue Breakdown", array('domain' => 'de.systopia.campaign')),
+            "value" => $revenue_combined,
+            "link" => ""
+         );
+      }
 
       // get donation heartbeat
       if(count($campaigns_ids['children']) > 0) {
@@ -350,16 +351,17 @@ class CRM_Campaign_KPI {
         $all_contribs[] = array("date" => $date, "value" => $contribution->value);
       }
 
-
-      $kpi["donation_heartbeat"] = array(
-         "id" => "donation_heartbeat",
-         "title" => ts("Donation Heartbeat", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "hidden",
-         "vis_type" => "line_graph",
-         "description" => ts("Donation Heartbeat", array('domain' => 'de.systopia.campaign')),
-         "value" => $all_contribs,
-         "link" => ""
-      );
+      if (!empty($all_contribs)) {
+         $kpi["donation_heartbeat"] = array(
+            "id" => "donation_heartbeat",
+            "title" => ts("Donation Heartbeat", array('domain' => 'de.systopia.campaign')),
+            "kpi_type" => "hidden",
+            "vis_type" => "line_graph",
+            "description" => ts("Donation Heartbeat", array('domain' => 'de.systopia.campaign')),
+            "value" => $all_contribs,
+            "link" => ""
+         );
+      }
 
       CRM_Utils_CampaignCustomisationHooks::campaign_kpis($id, $kpi, 99);
 
