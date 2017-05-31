@@ -50,8 +50,19 @@ class CRM_Campaign_KPI {
       // needed status ids
       $status = array();
       $status['completed'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name');
+      $status['refunded']  = CRM_Core_OptionGroup::getValue('contribution_status', 'Refunded', 'name');
       $status['cancelled'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Cancelled', 'name');
-      $status['failed'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Failed', 'name');
+      $status['failed']    = CRM_Core_OptionGroup::getValue('contribution_status', 'Failed', 'name');
+      $negative_statuses = array();
+      if (!empty($status['refunded'])) $negative_statuses[] = $status['refunded'];
+      if (!empty($status['cancelled'])) $negative_statuses[] = $status['cancelled'];
+      if (!empty($status['failed'])) $negative_statuses[] = $status['failed'];
+      $negative_status_list = implode(',', $negative_statuses);
+      if (empty($status['completed']) || empty($negative_status_list)) {
+         error_log("de.systopia.campaign: KPIs couldn't be calculated, something's wrong with the contributoin statuses.");
+         return;
+      }
+
 
       // get total revenue
       if(count($campaigns_ids['children']) > 0) {
@@ -64,7 +75,7 @@ class CRM_Campaign_KPI {
       SELECT    SUM(contrib.total_amount) as revenue
       FROM  civicrm_contribution contrib
       WHERE contrib.campaign_id IN ( $ids_list_tr )
-      AND   contrib.contribution_status_id NOT IN ({$status['cancelled']}, {$status['failed']})
+      AND   contrib.contribution_status_id = {$status['completed']};
       ";
 
       $contribution = CRM_Core_DAO::executeQuery($query);
@@ -146,7 +157,7 @@ class CRM_Campaign_KPI {
       SELECT   COUNT(contrib.id) as amount_all
       FROM  civicrm_contribution contrib
       WHERE contrib.campaign_id IN ($ids_list_tr)
-      AND   contrib.contribution_status_id NOT IN ({$status['cancelled']}, {$status['failed']});
+      AND   contrib.contribution_status_id NOT IN ({$negative_status_list});
       ";
 
       $contribution = CRM_Core_DAO::executeQuery($query);
@@ -156,7 +167,7 @@ class CRM_Campaign_KPI {
 
       $kpi["amount_all"] = array(
          "id" => "amount_all",
-         "title" => ts("Number of Contributions (all but cancelled/failed)", array('domain' => 'de.systopia.campaign')),
+         "title" => ts("Number of Contributions (all but cancelled/refunded/failed)", array('domain' => 'de.systopia.campaign')),
          "kpi_type" => "number",
          "vis_type" => "none",
          "description" => ts("Number of Contributions (all but cancelled/failed)", array('domain' => 'de.systopia.campaign')),
@@ -269,7 +280,7 @@ class CRM_Campaign_KPI {
             civicrm_campaign camp
       WHERE contrib.campaign_id IN ( %s )
       AND   contrib.campaign_id = camp.id
-      AND   contrib.contribution_status_id NOT IN ({$status['cancelled']}, {$status['failed']})
+      AND   contrib.contribution_status_id NOT IN ({$negative_status_list})
       ";
 
       $e_query = sprintf($query, $id);
@@ -339,7 +350,7 @@ class CRM_Campaign_KPI {
               COUNT(*) as value
       FROM  civicrm_contribution contrib
       WHERE contrib.campaign_id IN ( $ids_list_hb )
-      AND contrib.contribution_status_id NOT IN ({$status['cancelled']}, {$status['failed']})
+      AND contrib.contribution_status_id NOT IN ({$negative_status_list})
       GROUP BY DATE(`receive_date`)
       ;";
       $all_contribs = array();
