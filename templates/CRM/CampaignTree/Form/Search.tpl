@@ -50,7 +50,7 @@
         <!-- /.crm-accordion-header -->
 
         <div class="crm-accordion-body">
-
+  <form id="crm-campaign-search-form" onsubmit="return false;">
   <table class="form-layout">
     <tr>
       <td>
@@ -119,6 +119,7 @@
       <td>{$form.buttons.html}</td><td colspan="2">
     </tr>
   </table>
+  </form>
 </div>
     </div>
 </div>
@@ -147,6 +148,18 @@
 <script type="text/javascript">
     CRM.$(function($) {
         buildCampaignSelector( true );
+
+        // Search on submit (ie. enter keypress)
+        $('#crm-campaign-search-form').submit(function(){
+            buildCampaignSelector( true );
+        });
+        // Search on change for non-text elements (checkbox, dropdown etc)
+        $("#crm-campaign-search-form :input").change(function() {
+            if ($(this).attr('type') !== 'text') {
+                buildCampaignSelector( true );
+            }
+        });
+
         $('#_qf_Search_refresh').click( function() {
             buildCampaignSelector( true );
         });
