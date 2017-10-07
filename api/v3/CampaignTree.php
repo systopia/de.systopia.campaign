@@ -118,7 +118,7 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
   }
   catch (Exception $e) {
     CRM_Core_Error::debug_log_message("Cannot find id for 'campaign_information' custom field group!");
-    return;
+    return array();
   }
 
   // Get list of custom fields in group
