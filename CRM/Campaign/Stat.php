@@ -1,5 +1,7 @@
 <?php
 
+use CRM_Campaign_ExtensionUtil as E;
+
 class CRM_Campaign_Stat {
 
   /**
@@ -64,11 +66,86 @@ class CRM_Campaign_Stat {
   public static function sequence() {
     $query = "SELECT grouping FROM civicrm_campaign_config_status_sequence ORDER BY sequence";
     $dao = CRM_Core_DAO::executeQuery($query);
-    return $dao->fetchAll();
+    $result = array();
+    while ($dao->fetch()) {
+      $result[] = $dao->grouping;
+    }
+    return $result;
   }
 
   public static function calculateActivityStats($kpi, $campaign_id, $children) {
     $stats = self::activityReport($campaign_id, $children);
+    $sequence = CRM_Campaign_Stat::sequence();
+    $report = array();
+    $columns = array();
+    $activityTypes = array();
+    $totalPerRow = array();
+    $totalPerColumn = array();
+    $existingGrouping = array();
+    foreach ($stats as $stat) {
+      $report[$stat['name']][$stat['grouping']] = $stat['counter'];
+      $activityTypes[$stat['name']] = $stat['name'];
+      $columns[$stat['grouping']] = $stat['grouping'];
+      $totalPerRow[$stat['name']] += $stat['counter'];
+      $totalPerColumn[$stat['grouping']] += $stat['counter'];
+      $existingGrouping[$stat['grouping']] = $stat['grouping'];
+    }
+    $header = array(E::ts("Activity"));
+    $body = array();
+    $footer = array();
+    $total = 0;
+    foreach ($sequence as $i => $grouping) {
+      if (!in_array($grouping, $existingGrouping)) {
+        unset($sequence[$i]);
+      }
+    }
+    foreach ($sequence as $i => $grouping) {
+      $header[] = $grouping;
+    }
+    $header[] = E::ts('Total');
+    foreach ($activityTypes as $type) {
+      $body[$type] = array($type);
+      foreach ($sequence as $i => $grouping) {
+        $body[$type][$grouping] = $report[$type][$grouping];
+      }
+      $body[$type]['total'] = $totalPerRow[$type];
+      $total += $totalPerRow[$type];
+    }
+    $footer[] = E::ts('Total');
+    foreach ($sequence as $i => $grouping) {
+      $footer[] = $totalPerColumn[$grouping];
+    }
+    $footer[] = $total;
+
+    $kpi["actiontable"] = array(
+      "id" => "actiontable",
+      "description" => E::ts('Statistics on associated activities'),
+      "kpi_type" => "hidden",
+      "link" => "",
+      "title" => E::ts('Statistics on associated activities'),
+      "vis_type" => "table",
+      "value" => array(
+        "header" => array(
+          "comment" => "This is a header :-)",
+          "cells" => array(
+            "comment" => "This is a comment to cells ;-)",
+            "value" => $header,
+          ),
+        ),
+        "body" => array(
+          "comment" => "List of counters",
+          "cells" => array(
+            "value" => $body,
+          ),
+        ),
+        "footer" => array(
+          "cells" => array(
+            "value" => $footer,
+          ),
+        ),
+      ),
+    );
+
     return $kpi;
   }
 
