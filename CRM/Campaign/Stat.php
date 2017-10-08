@@ -37,10 +37,11 @@ class CRM_Campaign_Stat {
    * Calculate counts of activities and prepared as a report.
    *
    * @param int $campaignId
+   * @param array $children
    *
    * @return array
    */
-  public static function activityReport($campaignId) {
+  public static function activityReport($campaignId, $children) {
     $query = "SELECT t1.activity_type_id, at1.name, t1.grouping, sum(t1.counter) counter FROM
                 (SELECT
                   a.activity_type_id, a.status_id, s.grouping, count(a.id) counter
@@ -76,4 +77,10 @@ class CRM_Campaign_Stat {
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     return $dao->fetchAll();
   }
+
+  public static function calculateActivityStats($kpi, $campaign_id, $children) {
+    $stats = self::activityReport($campaign_id, $children);
+    return $kpi;
+  }
+
 }

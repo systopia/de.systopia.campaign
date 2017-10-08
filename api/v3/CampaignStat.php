@@ -44,7 +44,9 @@ function _civicrm_api3_campaign_stat_activity_report(&$params) {
 function civicrm_api3_campaign_stat_activity_report($params) {
   try {
     $campaignId = $params['id'];
-    $stat = CRM_Campaign_Stat::activityReport($campaignId);
+    $campaigns = CRM_Campaign_Tree::getCampaignIds($campaignId, 99);
+    $children = $campaigns['children'];
+    $stat = CRM_Campaign_Stat::activityReport($campaignId, $children);
     return civicrm_api3_create_success($stat, $params);
   } catch (Exception $exception) {
     $data = array(
