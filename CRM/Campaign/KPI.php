@@ -482,7 +482,7 @@ class CRM_Campaign_KPI {
     */
    protected static function getTotalCosts($campaign_id, $children) {
       if (!isset(self::$cache[$campaign_id]['total_costs'])) {
-         $cost_query = civicrm_api3('CampaignExpense', 'getsum', array('campaign_id' => $campaign_id));
+         $result = civicrm_api3('CampaignExpense', 'getsum', array('campaign_id' => $campaign_id));
          self::$cache[$campaign_id]['total_costs'] = (double) $result['values'][$result['id']];
       }
       return self::$cache[$campaign_id]['total_costs'];
