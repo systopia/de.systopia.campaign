@@ -14,10 +14,19 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-require_once('CRM/CampaignTree/Tree.php');
+use CRM_Campaign_ExtensionUtil as E;
+
+require_once 'CRM/CampaignTree/Tree.php';
 
 function _civicrm_api3_campaign_stat_activity_counter(&$params) {
-  $params['id']['api.required'] = 1;
+  $params['id'] = array(
+    'name' => 'id',
+    'title' => E::ts('Campaign ID'),
+    'description' => E::ts('ID of parent campaign'),
+    'type' => CRM_Utils_Type::T_INT,
+    'api.required' => 1,
+    'api.default' => 0,
+  );
 }
 
 function civicrm_api3_campaign_stat_activity_counter($params) {
@@ -27,7 +36,8 @@ function civicrm_api3_campaign_stat_activity_counter($params) {
     $children = $campaigns['children'];
     $stat = CRM_Campaign_Stat::activityCounter($campaignId, $children);
     return civicrm_api3_create_success($stat, $params);
-  } catch (Exception $exception) {
+  }
+  catch (Exception $exception) {
     $data = array(
       'params' => $params,
       'exception' => array(
@@ -42,7 +52,14 @@ function civicrm_api3_campaign_stat_activity_counter($params) {
 }
 
 function _civicrm_api3_campaign_stat_activity_report(&$params) {
-  $params['id']['api.required'] = 1;
+  $params['id'] = array(
+    'name' => 'id',
+    'title' => E::ts('Campaign ID'),
+    'description' => E::ts('ID of parent campaign'),
+    'type' => CRM_Utils_Type::T_INT,
+    'api.required' => 1,
+    'api.default' => 0,
+  );
 }
 
 function civicrm_api3_campaign_stat_activity_report($params) {
@@ -52,7 +69,8 @@ function civicrm_api3_campaign_stat_activity_report($params) {
     $children = $campaigns['children'];
     $stat = CRM_Campaign_Stat::activityReport($campaignId, $children);
     return civicrm_api3_create_success($stat, $params);
-  } catch (Exception $exception) {
+  }
+  catch (Exception $exception) {
     $data = array(
       'params' => $params,
       'exception' => array(
@@ -72,7 +90,8 @@ function _civicrm_api3_campaign_stat_activity_sequence(&$params) {
 function civicrm_api3_campaign_stat_activity_sequence($params) {
   try {
     return civicrm_api3_create_success(CRM_Campaign_Stat::sequence(), $params);
-  } catch (Exception $exception) {
+  }
+  catch (Exception $exception) {
     $data = array(
       'params' => $params,
       'exception' => array(
