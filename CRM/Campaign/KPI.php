@@ -373,7 +373,7 @@ class CRM_Campaign_KPI {
     *
     * @author N. Bochan
     */
-   public static function calculateDonationHeartbeat(&$kpi, $campaign_id, $campaigns) {
+   public static function calculateDonationHeartbeat(&$kpi, $campaign_id, $children) {
       $all_ids = array_keys($children);
       $all_ids[] = $campaign_id;
       $all_ids_list = implode(',', $all_ids);
