@@ -15,8 +15,43 @@
 +########################################################*/
 -->
 
+
+<style type="text/css">
+#crm-campaign-actions-list {
+  position: absolute;
+  display: block;
+  top: 150px;
+  width: 256px;
+  left: 128;
+  z-index: 15;
+}
+
+.crm-campaign-actions-list-inner {
+  background-color: #2f2f2e;
+  padding: 4px;
+}
+
+.crm-create-new-list-inner, .crm-create-new-list-inner ul {
+  width: 160px!important;
+}
+</style>
+
+<script type="text/javascript">
+  cj("#crm-campaign-actions-link").click(function() {
+    var current = cj("#crm-campaign-actions-list").css("display");
+    if (current == 'none') {
+      cj("#crm-campaign-actions-list").css("display", "block");
+    } else {
+      cj("#crm-campaign-actions-list").css("display", "none");
+    }
+    // cj("#crm-campaign-actions-list").show(200);
+  });
+</script>
+
+
 <div id="campaign_container">
    <div id="campaign_summary">
+
       <div id="breadcrumb">
          <div class="parents">
            {{ts('Parent Campaign(s)', {domain: 'de.systopia.campaign'})}} [{{numberof.parents}}]:
@@ -33,25 +68,71 @@
            <a ng-if="numberof.children == 0">{{ts('none', {domain: 'de.systopia.campaign'})}}</a>
          </div>
       </div>
-      <div id="actions">
+
+      <div class="crm-actions-ribbon">
+        <ul id="actions">
+          <li class="crm-contact-activity crm-summary-block">
+            <div data-edit-params="{&quot;cid&quot;: &quot;125&quot;, &quot;class_name&quot;: &quot;CRM_Contact_Page_Inline_Actions&quot;}" id="crm-campaign-actions-wrapper">
+              <a class="button" href="" id="crm-campaign-actions-link">
+                <span>
+                  <div class="icon ui-icon-arrow-1-se css_right"/>Actions</span>
+              </a>
+              <div class="ac_results" id="crm-campaign-actions-list" style="display: none;">
+                <div class="crm-campaign-actions-list-inner">
+                  <div class="crm-contact_activities-list">
+                    <ul>
+                      <li>
+                        <a class="campaign-action" href="{{subcampaign_link}}" title="{{ts('Create Subcampaign', {domain: 'de.systopia.campaign'})}}">
+                          <span><div class="icon ui-icon-circle-plus"/>{{ts('Create Subcampaign', {domain: 'de.systopia.campaign'})}}</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a class="campaign-action" href="{{clone_link}}" title="{{ts('Clone Campaign', {domain: 'de.systopia.campaign'})}}">
+                          <span><div class="icon ui-icon-copy"/>{{ts('Clone Campaign', {domain: 'de.systopia.campaign'})}}</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="clear"/>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <a href="{{tree_link}}" class="button">{{ts('View Campaign Tree', {domain: 'de.systopia.campaign'})}}</a>
+          </li>
+          <li>
+            <a href="{{edit_link}}" class="button">{{ts('Edit Campaign', {domain: 'de.systopia.campaign'})}}</a>
+          </li>
+          <li>
+            <a href="{{btd_link}}" class="button fr">{{ts('Return to Dashboard', {domain: 'de.systopia.campaign'})}}</a>
+          </li>
+        </ul>
+        <div class="clear"/>
+      </div>
+
+
+      <!-- <div>
         <a href="{{tree_link}}" class="button">{{ts('View Campaign Tree', {domain: 'de.systopia.campaign'})}}</a>
         <a href="{{edit_link}}" class="button">{{ts('Edit Campaign', {domain: 'de.systopia.campaign'})}}</a>
         <a href="{{subcampaign_link}}" class="button">{{ts('Create Subcampaign', {domain: 'de.systopia.campaign'})}}</a>
         <a href="{{clone_link}}" class="button">{{ts('Clone Campaign', {domain: 'de.systopia.campaign'})}}</a>
         <a href="{{btd_link}}" class="button fr">{{ts('Return to Dashboard', {domain: 'de.systopia.campaign'})}}</a>
-      </div>
+      </div> -->
+
+
+
       <div id="info">
          <table class="cmpinfo">
-
             <tr>
               <td>{{ts('Status', {domain: 'de.systopia.campaign'})}}</td>
               <td>{{currentCampaign.status_id_text ? currentCampaign.status_id_text : ts('not set', {domain: 'de.systopia.campaign'}) }}</td>
-              <td><a crm-confirm="{message: ts('Are you sure you want to apply this status id to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('status_id', currentCampaign.status_id)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
+              <td><a crm-confirm="{message: ts('Are you sure you want to apply this status id to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('status_id', currentCampaign.status_id)" class="button" title="{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}">{{ts('Propagate', {domain: 'de.systopia.campaign'})}}</a></td>
             </tr>
            <tr>
              <td>{{ts('Is Active', {domain: 'de.systopia.campaign'})}}</td>
              <td>{{currentCampaign.is_active ? ts('Yes', {domain: 'de.systopia.campaign'}) : ts('No', {domain: 'de.systopia.campaign'}) }}</td>
-             <td><a crm-confirm="{message: ts('Are you sure you want to apply this status to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('is_active', currentCampaign.is_active)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
+             <td><a crm-confirm="{message: ts('Are you sure you want to apply this status to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('is_active', currentCampaign.is_active)" class="button" title="{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}">{{ts('Propagate', {domain: 'de.systopia.campaign'})}}</a></td>
            </tr>
            <tr>
              <td>{{ts('External Identifier', {domain: 'de.systopia.campaign'})}}</td>
@@ -60,12 +141,12 @@
            <tr>
              <td>{{ts('Start date', {domain: 'de.systopia.campaign'})}}</td>
              <td>{{currentCampaign.start_date ? currentCampaign.start_date_date : ts('none', {domain: 'de.systopia.campaign'})}}</td>
-             <td><a crm-confirm="{message: ts('Are you sure you want to apply this start date to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('start_date', currentCampaign.start_date)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
+             <td><a crm-confirm="{message: ts('Are you sure you want to apply this start date to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('start_date', currentCampaign.start_date)" class="button" title="{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}">{{ts('Propagate', {domain: 'de.systopia.campaign'})}}</a></td>
            </tr>
            <tr>
              <td>{{ts('End date', {domain: 'de.systopia.campaign'})}}</td>
              <td>{{currentCampaign.end_date ? currentCampaign.end_date_date : ts('none', {domain: 'de.systopia.campaign'})}}</td>
-             <td><a crm-confirm="{message: ts('Are you sure you want to apply this end date to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('end_date', currentCampaign.end_date)" class="button">{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}</a></td>
+             <td><a crm-confirm="{message: ts('Are you sure you want to apply this end date to all subcampaigns?', {domain: 'de.systopia.campaign'})}" on-yes="applyToChildren('end_date', currentCampaign.end_date)" class="button" title="{{ts('Apply to Subcampaigns', {domain: 'de.systopia.campaign'})}}">{{ts('Propagate', {domain: 'de.systopia.campaign'})}}</a></td>
            </tr>
            <tr>
              <td>{{ts('Revenue Goal', {domain: 'de.systopia.campaign'})}}</td>
