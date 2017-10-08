@@ -30,21 +30,7 @@ class CRM_Campaign_KPI {
          'costs'                => E::ts("Expenses and ROI"),
          'revenue_breakdown'    => E::ts("Revenue breakdown for subcampaigns"),
          'donation_heartbeat'   => E::ts("Plots donations over the course of the campaign"),
-
-
-         // 'amount_all'                     => E::ts("Number of Contributions (all but cancelled/failed)"),
-         // 'contribution_stats_basic'       => E::ts("Basic stats on contributions"),
-         // 'amount_average_first'           => E::ts("Average Cost per first contribution associated with this campaign"),
-         // 'amount_average_second_or_later' => E::ts("Average Cost per second or later contribution associated with this campaign"),
-
-         // 'amount_first'                   => E::ts("Number of first contributions associated with this campaign"),
-
-         // 'roi'                            => E::ts("Return on investment"),
-         // 'total_cost'                     => E::ts("Sum of (known) expenses to this campaign"),
-         // 'total_revenue'                  => E::ts("Total Revenue"),
-         // 'total_revenue_goal'             => E::ts("Total Revenue Goal"),
-         // 'total_revenue_goal_pc'          => E::ts("Total Revenue Reached"),
-
+         'activities'           => E::ts("Statistics on associated activities"),
       );
    }
 
@@ -80,6 +66,9 @@ class CRM_Campaign_KPI {
       if (in_array('costs', $enabled_kpis)) {
          self::calculateCosts($kpi, $campaign_id, $children);
       }
+      if (in_array('activities', $enabled_kpis)) {
+         // CRM_Campaign_Stats::calculateActivityStats($kpi, $campaign_id, $children);
+      }
 
       // finally: run the hook
       CRM_Utils_CampaignCustomisationHooks::campaign_kpis($id, $kpi, 99);
@@ -106,7 +95,7 @@ class CRM_Campaign_KPI {
       $query = "  SELECT camp.goal_revenue
                   FROM  civicrm_campaign camp
                   WHERE camp.id = {$campaign_id};";
-      $total_revenue_goal = (float) CRM_Core_DAO::singleValueQuery($query);
+      $total_revenue_goal = (double) CRM_Core_DAO::singleValueQuery($query);
 
       $kpi["total_revenue_goal"] = array(
          "id"          => "total_revenue_goal",
@@ -292,16 +281,16 @@ class CRM_Campaign_KPI {
       );
 
       // CALCULATE NOT-NEGATIVE CONTRIBUTIONS
+      $total_contribution_count = self::getTotalContributionCount($campaign_id, $children);
 
-
-      // TODO: rename
+      // TODO: rename (amount -> count)
       $kpi["amount_all"] = array(
          "id"          => "amount_all",
          "title"       => ts("Number of Contributions (all but cancelled/refunded/failed)", array('domain' => 'de.systopia.campaign')),
          "kpi_type"    => "number",
          "vis_type"    => "none",
          "description" => ts("Number of Contributions (all but cancelled/failed)", array('domain' => 'de.systopia.campaign')),
-         "value"       => self::getTotalContributionCount($campaign_id, $children),
+         "value"       => $total_contribution_count,
          "link"        => ""
       );
    }
@@ -318,67 +307,63 @@ class CRM_Campaign_KPI {
 
       // get the status IDs
       $negative_status_list = self::getNegativeContributionStatusIDs();
+      $total_revenue = self::getTotalRevenue($campaign_id, $children);
+      $revenue_breakdown = array();
 
-      // get revenue breakdown
+      // create a generic query
       $query = "
       SELECT    SUM(contrib.total_amount) AS revenue,
                 camp.title                AS label
       FROM  civicrm_contribution contrib,
             civicrm_campaign camp
-      WHERE contrib.campaign_id IN ( {$all_ids_list} )
+      WHERE contrib.campaign_id IN (%s)
       AND   contrib.campaign_id = camp.id
       AND   contrib.contribution_status_id NOT IN ({$negative_status_list})";
-      $contribution = CRM_Core_DAO::executeQuery($query);
+
+      // RUN QUERY for the campaign itself
+      $contribution = CRM_Core_DAO::executeQuery(sprintf($query, $campaign_id));
       while ($contribution->fetch()) {
-         $revenue_current = array("label" => $contribution->label, "value" => (is_null($contribution->revenue) ? 0.00 : $contribution->revenue) / $total_revenue);
+         if ($contribution->revenue) {
+            $revenue_breakdown[] = array("label" => $contribution->label, "value" => (double) ($contribution->revenue / $total_revenue));
+         }
       }
 
+      // RUN QUERY FOR EACH SUBCAMPAIGN
       $revenue_subcampaigns = array();
-      $tmp_idslist = array();
+      $subcampaign_child_ids = array();
       $children = CRM_Campaign_Tree::getCampaignIds($campaign_id, 0);
 
       if(count($children['children']) > 0) {
          $children = $children['children'];
 
-         foreach ($children as $c_id => $label) {
-           $subcampaigns = CRM_Campaign_Tree::getCampaignIds($c_id, 99);
-
-           $tmp_idslist[] = $c_id;
+         foreach ($children as $child_id => $label) {
+           $subcampaigns = CRM_Campaign_Tree::getCampaignIds($child_id, 99);
+           $subcampaign_child_ids = array($child_id);
            if(count($subcampaigns['children']) > 0) {
               $subcampaigns = $subcampaigns['children'];
               foreach ($subcampaigns as $key => $value) {
-                $tmp_idslist[] = $key;
+                $subcampaign_child_ids[] = $key;
               }
-
            }
-           $id_string = implode(',', $tmp_idslist);
-           $e_query = sprintf($query, $id_string);
-
-           $curr_contrib = CRM_Core_DAO::executeQuery($e_query);
+           $id_string = implode(',', $subcampaign_child_ids);
+           $curr_contrib = CRM_Core_DAO::executeQuery(sprintf($query, $id_string));
            while ($curr_contrib->fetch()) {
-             if (is_null($curr_contrib->revenue)) {
-               continue;
+             if ($curr_contrib->revenue) {
+               $revenue_breakdown[] = array("label" => $label, "value" => (double) $curr_contrib->revenue / $total_revenue);
              }
-             $revenue_subcampaigns[] = array("label" => $label, "value" => $curr_contrib->revenue / $total_revenue);
            }
-
-           $tmp_idslist = array();
          }
-
       }
 
-      $revenue_combined = array();
-      $revenue_combined[] = $revenue_current;
-      $revenue_combined = array_merge($revenue_combined, $revenue_subcampaigns);
-      if ($revenue_current['value'] || !empty($revenue_subcampaigns)) {
+      if (!empty($revenue_breakdown)) {
          $kpi["revenue_breakdown"] = array(
-            "id" => "revenue_breakdown",
-            "title" => ts("Revenue Breakdown", array('domain' => 'de.systopia.campaign')),
-            "kpi_type" => "hidden",
-            "vis_type" => "pie_chart",
+            "id"          => "revenue_breakdown",
+            "title"       => ts("Revenue Breakdown", array('domain' => 'de.systopia.campaign')),
+            "kpi_type"    => "hidden",
+            "vis_type"    => "pie_chart",
             "description" => ts("Revenue Breakdown", array('domain' => 'de.systopia.campaign')),
-            "value" => $revenue_combined,
-            "link" => ""
+            "value"       => $revenue_breakdown,
+            "link"        => ""
          );
       }
    }
@@ -498,7 +483,7 @@ class CRM_Campaign_KPI {
    protected static function getTotalCosts($campaign_id, $children) {
       if (!isset(self::$cache[$campaign_id]['total_costs'])) {
          $cost_query = civicrm_api3('CampaignExpense', 'getsum', array('campaign_id' => $campaign_id));
-         self::$cache[$campaign_id]['total_costs'] = (float) $result['values'][$result['id']];
+         self::$cache[$campaign_id]['total_costs'] = (double) $result['values'][$result['id']];
       }
       return self::$cache[$campaign_id]['total_costs'];
    }
@@ -520,7 +505,7 @@ class CRM_Campaign_KPI {
          FROM  civicrm_contribution contrib
          WHERE contrib.campaign_id IN ( {$all_ids_list} )
          AND   contrib.contribution_status_id = {$status['completed']};";
-         self::$cache[$campaign_id]['total_revenue'] = (float) CRM_Core_DAO::singleValueQuery($query);
+         self::$cache[$campaign_id]['total_revenue'] = (double) CRM_Core_DAO::singleValueQuery($query);
       }
 
       return self::$cache[$campaign_id]['total_revenue'];
