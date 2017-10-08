@@ -14,117 +14,257 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+use CRM_Campaign_ExtensionUtil as E;
+
 require_once('CRM/CampaignTree/Tree.php');
 
 class CRM_Campaign_KPI {
 
-   /**
-   * Get Key Performance Indicators (KPIs) for a specific campaign (-subtree):
-   *
-   * Total Costs (sum of expenses)
-   * Total revenue (sum of contributions connected with campaign)
-   * Total revenue Goal (field in campaign)
-   * Number/amount of Contributions (all but cancelled & failed)
-   * Number/amount of Contributions (only completed)
-   * Number of first contributions
-   * ROI (Total revenue divided by total costs)
-   * average contribution amount
-   * average cost per first contribution
-   * Revenue goal reached in percent (total revenue divided by total revenue goal *100)
-   */
+   protected static $cache = array();
 
-   public static function getCampaignKPI($id) {
+   public static function builtInKPIs() {
+      return array(
+         'contribution_count'   => E::ts("Generic stats on associated contributions"),
+         'revenue'              => E::ts("Revenue based on associated contributions"),
+         'first_contributions'  => E::ts("First contributions (per contact) associated with this campaign"),
+         'costs'                => E::ts("Expenses and ROI"),
+         'revenue_breakdown'    => E::ts("Revenue breakdown for subcampaigns"),
+         'donation_heartbeat'   => E::ts("Plots donations over the course of the campaign"),
+
+
+         // 'amount_all'                     => E::ts("Number of Contributions (all but cancelled/failed)"),
+         // 'contribution_stats_basic'       => E::ts("Basic stats on contributions"),
+         // 'amount_average_first'           => E::ts("Average Cost per first contribution associated with this campaign"),
+         // 'amount_average_second_or_later' => E::ts("Average Cost per second or later contribution associated with this campaign"),
+
+         // 'amount_first'                   => E::ts("Number of first contributions associated with this campaign"),
+
+         // 'roi'                            => E::ts("Return on investment"),
+         // 'total_cost'                     => E::ts("Sum of (known) expenses to this campaign"),
+         // 'total_revenue'                  => E::ts("Total Revenue"),
+         // 'total_revenue_goal'             => E::ts("Total Revenue Goal"),
+         // 'total_revenue_goal_pc'          => E::ts("Total Revenue Reached"),
+
+      );
+   }
+
+   /**
+   * Get Key Performance Indicators (KPIs) for a specific campaign (+subtree):
+   */
+   public static function getCampaignKPI($campaign_id) {
+      $kpi = array();
 
       // get all sub-campaigns
-      $campaigns = CRM_Campaign_Tree::getCampaignIds($id, 99);
-      $ids = array();
-      $ids[] = $id;
+      $campaigns = CRM_Campaign_Tree::getCampaignIds($campaign_id, 99);
+      $children = $campaigns['children'];
 
-      if(count($campaigns['children']) > 0) {
-         $campaigns_ids = $campaigns;
-         $campaigns = $campaigns['children'];
+
+      // NOW CALCULATE all the (enabled) KPIs
+      $enabled_kpis = CRM_Campaign_Config::getActiveBuiltInKPIs();
+
+      if (in_array('contribution_count', $enabled_kpis)) {
+         self::calculateGenericContributionStats($kpi, $campaign_id, $children);
       }
-      $ids_list = implode(',', $ids);
-
-
-      // needed status ids
-      $status = array();
-      $status['completed'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name');
-      $status['refunded']  = CRM_Core_OptionGroup::getValue('contribution_status', 'Refunded', 'name');
-      $status['cancelled'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Cancelled', 'name');
-      $status['failed']    = CRM_Core_OptionGroup::getValue('contribution_status', 'Failed', 'name');
-      $negative_statuses = array();
-      if (!empty($status['refunded'])) $negative_statuses[] = $status['refunded'];
-      if (!empty($status['cancelled'])) $negative_statuses[] = $status['cancelled'];
-      if (!empty($status['failed'])) $negative_statuses[] = $status['failed'];
-      $negative_status_list = implode(',', $negative_statuses);
-      if (empty($status['completed']) || empty($negative_status_list)) {
-         error_log("de.systopia.campaign: KPIs couldn't be calculated, something's wrong with the contributoin statuses.");
-         return;
+      if (in_array('revenue_breakdown', $enabled_kpis)) {
+         self::calculateRevenueBreakdown($kpi, $campaign_id, $children);
+      }
+      if (in_array('donation_heartbeat', $enabled_kpis)) {
+         self::calculateDonationHeartbeat($kpi, $campaign_id, $children);
+      }
+      if (in_array('revenue', $enabled_kpis)) {
+         self::calculateRevenue($kpi, $campaign_id, $children);
+      }
+      if (in_array('first_contributions', $enabled_kpis)) {
+         self::calculateFirstContributions($kpi, $campaign_id, $children);
+      }
+      if (in_array('costs', $enabled_kpis)) {
+         self::calculateCosts($kpi, $campaign_id, $children);
       }
 
+      // finally: run the hook
+      CRM_Utils_CampaignCustomisationHooks::campaign_kpis($id, $kpi, 99);
 
+      return json_encode($kpi);
+   }
+
+
+
+   /*************************************************************
+    **           (BUILT-IN)  KPI Calculation                   **
+    ************************************************************/
+
+   /**
+    * Sum of all (completed) contributions with this campaing
+    *
+    * @author N. Bochan
+    */
+   public static function calculateCosts(&$kpi, $campaign_id, $children) {
       // get total revenue
-      if(count($campaigns_ids['children']) > 0) {
-         $ids_list_tr = implode(',', array_merge(array($id), array_keys($campaigns)));
-      }else{
-        $ids_list_tr = $ids_list;
-      }
-
-      $query = "
-      SELECT    SUM(contrib.total_amount) as revenue
-      FROM  civicrm_contribution contrib
-      WHERE contrib.campaign_id IN ( $ids_list_tr )
-      AND   contrib.contribution_status_id = {$status['completed']};
-      ";
-
-      $contribution = CRM_Core_DAO::executeQuery($query);
-      $kpi = array();
-      $total_revenue = 0.00;
-      while ($contribution->fetch()) {
-         $total_revenue = is_null($contribution->revenue) ? 0.00 : $contribution->revenue;
-      }
-
-      $kpi["total_revenue"] = array(
-         "id" => "total_revenue",
-         "title" => ts("Total Revenue", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "money",
-         "vis_type" => "none",
-         "description" => ts("Total Revenue", array('domain' => 'de.systopia.campaign')),
-         "value" => isset($total_revenue) ? $total_revenue : 0.00,
-         "link" => ""
-      );
+      $total_revenue = self::getTotalRevenue($campaign_id, $children);
 
       // get total revenue goal
-      $query = "
-      SELECT camp.goal_revenue
-      FROM  civicrm_campaign camp
-      WHERE camp.id = $id;
-      ";
-
-      $campaign = CRM_Core_DAO::executeQuery($query);
-      while ($campaign->fetch()) {
-         $total_revenue_goal = is_null($campaign->goal_revenue) ? 0.00 : $campaign->goal_revenue;
-      }
+      $query = "  SELECT camp.goal_revenue
+                  FROM  civicrm_campaign camp
+                  WHERE camp.id = {$campaign_id};";
+      $total_revenue_goal = (float) CRM_Core_DAO::singleValueQuery($query);
 
       $kpi["total_revenue_goal"] = array(
-         "id" => "total_revenue_goal",
-         "title" => ts("Total Revenue Goal", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "money",
-         "vis_type" => "none",
+         "id"          => "total_revenue_goal",
+         "title"       => ts("Total Revenue Goal", array('domain' => 'de.systopia.campaign')),
+         "kpi_type"    => "money",
+         "vis_type"    => "none",
          "description" => ts("Total Revenue Goal", array('domain' => 'de.systopia.campaign')),
-         "value" => isset($total_revenue_goal) ? $total_revenue_goal : 0.00,
-         "link" => ""
+         "value"       => isset($total_revenue_goal) ? $total_revenue_goal : 0.00,
+         "link"        => ""
       );
 
-      // get all completed and average contribution amount
+      // get all expenses
+      $total_costs = self::getTotalCosts($campaign_id, $children);
+
+      $kpi["total_cost"] = array(
+         "id"          => "ttlcost",
+         "title"       => ts("Total Costs", array('domain' => 'de.systopia.campaign')),
+         "kpi_type"    => "money",
+         "vis_type"    => "none",
+         "description" => ts("Sum of (known) expenses to this campaign", array('domain' => 'de.systopia.campaign')),
+         "value"       => isset($total_costs) ? $total_costs : 0.00,
+         "link"        => ""
+      );
+
+      // get ROI
+      $kpi["roi"] = array(
+         "id"          => "roi",
+         "title"       => ts("ROI", array('domain' => 'de.systopia.campaign')),
+         "kpi_type"    => "number",
+         "vis_type"    => "none",
+         "description" => ts("Return on investment", array('domain' => 'de.systopia.campaign')),
+         "value"       => $total_revenue / (($total_costs == 0.00) ? 1.00 : $total_costs),
+         "link"        => "https://en.wikipedia.org/wiki/Return_on_investment"
+      );
+
+      // get revenue goal reached percent
+      if ($total_revenue_goal) {
+         $total_revenue_goal_pc = ($total_revenue / $total_revenue_goal);
+      } else {
+         $total_revenue_goal_pc = -1;
+      }
+
+      $kpi["total_revenue_goal_pc"] = array(
+         "id"          => "total_revenue_goal_pc",
+         "title"       => ts("Total Revenue Reached", array('domain' => 'de.systopia.campaign')),
+         "kpi_type"    => "percentage",
+         "vis_type"    => "none",
+         "description" => ts("Total Revenue Reached", array('domain' => 'de.systopia.campaign')),
+         "value"       => $total_revenue_goal_pc,
+         "link"        => ""
+      );
+   }
+
+
+   /**
+    * Sum of all (completed) contributions with this campaing
+    *
+    * @author N. Bochan
+    */
+   public static function calculateFirstContributions(&$kpi, $campaign_id, $children) {
+      $all_ids = array_keys($children);
+      $all_ids[] = $campaign_id;
+      $all_ids_list = implode(',', $all_ids);
+
+      $total_costs = self::getTotalCosts($campaign_id, $children);
+      $contribution_count = self::getTotalContributionCount($campaign_id, $children);
+
+      $query = "
+      SELECT COUNT(id)
+      FROM civicrm_contribution first_contribution
+      WHERE first_contribution.campaign_id IN ($all_ids_list)
+        AND NOT EXISTS (SELECT id
+                        FROM civicrm_contribution other_contribution
+                        WHERE other_contribution.contact_id = first_contribution.contact_id
+                          AND other_contribution.receive_date < first_contribution.receive_date);";
+      $first_contribution_count = CRM_Core_DAO::singleValueQuery($query);
+
+      // get all first
+      $kpi["amount_first"] = array(
+         "id"          => "amount_first",
+         "title"       => ts("Number of First Contributions", array('domain' => 'de.systopia.campaign')),
+         "kpi_type"    => "number",
+         "vis_type"    => "none",
+         "description" => ts("Number of first contributions associated with this campaign", array('domain' => 'de.systopia.campaign')),
+         "value"       => $first_contribution_count,
+         "link"        => ""
+      );
+
+      // get average cost per first contribution
+      $kpi['amount_average_first'] = array(
+         "id"          => "amount_average_first",
+         "title"       => ts("Average Cost per First Contribution", array('domain' => 'de.systopia.campaign')),
+         "kpi_type"    => "money",
+         "vis_type"    => "none",
+         "description" => ts("Average Cost per first contribution associated with this campaign", array('domain' => 'de.systopia.campaign')),
+         "value"       => $total_costs / $first_contribution_count,
+         "link"        => ""
+      );
+
+
+      if ($contribution_count - $first_contribution_count > 0) {
+         $avg_cost_per_second_or_later = $total_costs / ($contribution_count - $first_contribution_count);
+      } else {
+         $avg_cost_per_second_or_later = 0;
+      }
+
+      // get average cost per second or later contribution
+      $kpi['amount_average_second_or_later'] = array(
+         "id"          => "amount_average_second",
+         "title"       => ts("Average Cost per Second or Later Contribution", array('domain' => 'de.systopia.campaign')),
+         "kpi_type"    => "money",
+         "vis_type"    => "none",
+         "description" => ts("Average Cost per second or later contribution associated with this campaign", array('domain' => 'de.systopia.campaign')),
+         "value"       => $avg_cost_per_second_or_later,
+         "link"        => ""
+      );
+   }
+
+   /**
+    * Calculate some generic stats on contributions
+    *
+    * @author N. Bochan
+    */
+   public static function calculateRevenue(&$kpi, $campaign_id, $children) {
+      $total_revenue  = self::getTotalRevenue($campaign_id, $children);
+
+      $kpi["total_revenue"] = array(
+         "id"          => "total_revenue",
+         "title"       => ts("Total Revenue", array('domain' => 'de.systopia.campaign')),
+         "kpi_type"    => "money",
+         "vis_type"    => "none",
+         "description" => ts("Total Revenue", array('domain' => 'de.systopia.campaign')),
+         "value"       => isset($total_revenue) ? $total_revenue : 0.00,
+         "link"        => ""
+      );
+   }
+
+   /**
+    * Calculate some generic stats on contributions
+    *
+    * @author N. Bochan
+    */
+   public static function calculateGenericContributionStats(&$kpi, $campaign_id, $children) {
+      $all_ids = array_keys($children);
+      $all_ids[] = $campaign_id;
+      $all_ids_list = implode(',', $all_ids);
+
+      // get the status IDs
+      $status = self::getContributionStatusList();
+      $negative_status_list = self::getNegativeContributionStatusIDs();
+
+      // CALCULATE COMPLETED CONTRIBUTIONS
       $query = "
       SELECT   COUNT(contrib.id) as amount_completed,
                AVG(contrib.total_amount) as amount_average
       FROM  civicrm_contribution contrib
-      WHERE contrib.campaign_id IN ($ids_list_tr)
-      AND   contrib.contribution_status_id = {$status['completed']};
-      ";
+      WHERE contrib.campaign_id IN ({$all_ids_list})
+      AND   contrib.contribution_status_id = {$status['completed']};";
 
       $contribution = CRM_Core_DAO::executeQuery($query);
       while ($contribution->fetch()) {
@@ -141,7 +281,6 @@ class CRM_Campaign_KPI {
          "value" => isset($amount_completed) ? $amount_completed : 0.00,
          "link" => ""
       );
-
       $kpi["amount_average"] = array(
          "id" => "amount_average",
          "title" => ts("Average Amount of Contributions", array('domain' => 'de.systopia.campaign')),
@@ -152,146 +291,51 @@ class CRM_Campaign_KPI {
          "link" => ""
       );
 
-      // get all but cancelled and failed
-      $query = "
-      SELECT   COUNT(contrib.id) as amount_all
-      FROM  civicrm_contribution contrib
-      WHERE contrib.campaign_id IN ($ids_list_tr)
-      AND   contrib.contribution_status_id NOT IN ({$negative_status_list});
-      ";
+      // CALCULATE NOT-NEGATIVE CONTRIBUTIONS
 
-      $contribution = CRM_Core_DAO::executeQuery($query);
-      while ($contribution->fetch()) {
-         $amount_all = $contribution->amount_all;
-      }
 
+      // TODO: rename
       $kpi["amount_all"] = array(
-         "id" => "amount_all",
-         "title" => ts("Number of Contributions (all but cancelled/refunded/failed)", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "number",
-         "vis_type" => "none",
+         "id"          => "amount_all",
+         "title"       => ts("Number of Contributions (all but cancelled/refunded/failed)", array('domain' => 'de.systopia.campaign')),
+         "kpi_type"    => "number",
+         "vis_type"    => "none",
          "description" => ts("Number of Contributions (all but cancelled/failed)", array('domain' => 'de.systopia.campaign')),
-         "value" => isset($amount_all) ? $amount_all : 0.00,
-         "link" => ""
+         "value"       => self::getTotalContributionCount($campaign_id, $children),
+         "link"        => ""
       );
+   }
 
-      // get all expenses
-      $result = civicrm_api3('CampaignExpense', 'getsum', array(
-           'campaign_id' => $id
-         ));
-      if($result['is_error'] == 0) {
-            $total_costs = $result['values'][$result['id']];
-      }
-      $kpi["total_cost"] = array(
-         "id" => "ttlcost",
-         "title" => ts("Total Costs", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "money",
-         "vis_type" => "none",
-         "description" => ts("Sum of (known) expenses to this campaign", array('domain' => 'de.systopia.campaign')),
-         "value" => isset($total_costs) ? $total_costs : 0.00,
-         "link" => ""
-      );
+   /**
+    * Calculate the revenue breakdown by subcampaign
+    *
+    * @author N. Bochan
+    */
+   public static function calculateRevenueBreakdown(&$kpi, $campaign_id, $children) {
+      $all_ids = array_keys($children);
+      $all_ids[] = $campaign_id;
+      $all_ids_list = implode(',', $all_ids);
 
-
-      $query = "
-      SELECT COUNT(id)
-      FROM civicrm_contribution first_contribution
-      WHERE first_contribution.campaign_id IN ($ids_list_tr)
-        AND NOT EXISTS (SELECT id
-                        FROM civicrm_contribution other_contribution
-                        WHERE other_contribution.contact_id = first_contribution.contact_id
-                          AND other_contribution.receive_date < first_contribution.receive_date);";
-
-      $first_contributions = CRM_Core_DAO::singleValueQuery($query);
-
-      // get all first
-      $kpi["amount_first"] = array(
-         "id" => "amount_first",
-         "title" => ts("Number of First Contributions", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "number",
-         "vis_type" => "none",
-         "description" => ts("Number of first contributions associated with this campaign", array('domain' => 'de.systopia.campaign')),
-         "value" => $first_contributions,
-         "link" => ""
-      );
-
-      // get average cost per first contribution
-      $kpi['amount_average_first'] = array(
-         "id" => "amount_average_first",
-         "title" => ts("Average Cost per First Contribution", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "money",
-         "vis_type" => "none",
-         "description" => ts("Average Cost per first contribution associated with this campaign", array('domain' => 'de.systopia.campaign')),
-         "value" => $total_costs / $first_contributions,
-         "link" => ""
-      );
-
-      if ($amount_all - $first_contributions > 0) {
-         $avg_cost_per_second_or_later = $total_costs / ($amount_all - $first_contributions);
-      } else {
-         $avg_cost_per_second_or_later = 0;
-      }
-
-      // get average cost per second or later contribution
-      $kpi['amount_average_second_or_later'] = array(
-         "id" => "amount_average_second",
-         "title" => ts("Average Cost per Second or Later Contribution", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "money",
-         "vis_type" => "none",
-         "description" => ts("Average Cost per second or later contribution associated with this campaign", array('domain' => 'de.systopia.campaign')),
-         "value" => $avg_cost_per_second_or_later,
-         "link" => ""
-      );
-
-
-      // get ROI
-      $kpi["roi"] = array(
-         "id" => "roi",
-         "title" => ts("ROI", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "number",
-         "vis_type" => "none",
-         "description" => ts("Return on investment", array('domain' => 'de.systopia.campaign')),
-         "value" => $total_revenue / (($total_costs == 0.00) ? 1.00 : $total_costs),
-         "link" => "https://en.wikipedia.org/wiki/Return_on_investment"
-      );
-
-      // get revenue goal reached percent
-      if($total_revenue_goal) {
-         $total_revenue_goal_pc = ($total_revenue / $total_revenue_goal);
-      }else{
-         $total_revenue_goal_pc = -1;
-      }
-
-      $kpi["total_revenue_goal_pc"] = array(
-         "id" => "total_revenue_goal_pc",
-         "title" => ts("Total Revenue Reached", array('domain' => 'de.systopia.campaign')),
-         "kpi_type" => "percentage",
-         "vis_type" => "none",
-         "description" => ts("Total Revenue Reached", array('domain' => 'de.systopia.campaign')),
-         "value" => $total_revenue_goal_pc,
-         "link" => ""
-      );
+      // get the status IDs
+      $negative_status_list = self::getNegativeContributionStatusIDs();
 
       // get revenue breakdown
       $query = "
-      SELECT    SUM(contrib.total_amount) as revenue,
-                camp.title as label
+      SELECT    SUM(contrib.total_amount) AS revenue,
+                camp.title                AS label
       FROM  civicrm_contribution contrib,
             civicrm_campaign camp
-      WHERE contrib.campaign_id IN ( %s )
+      WHERE contrib.campaign_id IN ( {$all_ids_list} )
       AND   contrib.campaign_id = camp.id
-      AND   contrib.contribution_status_id NOT IN ({$negative_status_list})
-      ";
-
-      $e_query = sprintf($query, $id);
-      $contribution = CRM_Core_DAO::executeQuery($e_query);
+      AND   contrib.contribution_status_id NOT IN ({$negative_status_list})";
+      $contribution = CRM_Core_DAO::executeQuery($query);
       while ($contribution->fetch()) {
          $revenue_current = array("label" => $contribution->label, "value" => (is_null($contribution->revenue) ? 0.00 : $contribution->revenue) / $total_revenue);
       }
 
       $revenue_subcampaigns = array();
       $tmp_idslist = array();
-      $children = CRM_Campaign_Tree::getCampaignIds($id, 0);
+      $children = CRM_Campaign_Tree::getCampaignIds($campaign_id, 0);
 
       if(count($children['children']) > 0) {
          $children = $children['children'];
@@ -337,22 +381,28 @@ class CRM_Campaign_KPI {
             "link" => ""
          );
       }
+   }
 
-      // get donation heartbeat
-      if(count($campaigns_ids['children']) > 0) {
-        $ids_list_hb = implode(',', array_merge(array($id), array_keys($campaigns)));
-      }else{
-        $ids_list_hb = $ids_list;
-      }
+   /**
+    * Calculate revenue breakdown by date
+    *
+    * @author N. Bochan
+    */
+   public static function calculateDonationHeartbeat(&$kpi, $campaign_id, $campaigns) {
+      $all_ids = array_keys($children);
+      $all_ids[] = $campaign_id;
+      $all_ids_list = implode(',', $all_ids);
+
+      // get the status IDs
+      $negative_status_list = self::getNegativeContributionStatusIDs();
 
       $query_contribs = "
-      SELECT `receive_date` as date,
-              COUNT(*) as value
+      SELECT `receive_date` AS date,
+              COUNT(*)      AS value
       FROM  civicrm_contribution contrib
-      WHERE contrib.campaign_id IN ( $ids_list_hb )
+      WHERE contrib.campaign_id IN ( {$all_ids_list} )
       AND contrib.contribution_status_id NOT IN ({$negative_status_list})
-      GROUP BY DATE(`receive_date`)
-      ;";
+      GROUP BY DATE(`receive_date`);";
       $all_contribs = array();
 
       $contribution = CRM_Core_DAO::executeQuery($query_contribs);
@@ -373,10 +423,106 @@ class CRM_Campaign_KPI {
             "link" => ""
          );
       }
-
-      CRM_Utils_CampaignCustomisationHooks::campaign_kpis($id, $kpi, 99);
-
-      return json_encode($kpi);
    }
 
+
+
+
+
+   /************************************************************
+    **                HELPERS                                 **
+    ************************************************************/
+   /**
+    * get a count of all associated contributoins
+    */
+   protected static function getTotalContributionCount($campaign_id, $children) {
+      $all_ids = array_keys($children);
+      $all_ids[] = $campaign_id;
+      $all_ids_list = implode(',', $all_ids);
+
+      // get the status IDs
+      $negative_status_list = self::getNegativeContributionStatusIDs();
+
+      $query = "
+      SELECT COUNT(contrib.id)
+      FROM  civicrm_contribution contrib
+      WHERE contrib.campaign_id IN ({$all_ids_list})
+      AND   contrib.contribution_status_id NOT IN ({$negative_status_list});";
+
+      $value = CRM_Core_DAO::singleValueQuery($query);
+      if ($value) {
+         return $value;
+      } else {
+         return '0.00';
+      }
+   }
+
+   /**
+    * get the list of contribution statuses
+    */
+   protected static function getContributionStatusList() {
+      if (!isset(self::$cache['contribution_status_list'])) {
+         $status_list = array();
+         $status_list['completed'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name');
+         $status_list['refunded']  = CRM_Core_OptionGroup::getValue('contribution_status', 'Refunded',  'name');
+         $status_list['cancelled'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Cancelled', 'name');
+         $status_list['failed']    = CRM_Core_OptionGroup::getValue('contribution_status', 'Failed',    'name');
+         self::$cache['contribution_status_list'] = $status_list;
+      }
+      return self::$cache['contribution_status_list'];
+   }
+
+
+   /**
+    * get the list of contribution statuses
+    */
+   protected static function getNegativeContributionStatusIDs() {
+      $status_list = self::getContributionStatusList();
+
+      $negative_statuses = array();
+      if (!empty($status_list['refunded']))  $negative_statuses[] = $status_list['refunded'];
+      if (!empty($status_list['cancelled'])) $negative_statuses[] = $status_list['cancelled'];
+      if (!empty($status_list['failed']))    $negative_statuses[] = $status_list['failed'];
+
+      if (empty($negative_statuses)) {
+         error_log("de.systopia.campaign: KPIs couldn't be calculated, something's wrong with the contributoin statuses.");
+         $negative_statuses[] = 999; // prevent SQL errors
+      }
+
+      return implode(',', $negative_statuses);
+   }
+
+   /**
+    * Get total (recursive) costs of the campaign
+    */
+   protected static function getTotalCosts($campaign_id, $children) {
+      if (!isset(self::$cache[$campaign_id]['total_costs'])) {
+         $cost_query = civicrm_api3('CampaignExpense', 'getsum', array('campaign_id' => $campaign_id));
+         self::$cache[$campaign_id]['total_costs'] = (float) $result['values'][$result['id']];
+      }
+      return self::$cache[$campaign_id]['total_costs'];
+   }
+
+   /**
+    * Get total (recursive) revenue of the campaing
+    */
+   protected static function getTotalRevenue($campaign_id, $children) {
+      if (!isset(self::$cache[$campaign_id]['total_revenue'])) {
+         $all_ids = array_keys($children);
+         $all_ids[] = $campaign_id;
+         $all_ids_list = implode(',', $all_ids);
+
+         // get the status IDs
+         $status = self::getContributionStatusList();
+
+         $query = "
+         SELECT    SUM(contrib.total_amount)
+         FROM  civicrm_contribution contrib
+         WHERE contrib.campaign_id IN ( {$all_ids_list} )
+         AND   contrib.contribution_status_id = {$status['completed']};";
+         self::$cache[$campaign_id]['total_revenue'] = (float) CRM_Core_DAO::singleValueQuery($query);
+      }
+
+      return self::$cache[$campaign_id]['total_revenue'];
+   }
 }

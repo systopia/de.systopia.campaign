@@ -17,4 +17,10 @@
     <page_callback>CRM_CampaignTree_Page_AJAX::getCampaignList</page_callback>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/campaign/settings</path>
+    <page_callback>CRM_Campaign_Form_Settings</page_callback>
+    <title>Settings</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
