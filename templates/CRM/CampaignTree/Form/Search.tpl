@@ -270,8 +270,7 @@
                     return nRow;
                 },
                 "fnDrawCallback": function() {
-                    // FIXME: trigger crmLoad and crmEditable would happen automatically
-                    $('.crm-editable').crmEditable();
+                  // REMOVED: $('.crm-editable').crmEditable(); (see https://github.com/systopia/de.systopia.campaign/issues/40)
                 },
                 "fnServerData": function ( sSource, aoData, fnCallback ) {
                     if ( filterSearch ) {
