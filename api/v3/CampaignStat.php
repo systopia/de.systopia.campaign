@@ -71,9 +71,7 @@ function _civicrm_api3_campaign_stat_activity_sequence(&$params) {
 
 function civicrm_api3_campaign_stat_activity_sequence($params) {
   try {
-    $query = "SELECT grouping FROM civicrm_campaign_config_status_sequence ORDER BY sequence";
-    $dao = CRM_Core_DAO::executeQuery($query);
-    return civicrm_api3_create_success($dao->fetchAll(), $params);
+    return civicrm_api3_create_success(CRM_Campaign_Stat::sequence(), $params);
   } catch (Exception $exception) {
     $data = array(
       'params' => $params,

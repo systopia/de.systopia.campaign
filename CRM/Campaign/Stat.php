@@ -61,6 +61,12 @@ class CRM_Campaign_Stat {
     return $dao->fetchAll();
   }
 
+  public static function sequence() {
+    $query = "SELECT grouping FROM civicrm_campaign_config_status_sequence ORDER BY sequence";
+    $dao = CRM_Core_DAO::executeQuery($query);
+    return $dao->fetchAll();
+  }
+
   public static function calculateActivityStats($kpi, $campaign_id, $children) {
     $stats = self::activityReport($campaign_id, $children);
     return $kpi;
