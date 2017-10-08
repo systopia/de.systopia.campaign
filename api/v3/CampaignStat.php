@@ -14,6 +14,8 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+require_once('CRM/CampaignTree/Tree.php');
+
 function _civicrm_api3_campaign_stat_activity_counter(&$params) {
   $params['id']['api.required'] = 1;
 }
