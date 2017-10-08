@@ -15,40 +15,6 @@
 +########################################################*/
 -->
 
-
-<style type="text/css">
-#crm-campaign-actions-list {
-  position: absolute;
-  display: block;
-  top: 150px;
-  width: 256px;
-  left: 128;
-  z-index: 15;
-}
-
-.crm-campaign-actions-list-inner {
-  background-color: #2f2f2e;
-  padding: 4px;
-}
-
-.crm-create-new-list-inner, .crm-create-new-list-inner ul {
-  width: 160px!important;
-}
-</style>
-
-<script type="text/javascript">
-  cj("#crm-campaign-actions-link").click(function() {
-    var current = cj("#crm-campaign-actions-list").css("display");
-    if (current == 'none') {
-      cj("#crm-campaign-actions-list").css("display", "block");
-    } else {
-      cj("#crm-campaign-actions-list").css("display", "none");
-    }
-    // cj("#crm-campaign-actions-list").show(200);
-  });
-</script>
-
-
 <div id="campaign_container">
    <div id="campaign_summary">
 
@@ -91,6 +57,11 @@
                           <span><div class="icon ui-icon-copy"/>{{ts('Clone Campaign', {domain: 'de.systopia.campaign'})}}</span>
                         </a>
                       </li>
+                      <li ng-repeat="action in actions">
+                        <a class="campaign-action" href="{{action.url}}" title="{{action.name}}">
+                          <span><div class="icon {{action.icon}}"/>{{action.name}}</span>
+                        </a>
+                      </li>
                     </ul>
                   </div>
                   <div class="clear"/>
@@ -110,16 +81,6 @@
         </ul>
         <div class="clear"/>
       </div>
-
-
-      <!-- <div>
-        <a href="{{tree_link}}" class="button">{{ts('View Campaign Tree', {domain: 'de.systopia.campaign'})}}</a>
-        <a href="{{edit_link}}" class="button">{{ts('Edit Campaign', {domain: 'de.systopia.campaign'})}}</a>
-        <a href="{{subcampaign_link}}" class="button">{{ts('Create Subcampaign', {domain: 'de.systopia.campaign'})}}</a>
-        <a href="{{clone_link}}" class="button">{{ts('Clone Campaign', {domain: 'de.systopia.campaign'})}}</a>
-        <a href="{{btd_link}}" class="button fr">{{ts('Return to Dashboard', {domain: 'de.systopia.campaign'})}}</a>
-      </div> -->
-
 
 
       <div id="info">
@@ -234,3 +195,16 @@
 
    <div class="titlechanger"></div>
 </div>
+
+
+<!-- ACTION MENU LOGIC (TODO: MOVE) -->
+<script type="text/javascript">
+  cj("#crm-campaign-actions-link").click(function() {
+    var current = cj("#crm-campaign-actions-list").css("display");
+    if (current == 'none') {
+      cj("#crm-campaign-actions-list").css("display", "block");
+    } else {
+      cj("#crm-campaign-actions-list").css("display", "none");
+    }
+  });
+</script>
