@@ -30,6 +30,7 @@ class CRM_Campaign_KPI {
          'costs'                => E::ts("Expenses and ROI"),
          'revenue_breakdown'    => E::ts("Revenue breakdown for subcampaigns"),
          'donation_heartbeat'   => E::ts("Plots donations over the course of the campaign"),
+         'activities'           => E::ts("Statistics on associated activities"),
       );
    }
 
@@ -64,6 +65,9 @@ class CRM_Campaign_KPI {
       }
       if (in_array('costs', $enabled_kpis)) {
          self::calculateCosts($kpi, $campaign_id, $children);
+      }
+      if (in_array('activities', $enabled_kpis)) {
+         // CRM_Campaign_Stats::calculateActivityStats($kpi, $campaign_id, $children);
       }
 
       // finally: run the hook
