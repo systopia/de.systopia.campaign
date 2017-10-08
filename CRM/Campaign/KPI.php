@@ -71,7 +71,7 @@ class CRM_Campaign_KPI {
       }
 
       // finally: run the hook
-      CRM_Utils_CampaignCustomisationHooks::campaign_kpis($id, $kpi, 99);
+      CRM_Utils_CampaignCustomisationHooks::campaign_kpis($campaign_id, $kpi, 99);
 
       return json_encode($kpi);
    }
