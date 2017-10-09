@@ -42,6 +42,7 @@ function campaign_civicrm_xmlMenu(&$files) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
  */
 function campaign_civicrm_install() {
+  CRM_Campaign_Config::installScheduledJob();
   _campaign_civix_civicrm_install();
 }
 

@@ -69,4 +69,27 @@ class CRM_Campaign_Config extends CRM_Core_Form {
     }
     CRM_Core_BAO_Setting::setItem($active_kpis, 'CampaignManager', 'enabled_built_in_kpis');
   }
+
+  /**
+   * Install a scheduled job if there isn't one already
+   */
+  public static function installScheduledJob() {
+    // find all scheduled jobs calling CampaignKpi.cache
+    $query = civicrm_api3('Job', 'get', array(
+      'api_entity'   => 'CampaignKpi',
+      'api_action'   => 'cache',
+      'option.limit' => 0));
+    $jobs = $query['values'];
+
+    if (empty($jobs)) {
+      // none found? create a new one
+      civicrm_api3('Job', 'create', array(
+        'api_entity'    => 'CampaignKpi',
+        'api_action'    => 'cache',
+        'run_frequency' => 'Daily',
+        'name'          => E::ts('Fill CM KPI Cache'),
+        'description'   => E::ts("Caches the CampaignManager's KPI cache, if caching is enabled."),
+        'is_active'     => '0'));
+    }
+  }
 }

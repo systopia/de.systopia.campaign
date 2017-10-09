@@ -65,6 +65,12 @@ class CRM_Campaign_Form_Settings extends CRM_Core_Form {
       $current_values[$key] = 1;
     }
 
+    // add general settings
+    $settings = CRM_Campaign_Config::getCMSettings();
+    foreach ($settings as $key => $value) {
+      $current_values[$key] = $value;
+    }
+
     return $current_values;
   }
 

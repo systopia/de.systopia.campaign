@@ -20,7 +20,10 @@
   <item>
     <path>civicrm/campaign/settings</path>
     <page_callback>CRM_Campaign_Form_Settings</page_callback>
-    <title>Settings</title>
-    <access_arguments>access CiviCRM</access_arguments>
+    <title>Campaign Manager Settings</title>
+    <access_arguments>administer CiviCampaign</access_arguments>
+    <icon>admin/small/05.png</icon>
+    <adminGroup>CiviCampaign</adminGroup>
+    <component>CiviCampaign</component>
   </item>
 </menu>
