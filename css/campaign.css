@@ -183,3 +183,21 @@ linegraph .axis line {
     max-width: 20px;
     vertical-align: middle;
 }
+
+#crm-campaign-actions-list {
+  position: absolute;
+  display: block;
+  top: 150px;
+  width: 256px;
+  left: 128;
+  z-index: 15;
+}
+
+.crm-campaign-actions-list-inner {
+  background-color: #2f2f2e;
+  padding: 4px;
+}
+
+.crm-create-new-list-inner, .crm-create-new-list-inner ul {
+  width: 160px!important;
+}

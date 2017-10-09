@@ -46,6 +46,9 @@
           expenses: function($route, crmApi) {
              return crmApi('CampaignExpense', 'get', {campaign_id: $route.current.params.id});
           },
+          actions: function($route, crmApi) {
+             return crmApi('CampaignTree', 'getlinks', {id: $route.current.params.id});
+          },
           // customInfo: function($route, crmApi) {
           //   return crmApi('CampaignTree', 'getcustominfo', {entity_id: $route.current.params.id});
           // },
@@ -98,11 +101,12 @@
   'kpi',
   'expenseSum',
   'expenses',
+  'actions',
   // 'customInfo',
   'dialogService',
   'crmApi',
   '$interval',
-   function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi, expenseSum, expenses, /*customInfo,*/ dialogService, crmApi, $interval) {
+   function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi, expenseSum, expenses, actions, /*customInfo,*/ dialogService, crmApi, $interval) {
      $scope.ts = CRM.ts('de.systopia.campaign');
      $scope.currentCampaign = currentCampaign;
      $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
@@ -113,7 +117,7 @@
      $scope.parents = parents.parents.reverse();
      $scope.expenseSum = expenseSum.values;
      $scope.expenses = [];
-     // $scope.customInfo = customInfo;
+     $scope.actions = JSON.parse(actions.result);
 
      crmApi('OptionValue', 'get', {"option_group_id": "campaign_status", "return": "value,label"}).then(function (apiResult) {
        $scope.campaign_status = apiResult.values;
@@ -315,8 +319,31 @@
         switch (current_item.vis_type) {
           case "":
           case "none":
+          case "table":
             continue;
           default:
+            filtered.push(current_item);
+        }
+      }
+    }
+    return filtered;
+   }
+  });
+
+  campaign.filter("filterTableKPI", function(){
+   return function(items){
+    var filtered = [];
+    for (var item in items) {
+      if (items.hasOwnProperty(item)) {
+        var current_item = items[item];
+        if(!"vis_type" in current_item) {
+          continue;
+        }
+        switch (current_item.vis_type) {
+          case "":
+          case "none":
+            continue;
+          case "table":
             filtered.push(current_item);
         }
       }

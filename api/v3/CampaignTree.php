@@ -195,3 +195,35 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
 function _civicrm_api3_campaign_tree_getcustominfo_spec(&$params) {
   $params['entity_id']['api.required'] = 1;
 }
+
+
+
+
+/**
+ * Get all actions links for a given campaign id
+ *
+ * @param integer $id campaign id
+ *
+ * @return array
+ */
+function civicrm_api3_campaign_tree_getlinks($params) {
+  // simply call the Hook to catch custom actions
+  $links = array();
+  CRM_Utils_Hook::links('campaign.selector.row', 'Campaign', $params['id'], $links);
+
+  // postprocess
+  foreach ($links as &$link) {
+    if (isset($link['url'])) {
+      $link['url'] = str_replace('&amp;', '&', $link['url']);
+    }
+    if (!isset($link['icon'])) {
+      $link['icon'] = 'ui-icon-gear'; // ui-icon-link?
+    }
+  }
+
+  return json_encode($links);
+}
+
+function _civicrm_api3_campaign_tree_getlinks_spec(&$params) {
+ $params['id']['api.required'] = 1;
+}
