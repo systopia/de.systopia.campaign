@@ -319,6 +319,7 @@
         switch (current_item.vis_type) {
           case "":
           case "none":
+          case "table":
             continue;
           default:
             filtered.push(current_item);
