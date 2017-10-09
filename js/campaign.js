@@ -539,21 +539,32 @@
         var chartdata = scope[attrs.chartdata];
         var d3 = $window.d3;
 
-        var data = chartdata.value.header.cells.value;
+        var headerData = chartdata.value.header.cells.value;
+        var bodyData = chartdata.value.body.cells.value;
+        var footerData = chartdata.value.footer.cells.value;
 
-        var margin = {top: 30, right: 20, bottom: 30, left: 50},
+        var margin = {top: 10, right: 10, bottom: 10, left: 10},
           width  = 600 - margin.left - margin.right,
           height = 300 - margin.top  - margin.bottom;
 
-        var vis = d3.select(elem[0]).append("svg").data([data])
+        var vis2 = d3.select(elem[0]).append("table")
           .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+          .attr("height", height + margin.top + margin.bottom);
 
-        if(CRM._.isEmpty(data)) {
-          vis.append("text").attr("x", width / 2 - 20).attr("y", height / 2).text(ts('No Data'));
-        }
+        vis2.append('thead').append('tr').selectAll('th').data(headerData)
+          .enter()
+          .append("th")
+          .text(function(d){ return d;});
+
+        var bd = vis2.append('tbody');
+        angular.forEach(bodyData, function(d) {
+          bd.append('tr').selectAll('td').data(Object.values(d)).enter().append('td').text(function(d){ return d;});
+        });
+
+        vis2.append('tfoot').append('tr').selectAll('td').data(footerData)
+          .enter()
+          .append("td")
+          .text(function(d){ return d;});
       }
     }
   });
