@@ -23,6 +23,25 @@ use CRM_Campaign_ExtensionUtil as E;
 class CRM_Campaign_Config extends CRM_Core_Form {
 
   /**
+   * Get the generat CampaignManager Settings
+   */
+  public static function getCMSettings() {
+    $settings = CRM_Core_BAO_Setting::getItem('CampaignManager', 'campaign_mgr_settings');
+    if ($settings == NULL) {
+      $settings = array();
+    }
+
+    return $settings;
+  }
+
+  /**
+   * Set the generat CampaignManager Settings
+   */
+  public static function setCMSettings($settings) {
+    CRM_Core_BAO_Setting::setItem($settings, 'CampaignManager', 'campaign_mgr_settings');
+  }
+
+  /**
    * get the list of KPIs keys enabled
    */
   public static function getActiveBuiltInKPIs() {

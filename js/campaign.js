@@ -271,6 +271,7 @@
          switch (current_item.kpi_type) {
            case "money":
            case "percentage":
+           case "date":
            case "number":
             filtered.push(current_item);
             break;
@@ -289,6 +290,9 @@
         return "-";
       }
       switch (input.kpi_type) {
+        case "date":
+          // TODO: how to format date
+          return input.value;
         case "money":
           return CRM.formatMoney(input.value);
         case "percentage":

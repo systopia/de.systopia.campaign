@@ -35,6 +35,13 @@ class CRM_Campaign_Form_Settings extends CRM_Core_Form {
       $this->add('checkbox', $key, $label);
     }
 
+    // segment options
+    $this->addElement('select',
+                      'cache',
+                      E::ts('KPI Caching (TTL)'),
+                      CRM_Campaign_KPICache::getTTLOptions(),
+                      array());
+
     $this->addButtons(array(
       array(
         'type' => 'submit',
@@ -67,8 +74,16 @@ class CRM_Campaign_Form_Settings extends CRM_Core_Form {
     // store KPIs
     CRM_Campaign_Config::setActiveBuiltInKPIs($values);
 
+    // store settings
+    $settings = array(
+      'cache' => CRM_Utils_Array::value('cache', $values),
+    );
+    CRM_Campaign_Config::setCMSettings($settings);
+
+    // clear cache
+    CRM_Campaign_KPICache::clearCache();
+
     parent::postProcess();
   }
-
 
 }
