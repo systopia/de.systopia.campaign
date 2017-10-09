@@ -23,6 +23,8 @@ use CRM_Campaign_ExtensionUtil as E;
  */
 class CRM_Campaign_Form_Settings extends CRM_Core_Form {
 
+  private $currentValues = array();
+
   public function buildQuickForm() {
 
     CRM_Utils_System::setTitle(E::ts('Campaign Manager Settings'));
@@ -71,11 +73,16 @@ class CRM_Campaign_Form_Settings extends CRM_Core_Form {
       $current_values[$key] = $value;
     }
 
+    $this->currentValues = $current_values;
     return $current_values;
   }
 
   public function postProcess() {
     $values = $this->exportValues();
+
+    $currentActivitiesParam = (int) CRM_Utils_Array::value('activities', $this->currentValues);
+    $newActivitiesParam = (int) CRM_Utils_Array::value('activities', $values);
+    CRM_Campaign_Stat::set($currentActivitiesParam, $newActivitiesParam);
 
     // store KPIs
     CRM_Campaign_Config::setActiveBuiltInKPIs($values);
