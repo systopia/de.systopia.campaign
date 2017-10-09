@@ -38,7 +38,13 @@ class CRM_Campaign_KPI {
    * Get Key Performance Indicators (KPIs) for a specific campaign (+subtree):
    */
    public static function getCampaignKPI($campaign_id) {
-      $kpi = array();
+      $kpi = CRM_Campaign_KPICache::fetchFromCache($campaign_id);
+      if ($kpi !== NULL) {
+         return json_encode($kpi);
+      } else {
+         // cache miss
+         $kpi = array();
+      }
 
       // get all sub-campaigns
       $campaigns = CRM_Campaign_Tree::getCampaignIds($campaign_id, 99);
@@ -72,6 +78,9 @@ class CRM_Campaign_KPI {
 
       // finally: run the hook
       CRM_Utils_CampaignCustomisationHooks::campaign_kpis($id, $kpi, 99);
+
+      // cach result
+      CRM_Campaign_KPICache::pushToCache($campaign_id, $kpi);
 
       return json_encode($kpi);
    }
