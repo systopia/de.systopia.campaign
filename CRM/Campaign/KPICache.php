@@ -21,10 +21,40 @@ require_once('CRM/CampaignTree/Tree.php');
 class CRM_Campaign_KPICache {
 
    /**
+    * Check if caching is enabled
+    */
+   public static function isCacheEnabled() {
+      $settings = CRM_Campaign_Config::getCMSettings();
+      return !empty($settings['cache']);
+   }
+
+   /**
+    * get a list of options for cache TTL
+    */
+   public static function getTTLOptions() {
+      return array(
+         ''         => E::ts("no caching"),
+         '+1 hour'  => E::ts("cache for 1 hour"),
+         '+1 day'   => E::ts("cache for 24 hours"),
+         '+1 week'  => E::ts("cache for 1 week"),
+      );
+   }
+
+   /**
+    * clear ALL CampaignManager cache entries
+    */
+   public static function clearCache() {
+      // PURGE stale entries
+      CRM_Core_DAO::executeQuery("DELETE FROM civicrm_cache WHERE `group_name` = 'de.systopia.campaign'");
+   }
+
+   /**
     * fetch a valid record from the cache - according to the settings
     * @return valid KPI set or NULL if none found
     */
    public static function fetchFromCache($campaign_id) {
+      if (!self::isCacheEnabled()) return;
+
       $path = "kpis_campaign_{$campaign_id}";
 
       // PURGE stale entries
@@ -64,9 +94,11 @@ class CRM_Campaign_KPICache {
     * Cache the given result in the cache
     */
    public static function pushToCache($campaign_id, $kpi) {
+      if (!self::isCacheEnabled()) return;
+
       $path = "kpis_campaign_{$campaign_id}";
-      $ttl = "+24 hours";
-      $expired_date = date('Y-m-d H:i:s', strtotime($ttl));
+      $settings = CRM_Campaign_Config::getCMSettings();
+      $expired_date = date('Y-m-d H:i:s', strtotime($settings['cache']));
 
       // INSERT a new record
       // error_log("CACHED UNTIL {$expired_date}");

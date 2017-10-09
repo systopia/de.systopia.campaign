@@ -13,6 +13,13 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*}
 
+<h3>{ts domain="de.systopia.campaign"}Settings{/ts}</h3>
+<div class="crm-section">
+  <div class="label">{$form.cache.label}</div>
+  <div class="content">{$form.cache.html}</div>
+  <div class="clear"></div>
+</div>
+
 <h3>{ts domain="de.systopia.campaign"}Enable built-in KPIs{/ts}</h3>
 <div>
   {foreach from=$kpis item=kpi key=name}
