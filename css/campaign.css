@@ -161,6 +161,11 @@ linegraph .axis line {
     shape-rendering: crispEdges;
 }
 
+tablegraph svg {
+  display: block;
+  margin: auto;
+}
+
 /* alter display of parent and child groups in Manage Groups selector */
 /* from civicrm.css: #crm-container .crm-group-parent td.crm-group-name { */
 #crm-container td.crm-campaign-name {
