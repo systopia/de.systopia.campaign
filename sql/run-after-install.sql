@@ -35,8 +35,12 @@ INSERT INTO civicrm_campaign_config_activity_status
     (SELECT
       ov.value, ov.label
     FROM civicrm_option_value ov
-      JOIN civicrm_option_group og ON og.id = ov.option_group_id AND og.name = 'activity_status') s
-;
+      JOIN civicrm_option_group og ON og.id = ov.option_group_id AND og.name = 'activity_status') s;
+
+-- Set statuses as an Other except of Scheduled and Completed
+UPDATE civicrm_campaign_config_activity_status
+SET grouping = 'Other'
+WHERE status_id >= 3;
 
 -- insert grouping based on value of statuses
 INSERT INTO civicrm_campaign_config_status_sequence
