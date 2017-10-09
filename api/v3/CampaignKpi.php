@@ -47,9 +47,7 @@ function civicrm_api3_campaign_kpi_cache($params) {
   $campaign_ids = array();
   $params['option.limit'] = 0;
   $params['return'] = 'id';
-  error_log(json_encode($params));
   $campaign_query = civicrm_api3('Campaign', 'get', $params);
-  error_log(json_encode($campaign_query));
   foreach ($campaign_query['values'] as $campaign) {
     $campaign_ids[] = $campaign['id'];
   }
