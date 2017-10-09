@@ -124,10 +124,6 @@
   width: 100%;
 }
 
-#kpitabvis {
-  width: 100%;
-}
-
 .kpivisitem {
   float: left;
   padding: 20px 20px 20px 20px;
@@ -159,11 +155,6 @@ linegraph .axis line {
     stroke: grey;
     stroke-width: 1;
     shape-rendering: crispEdges;
-}
-
-tablegraph svg {
-  display: block;
-  margin: auto;
 }
 
 /* alter display of parent and child groups in Manage Groups selector */

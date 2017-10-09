@@ -369,23 +369,6 @@
     };
   });
 
-  campaign.directive("kpitablevisualization", function($window) {
-    return {
-      template: '<ng-include src="getTemplateUrl()"/>',
-      scope: {
-          kpi: '=kpi'
-      },
-      restrict: 'E',
-      controller: function($scope) {
-        $scope.chartdata = $scope.kpi;
-        //function used on the ng-include to resolve the template
-        $scope.getTemplateUrl = function() {
-          return resourceUrl + '/partials/kpi_' + $scope.kpi.vis_type + '.html';
-        }
-      }
-    };
-  });
-
   campaign.directive("piechart", function($window) {
     return {
       scope: {
@@ -525,46 +508,6 @@
                   .text(ts('No Data'));
           }
 
-      }
-    }
-  });
-
-  campaign.directive("tablegraph", function($window) {
-    return {
-      scope: {
-          chartdata: '=chartdata'
-      },
-      restrict: 'E',
-      link: function(scope, elem, attrs) {
-        var chartdata = scope[attrs.chartdata];
-        var d3 = $window.d3;
-
-        var headerData = chartdata.value.header.cells.value;
-        var bodyData = chartdata.value.body.cells.value;
-        var footerData = chartdata.value.footer.cells.value;
-
-        var margin = {top: 10, right: 10, bottom: 10, left: 10},
-          width  = 600 - margin.left - margin.right,
-          height = 300 - margin.top  - margin.bottom;
-
-        var vis2 = d3.select(elem[0]).append("table")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom);
-
-        vis2.append('thead').append('tr').selectAll('th').data(headerData)
-          .enter()
-          .append("th")
-          .text(function(d){ return d;});
-
-        var bd = vis2.append('tbody');
-        angular.forEach(bodyData, function(d) {
-          bd.append('tr').selectAll('td').data(Object.values(d)).enter().append('td').text(function(d){ return d;});
-        });
-
-        vis2.append('tfoot').append('tr').selectAll('td').data(footerData)
-          .enter()
-          .append("td")
-          .text(function(d){ return d;});
       }
     }
   });

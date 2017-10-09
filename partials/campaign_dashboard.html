@@ -145,16 +145,6 @@
      </div>
    </div>
 
-   <div crm-ui-accordion="{title: ts('KPI Tables', {domain: 'de.systopia.campaign'})}">
-     <div id="kpitabvis">
-       <div class="kpivisitem" ng-repeat="(key, value) in kpi | filterTableKPI">
-         <div class="title"><h3>{{value.title}}</h3></div>
-         <div class="visualization"><kpitablevisualization kpi="value"></kpitablevisualization></div>
-       </div>
-       <div style="clear:both"></div>
-     </div>
-   </div>
-
     <div ng-repeat="(key, tableSection) in kpi | filterTableKPI">
         <div crm-ui-accordion="{title: tableSection.title}">
             <table>
