@@ -73,7 +73,7 @@ class CRM_Campaign_Stat {
     return $result;
   }
 
-  public static function calculateActivityStats($kpi, $campaign_id, $children) {
+  public static function calculateActivityStats(&$kpi, $campaign_id, $children) {
     $stats = self::activityReport($campaign_id, $children);
     $sequence = CRM_Campaign_Stat::sequence();
     $report = array();
@@ -145,8 +145,6 @@ class CRM_Campaign_Stat {
         ),
       ),
     );
-
-    return $kpi;
   }
 
 }
