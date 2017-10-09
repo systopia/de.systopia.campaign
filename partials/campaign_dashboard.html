@@ -155,6 +155,28 @@
      </div>
    </div>
 
+    <div ng-repeat="(key, tableSection) in kpi | filterTableKPI">
+        <div crm-ui-accordion="{title: tableSection.title}">
+            <table>
+                <thead>
+                    <tr>
+                        <th ng-repeat="(k, v) in tableSection.value.header.cells.value">{{v}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="(k, r) in tableSection.value.body.cells.value">
+                        <td ng-repeat="(k, v) in r">{{v}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td ng-repeat="(k, v) in tableSection.value.footer.cells.value">{{v}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
    <div crm-ui-accordion="{title: ts('Key Performance Indicators (includes subcampaigns)', {domain: 'de.systopia.campaign'})}" >
       <table class="kpitable">
         <tr ng-repeat="(key, value) in kpi | preFilterKPI">
