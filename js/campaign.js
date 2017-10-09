@@ -329,7 +329,46 @@
    }
   });
 
+  campaign.filter("filterTableKPI", function(){
+   return function(items){
+    var filtered = [];
+    for (var item in items) {
+      if (items.hasOwnProperty(item)) {
+        var current_item = items[item];
+        if(!"vis_type" in current_item) {
+          continue;
+        }
+        switch (current_item.vis_type) {
+          case "":
+          case "none":
+            continue;
+          case "table":
+            filtered.push(current_item);
+        }
+      }
+    }
+    return filtered;
+   }
+  });
+
   campaign.directive("kpivisualization", function($window) {
+    return {
+      template: '<ng-include src="getTemplateUrl()"/>',
+      scope: {
+          kpi: '=kpi'
+      },
+      restrict: 'E',
+      controller: function($scope) {
+        $scope.chartdata = $scope.kpi;
+        //function used on the ng-include to resolve the template
+        $scope.getTemplateUrl = function() {
+          return resourceUrl + '/partials/kpi_' + $scope.kpi.vis_type + '.html';
+        }
+      }
+    };
+  });
+
+  campaign.directive("kpitablevisualization", function($window) {
     return {
       template: '<ng-include src="getTemplateUrl()"/>',
       scope: {
@@ -485,6 +524,35 @@
                   .text(ts('No Data'));
           }
 
+      }
+    }
+  });
+
+  campaign.directive("tablegraph", function($window) {
+    return {
+      scope: {
+          chartdata: '=chartdata'
+      },
+      restrict: 'E',
+      link: function(scope, elem, attrs) {
+        var chartdata = scope[attrs.chartdata];
+        var d3 = $window.d3;
+
+        var data = chartdata.value.header.cells.value;
+
+        var margin = {top: 30, right: 20, bottom: 30, left: 50},
+          width  = 600 - margin.left - margin.right,
+          height = 300 - margin.top  - margin.bottom;
+
+        var vis = d3.select(elem[0]).append("svg").data([data])
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        if(CRM._.isEmpty(data)) {
+          vis.append("text").attr("x", width / 2 - 20).attr("y", height / 2).text(ts('No Data'));
+        }
       }
     }
   });
