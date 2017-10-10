@@ -47,9 +47,8 @@ class CRM_Campaign_Config extends CRM_Core_Form {
   public static function getActiveBuiltInKPIs() {
     $enabled = CRM_Core_BAO_Setting::getItem('CampaignManager', 'enabled_built_in_kpis');
     if ($enabled == NULL) {
-      // i.e. first time
-      $kpis = CRM_Campaign_KPI::builtInKPIs();
-      $enabled = array_keys($kpis);
+      // i.e. first time: enable some KPIs.
+      $enabled = array('contribution_count', 'revenue', 'revenue_breakdown', 'donation_heartbeat');
     }
 
     return $enabled;
