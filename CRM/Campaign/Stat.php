@@ -71,7 +71,7 @@ class CRM_Campaign_Stat {
    */
   public static function activityReport($campaignId, $children) {
     $ids = array_merge(array($campaignId), array_keys($children));
-    $query = "SELECT t1.activity_type_id, at1.name, t1.grouping, sum(t1.counter) counter FROM
+    $query = "SELECT t1.activity_type_id, at1.label, t1.grouping, sum(t1.counter) counter FROM
                 (SELECT
                   a.activity_type_id, a.status_id, s.grouping, count(a.id) counter
                 FROM civicrm_activity a
@@ -87,11 +87,11 @@ class CRM_Campaign_Stat {
                 ) t1
                 JOIN civicrm_campaign_config_status_sequence ss ON t1.grouping = ss.grouping
                 JOIN (SELECT
-                  value id, name
+                  value id, label
                 FROM civicrm_option_value
                 WHERE option_group_id = (SELECT id FROM civicrm_option_group WHERE name = 'activity_type')) at1 ON at1.id = t1.activity_type_id
-              GROUP BY t1.activity_type_id, at1.name, t1.grouping
-              ORDER BY at1.name, ss.sequence";
+              GROUP BY t1.activity_type_id, at1.label, t1.grouping
+              ORDER BY at1.label, ss.sequence";
     $params = array();
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     return $dao->fetchAll();
