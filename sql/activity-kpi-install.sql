@@ -33,7 +33,7 @@ INSERT INTO civicrm_campaign_config_activity_status
   FROM civicrm_option_value ov
     JOIN civicrm_option_group og ON og.id = ov.option_group_id AND og.name = 'activity_type') a,
     (SELECT
-      ov.value, ov.label
+      ov.value, CONCAT(ov.label, ' (', ov.value, ')') label
     FROM civicrm_option_value ov
       JOIN civicrm_option_group og ON og.id = ov.option_group_id AND og.name = 'activity_status') s;
 
@@ -45,7 +45,7 @@ WHERE status_id >= 3;
 -- insert grouping based on value of statuses
 INSERT INTO civicrm_campaign_config_status_sequence
   SELECT
-    ov.label, ov.value * 10
+    CONCAT(ov.label, ' (', ov.value, ')'), ov.value * 10
   FROM civicrm_option_value ov
     JOIN civicrm_option_group og ON og.id = ov.option_group_id AND og.name = 'activity_status';
 INSERT INTO civicrm_campaign_config_status_sequence VALUES ('Other', 1000);
