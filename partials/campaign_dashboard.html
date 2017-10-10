@@ -150,17 +150,17 @@
             <table>
                 <thead>
                     <tr>
-                        <th ng-repeat="(k, v) in tableSection.value.header.cells.value">{{v}}</th>
+                        <th ng-repeat="v in tableSection.value.header.cells.value track by $index">{{v}}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="(k, r) in tableSection.value.body.cells.value">
-                        <td ng-repeat="(k, v) in r">{{v}}</td>
+                    <tr ng-repeat="row in tableSection.value.body.cells.value track by $index">
+                        <td ng-repeat="v in row track by $index">{{v}}</td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td ng-repeat="(k, v) in tableSection.value.footer.cells.value">{{v}}</td>
+                        <td ng-repeat="v in tableSection.value.footer.cells.value track by $index">{{v}}</td>
                     </tr>
                 </tfoot>
             </table>
