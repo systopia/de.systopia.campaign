@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS civicrm_campaign_config_activity_type;
+DROP TABLE IF EXISTS civicrm_campaign_config_activity_status;
+DROP TABLE IF EXISTS civicrm_campaign_config_status_sequence;

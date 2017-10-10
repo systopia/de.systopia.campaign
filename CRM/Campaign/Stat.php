@@ -5,6 +5,41 @@ use CRM_Campaign_ExtensionUtil as E;
 class CRM_Campaign_Stat {
 
   /**
+   * Create or drop configuration tables for statistics.
+   *
+   * @param int $currentActivitiesParam
+   * @param int $newActivitiesParam
+   */
+  public static function set($currentActivitiesParam, $newActivitiesParam) {
+    if ($currentActivitiesParam != $newActivitiesParam) {
+      if ($newActivitiesParam) {
+        self::create();
+      }
+      else {
+        self::drop();
+      }
+    }
+  }
+
+  /**
+   * Create default configuration for statistics.
+   */
+  private static function create() {
+    $config = CRM_Core_Config::singleton();
+    $sqlfile = dirname(__FILE__) . '/../../sql/activity-kpi-install.sql';
+    CRM_Utils_File::sourceSQLFile($config->dsn, $sqlfile, NULL, FALSE);
+  }
+
+  /**
+   * Drop configuration for statistics.
+   */
+  private static function drop() {
+    $config = CRM_Core_Config::singleton();
+    $sqlfile = dirname(__FILE__) . '/../../sql/activity-kpi-uninstall.sql';
+    CRM_Utils_File::sourceSQLFile($config->dsn, $sqlfile, NULL, FALSE);
+  }
+
+  /**
    * Calculate counts of activities.
    *
    * @param int $campaignId
@@ -25,7 +60,6 @@ class CRM_Campaign_Stat {
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     return $dao->fetchAll();
   }
-
 
   /**
    * Calculate counts of activities and prepared as a report.
