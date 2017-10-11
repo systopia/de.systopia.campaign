@@ -39,7 +39,7 @@
         </td>
       </tr>
       <tr>
-        <td colspan="2"><a class="button" crm-ui-id="addExpenseForm.submit" name="submit" ng-click="submit()" ng-class="{disabled: addExpenseForm.$invalid}">{{ts('Submit', {domain: 'de.systopia.campaign'})}}</a></td>
+        <td colspan="2"><a class="button" crm-ui-id="addExpenseForm.submit" name="submit" ng-click="submit()" ng-class="{disabled: model.is_new_expense && addExpenseForm.$invalid}">{{ts('Submit', {domain: 'de.systopia.campaign'})}}</a></td>
       </tr>
     </table>
   </div>

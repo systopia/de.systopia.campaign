@@ -175,7 +175,8 @@
 
      $scope.addExpense = function() {
        var model = {
-         campaign_id: $scope.currentCampaign.id
+         campaign_id: $scope.currentCampaign.id,
+         is_new_expense: true
         };
         var options = CRM.utils.adjustDialogDefaults({
           width: '40%',
@@ -195,13 +196,14 @@
          description: exp.description,
          transaction_date: exp.transaction_date,
          expense_type_id: exp.expense_type_id,
-         id: exp.id
+         id: exp.id,
+         is_new_expense: false
         };
         var options = CRM.utils.adjustDialogDefaults({
           width: '40%',
           height: 'auto',
           autoOpen: false,
-          title: ts('Add Expense')
+          title: ts('Edit Expense')
         });
         dialogService.open('addExpenseDialog', resourceUrl + '/partials/campaign_expense.html', model, options).then(function (result) {
           $scope.updateKpiAndExpenses();
@@ -228,7 +230,7 @@
       $scope.defaultCurrency = apiResult["defaultCurrency"];
     });
     $scope.submit = function() {
-      if($scope.addExpenseForm.$invalid) {
+      if($scope.model.is_new_expense && $scope.addExpenseForm.$invalid) {
         return;
       }
       crmApi('CampaignExpense', 'create', $scope.model).then(function (apiResult) {
