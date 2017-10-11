@@ -211,6 +211,18 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
             }
             $customInfo[$key]['value'] = implode(', ', $labels);
           }
+          elseif ($customValueData[$id]['html_type'] == 'Radio') {
+            try {
+              $optionLabel = civicrm_api3('OptionValue', 'getsingle', array(
+                'return' => "label",
+                'option_group_id' => $customValueData[$id]['option_group_id'],
+                'value' => $value,
+              ));
+            } catch (Exception $e) {
+              CRM_Core_Error::debug_log_message("Cannot find OptionGroup or OptionValue. " . print_r($e, TRUE));
+            }
+            $customInfo[$key]['value'] = $optionLabel['label'];
+          }
           else {
             $customInfo[$key]['value'] = $value;
           }
