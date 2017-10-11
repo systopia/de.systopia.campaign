@@ -111,9 +111,9 @@ function _civicrm_api3_campaign_tree_clone_spec(&$params) {
 function civicrm_api3_campaign_tree_getcustominfo($params) {
   // Get the Custom Group ID for campaign_information
   try {
-    $customGroupId = civicrm_api3('CustomGroup', 'getsingle', array(
+    $customGroupId = civicrm_api3('CustomGroup', 'get', array(
+      'extends' => "Campaign",
       'return' => "id",
-      'name' => "og_lna_kampania",
     ));
   }
   catch (Exception $e) {
@@ -122,9 +122,10 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
   }
 
   // Get list of custom fields in group
-  $customGroupFields = civicrm_api3('CustomField', 'get', array(
-    'custom_group_id' => $customGroupId['id'],
-  ));
+  $apiParams = array(
+    'custom_group_id' => array('IN' => array_keys($customGroupId['values'])),
+  );
+  $customGroupFields = civicrm_api3('CustomField', 'get', $apiParams);
 
   $customValueFields = array(); // Selector Array for CustomValue_get
   $customValueData = array(); // Data array to collect fields for output
