@@ -156,6 +156,10 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
     // Get actual values for references
     if (!empty($value)) {
       switch ($customValueData[$id]['data_type']) {
+        case 'Boolean':
+          $yn = array(0 => ts('No'), 1 => ts('Yes'));
+          $customInfo[$key]['value'] = $yn[$value];
+          break;
         case 'ContactReference':
           // Return the contact name, not the ID
           $contactName = civicrm_api3('Contact', 'getvalue', array(
@@ -181,7 +185,26 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
               CRM_Core_Error::debug_log_message("Cannot find OptionGroup or OptionValue. " . print_r($e, true));
             }
             $customInfo[$key]['value'] = $optionLabel['label'];
-          } else {
+          }
+          elseif ($customValueData[$id]['html_type'] == 'CheckBox') {
+            try {
+              // Return the label, not the OptionValue ID
+              $optionGroupId = civicrm_api3('OptionGroup', 'getsingle', array(
+                'return' => "id",
+                'title' => $customValueData[$id]['label'],
+              ));
+              // todo
+              $optionLabel = civicrm_api3('OptionValue', 'getsingle', array(
+                'return' => "label",
+                'option_group_id' => $optionGroupId['id'],
+                'value' => $value,
+              ));
+            } catch (Exception $e) {
+              CRM_Core_Error::debug_log_message("Cannot find OptionGroup or OptionValue. " . print_r($e, true));
+            }
+            $customInfo[$key]['value'] = $optionLabel['label'];
+          }
+          else {
             $customInfo[$key]['value'] = $value;
           }
           break;

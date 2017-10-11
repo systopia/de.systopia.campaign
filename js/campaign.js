@@ -118,7 +118,7 @@
      $scope.expenseSum = expenseSum.values;
      $scope.expenses = [];
      $scope.actions = JSON.parse(actions.result);
-     $scope.customInfo = JSON.parse(customInfo);
+     $scope.customInfo = customInfo;
 
      crmApi('OptionValue', 'get', {"option_group_id": "campaign_status", "return": "value,label"}).then(function (apiResult) {
        $scope.campaign_status = apiResult.values;
