@@ -37,9 +37,6 @@
           parents: function($route, crmApi) {
              return crmApi('CampaignTree', 'getparentids', {id: $route.current.params.id});
           },
-          kpi: function($route, crmApi) {
-             return crmApi('CampaignKpi', 'get', {id: $route.current.params.id});
-          },
           expenseSum: function($route, crmApi) {
              return crmApi('CampaignExpense', 'getsum', {campaign_id: $route.current.params.id});
           },
@@ -98,7 +95,6 @@
   'currentCampaign',
   'children',
   'parents',
-  'kpi',
   'expenseSum',
   'expenses',
   'actions',
@@ -106,18 +102,22 @@
   'dialogService',
   'crmApi',
   '$interval',
-   function($scope, $routeParams, $sce, currentCampaign, children, parents, kpi, expenseSum, expenses, actions, /*customInfo,*/ dialogService, crmApi, $interval) {
+   function($scope, $routeParams, $sce, currentCampaign, children, parents, expenseSum, expenses, actions, /*customInfo,*/ dialogService, crmApi, $interval) {
      $scope.ts = CRM.ts('de.systopia.campaign');
      $scope.currentCampaign = currentCampaign;
      $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
      $scope.currentCampaign.start_date_date = $scope.currentCampaign.start_date ? CRM.$.datepicker.formatDate(CRM.config.dateInputFormat, new Date($scope.currentCampaign.start_date.replace(/-/g, ' '))) : 'none';
      $scope.currentCampaign.end_date_date = $scope.currentCampaign.end_date ? CRM.$.datepicker.formatDate(CRM.config.dateInputFormat, new Date($scope.currentCampaign.end_date.replace(/-/g, ' '))) : 'none';
      $scope.children = children.children;
-     $scope.kpi = JSON.parse(kpi.result);
      $scope.parents = parents.parents.reverse();
      $scope.expenseSum = expenseSum.values;
      $scope.expenses = [];
      $scope.actions = JSON.parse(actions.result);
+
+     // load KPIs asynchronously (see #46)
+     crmApi('CampaignKpi', 'get', {id: $scope.currentCampaign.id}).then(function(apiResult) {
+       $scope.kpi = JSON.parse(apiResult.result);
+     });
 
      crmApi('OptionValue', 'get', {"option_group_id": "campaign_status", "return": "value,label"}).then(function (apiResult) {
        $scope.campaign_status = apiResult.values;
