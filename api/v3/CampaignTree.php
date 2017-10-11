@@ -113,7 +113,7 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
   try {
     $customGroupId = civicrm_api3('CustomGroup', 'getsingle', array(
       'return' => "id",
-      'name' => "campaign_information",
+      'name' => "og_lna_kampania",
     ));
   }
   catch (Exception $e) {
