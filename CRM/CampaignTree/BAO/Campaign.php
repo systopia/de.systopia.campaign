@@ -221,6 +221,8 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       }
       if ($object->status_id) {
         $values[$object->id]['status'] = $campaignStatus[$object->status_id];
+      } else {
+        $values[$object->id]['status'] = '';
       }
 
       // start_date / end_date
@@ -261,6 +263,8 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
 
       if ($object->external_identifier) {
         $values[$object->id]['external_id'] = $object->external_identifier;
+      } else {
+        $values[$object->id]['external_id'] = '';
       }
     }
 
