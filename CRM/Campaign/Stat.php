@@ -117,10 +117,10 @@ class CRM_Campaign_Stat {
     $totalPerColumn = array();
     $existingGrouping = array();
     foreach ($stats as $stat) {
-      $report[$stat['name']][$stat['grouping']] = $stat['counter'];
-      $activityTypes[$stat['name']] = $stat['name'];
+      $report[$stat['label']][$stat['grouping']] = $stat['counter'];
+      $activityTypes[$stat['label']] = $stat['label'];
       $columns[$stat['grouping']] = $stat['grouping'];
-      $totalPerRow[$stat['name']] += $stat['counter'];
+      $totalPerRow[$stat['label']] += $stat['counter'];
       $totalPerColumn[$stat['grouping']] += $stat['counter'];
       $existingGrouping[$stat['grouping']] = $stat['grouping'];
     }
