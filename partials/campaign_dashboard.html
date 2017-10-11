@@ -117,10 +117,9 @@
       </div>
    </div>
 
-   <!--div crm-ui-accordion="{title: ts('Campaign Information', {domain: 'de.systopia.campaign'}), collapsed: true}" >
-      <div class="label">{{ts('Description', {domain: 'de.systopia.campaign'})}}</div>
+   <div crm-ui-accordion="{title: ts('Campaign Information', {domain: 'de.systopia.campaign'}), collapsed: false}" >
+      <div class="label">{{ts('Description', {domain: 'de.systopia.campaign'})}}: {{currentCampaign.description ? currentCampaign.description : "---"}}</div>
       <div class="content">
-         <div id="campaign_description">{{currentCampaign.description ? currentCampaign.description : "-"}}</div>
           <table class="custominfotable">
               <tr ng-repeat="(key, value) in customInfo | filterCustomInfo">
                   <td>{{value.title}}</td>
@@ -129,11 +128,7 @@
           </table>
       </div>
       <div class="clear"></div>
-
-      <div class="label" ng-if="currentCampaign.goal_general_htmlSafe">{{ts('Goal', {domain: 'de.systopia.campaign'})}}</div>
-      <div class="goalContent" ng-bind-html="currentCampaign.goal_general_htmlSafe"></div>
-      <div class="clear"></div>
-   </div-->
+   </div>
 
    <div crm-ui-accordion="{title: ts('KPI Charts', {domain: 'de.systopia.campaign'})}" >
      <div id="kpivis">

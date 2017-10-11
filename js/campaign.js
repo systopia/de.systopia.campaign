@@ -46,9 +46,9 @@
           actions: function($route, crmApi) {
              return crmApi('CampaignTree', 'getlinks', {id: $route.current.params.id});
           },
-          // customInfo: function($route, crmApi) {
-          //   return crmApi('CampaignTree', 'getcustominfo', {entity_id: $route.current.params.id});
-          // },
+          customInfo: function($route, crmApi) {
+            return crmApi('CampaignTree', 'getcustominfo', {entity_id: $route.current.params.id});
+          }
         }
       });
 
@@ -98,11 +98,11 @@
   'expenseSum',
   'expenses',
   'actions',
-  // 'customInfo',
+  'customInfo',
   'dialogService',
   'crmApi',
   '$interval',
-   function($scope, $routeParams, $sce, currentCampaign, children, parents, expenseSum, expenses, actions, /*customInfo,*/ dialogService, crmApi, $interval) {
+   function($scope, $routeParams, $sce, currentCampaign, children, parents, expenseSum, expenses, actions, customInfo, dialogService, crmApi, $interval) {
      $scope.ts = CRM.ts('de.systopia.campaign');
      $scope.currentCampaign = currentCampaign;
      $scope.currentCampaign.goal_general_htmlSafe = $sce.trustAsHtml($scope.currentCampaign.goal_general);
@@ -113,6 +113,7 @@
      $scope.expenseSum = expenseSum.values;
      $scope.expenses = [];
      $scope.actions = JSON.parse(actions.result);
+     $scope.customInfo = customInfo;
 
      // load KPIs asynchronously (see #46)
      crmApi('CampaignKpi', 'get', {id: $scope.currentCampaign.id}).then(function(apiResult) {
