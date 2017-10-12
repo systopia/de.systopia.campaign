@@ -1,9 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| de.systopia.campaign                                   |
-| Copyright (C) 2017 SYSTOPIA                            |
-| Author: B. Endres                                      |
-| http://www.systopia.de/                                |
+| CAMPAIGN MANAGER                                       |
+| Copyright (C) 2015-2017 SYSTOPIA                       |
+| Author: B. Endres (endres@systopia.de)                 |
 +--------------------------------------------------------+
 | This program is released as free software under the    |
 | Affero GPL license. You can redistribute it and/or     |

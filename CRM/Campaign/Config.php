@@ -1,9 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| Campaign Manager                                       |
-| Copyright (C) 2017 SYSTOPIA                            |
+| CAMPAIGN MANAGER                                       |
+| Copyright (C) 2015-2017 SYSTOPIA                       |
 | Author: B. Endres (endres@systopia.de)                 |
-| http://www.systopia.de/                                |
 +--------------------------------------------------------+
 | This program is released as free software under the    |
 | Affero GPL license. You can redistribute it and/or     |

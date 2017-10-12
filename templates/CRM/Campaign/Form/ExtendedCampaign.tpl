@@ -1,10 +1,9 @@
-<!--
-/*#######################################################+
-| de.systopia.campaign                                   |
-| Copyright (C) 2015 SYSTOPIA                            |
-| Author: N. Bochan (bochan -at- systopia.de)            |
-| http://www.systopia.de/                                |
-+########################################################+
+{*-------------------------------------------------------+
+| CAMPAIGN MANAGER                                       |
+| Copyright (C) 2015-2017 SYSTOPIA                       |
+| Author: N. Bochan                                      |
+|         B. Endres (endres@systopia.de)                 |
++--------------------------------------------------------+
 | This program is released as free software under the    |
 | Affero GPL license. You can redistribute it and/or     |
 | modify it under the terms of this license which you    |
@@ -12,8 +11,8 @@
 | at www.gnu.org/licenses/agpl.html. Removal of this     |
 | copyright header is strictly prohibited without        |
 | written permission from the original author(s).        |
-+########################################################*/
--->
++-------------------------------------------------------*}
+
 
 <div id="pid_label_src">{$form.parent_id.label}</div>
 <div id="pid_html_src">{$form.parent_id.html}</div>

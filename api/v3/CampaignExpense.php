@@ -1,12 +1,18 @@
 <?php
-/**
- * Meta-API for campaign expenses, based on financial items
- * (DRAFT)
- *
- * @author endres@systopia.de
- */
-
-// TODO: handle expense_type (encode in description?)
+/*-------------------------------------------------------+
+| CAMPAIGN MANAGER                                       |
+| Copyright (C) 2015-2017 SYSTOPIA                       |
+| Author: N. Bochan                                      |
+|         B. Endres (endres@systopia.de)                 |
++--------------------------------------------------------+
+| This program is released as free software under the    |
+| Affero GPL license. You can redistribute it and/or     |
+| modify it under the terms of this license which you    |
+| can read by viewing the included agpl.txt or online    |
+| at www.gnu.org/licenses/agpl.html. Removal of this     |
+| copyright header is strictly prohibited without        |
+| written permission from the original author(s).        |
++--------------------------------------------------------*/
 
 /**
  * Get expenses
