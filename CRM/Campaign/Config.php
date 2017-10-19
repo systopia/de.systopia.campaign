@@ -58,7 +58,7 @@ class CRM_Campaign_Config extends CRM_Core_Form {
    */
   public static function setActiveBuiltInKPIs($enabled) {
     // filter for actual KPIs
-    $active_kpis = array();
+    $active_kpis = array('dummy');
     $all_kpis = CRM_Campaign_KPI::builtInKPIs();
     foreach ($all_kpis as $key => $label) {
       if (!empty($enabled[$key])) {
