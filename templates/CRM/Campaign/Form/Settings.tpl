@@ -24,7 +24,7 @@
 <div>
   {foreach from=$kpis item=kpi key=name}
   <div class="crm-section">
-    <div class="label"><code>{$name}</code></div>
+    <div class="label"><code>{$kpinames.$name}</code></div>
     <div class="content">{$form.$name.html} {$form.$name.label}</div>
     <div class="clear"></div>
   </div>

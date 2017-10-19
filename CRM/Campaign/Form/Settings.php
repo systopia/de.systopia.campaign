@@ -32,9 +32,12 @@ class CRM_Campaign_Form_Settings extends CRM_Core_Form {
     $this->assign('kpis', $kpis);
 
     // add switches for all
+    $kpinames = [];
     foreach ($kpis as $key => $label) {
       $this->add('checkbox', $key, $label);
+      $kpinames[$key] = str_replace('_', ' ', $key);
     }
+    $this->assign('kpinames', $kpinames);
 
     // segment options
     $this->addElement('select',
