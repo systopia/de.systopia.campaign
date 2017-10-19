@@ -72,7 +72,7 @@ class CRM_Campaign_KPI {
          self::calculateCosts($kpi, $campaign_id, $children);
       }
       if (in_array('activities', $enabled_kpis)) {
-          CRM_Campaign_Stat::calculateActivityStats($kpi, $campaign_id, $children);
+          CRM_Campaign_KPIActivity::calculateActivityStats($kpi, $campaign_id, $children);
       }
 
       // finally: run the hook

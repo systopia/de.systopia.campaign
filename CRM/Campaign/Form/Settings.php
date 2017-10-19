@@ -82,9 +82,10 @@ class CRM_Campaign_Form_Settings extends CRM_Core_Form {
   public function postProcess() {
     $values = $this->exportValues();
 
-    $currentActivitiesParam = (int) CRM_Utils_Array::value('activities', $this->currentValues);
-    $newActivitiesParam = (int) CRM_Utils_Array::value('activities', $values);
-    CRM_Campaign_Stat::set($currentActivitiesParam, $newActivitiesParam);
+    // the activity KPI needs some extra care when they are enabled/disabled
+    $enabled     = (int) CRM_Utils_Array::value('activities', $values);
+    $was_enabled = (int) CRM_Utils_Array::value('activities', $this->currentValues);
+    CRM_Campaign_KPIActivity::setEnabled($enabled, $was_enabled);
 
     // store KPIs
     CRM_Campaign_Config::setActiveBuiltInKPIs($values);

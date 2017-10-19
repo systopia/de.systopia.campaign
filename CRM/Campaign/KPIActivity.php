@@ -15,22 +15,26 @@
 
 use CRM_Campaign_ExtensionUtil as E;
 
-class CRM_Campaign_Stat {
+class CRM_Campaign_KPIActivity {
 
   /**
    * Create or drop configuration tables for statistics.
    *
-   * @param int $currentActivitiesParam
-   * @param int $newActivitiesParam
+   * @param int $enabled     should be enabled
+   * @param int $was_enabled was enabled before
    */
-  public static function set($currentActivitiesParam, $newActivitiesParam) {
-    if ($currentActivitiesParam != $newActivitiesParam) {
-      if ($newActivitiesParam) {
+  public static function setEnabled($enabled, $was_enabled) {
+    if ($enabled != $was_enabled) {
+      if ($enabled) {
         self::create();
       }
       else {
         self::drop();
       }
+
+      // make sure we don't get into trouble with extended logging
+      $logging = new CRM_Logging_Schema();
+      $logging->fixSchemaDifferences();
     }
   }
 
@@ -122,7 +126,7 @@ class CRM_Campaign_Stat {
 
   public static function calculateActivityStats(&$kpi, $campaign_id, $children) {
     $stats = self::activityReport($campaign_id, $children);
-    $sequence = CRM_Campaign_Stat::sequence();
+    $sequence = CRM_Campaign_KPIActivity::sequence();
     $report = array();
     $columns = array();
     $activityTypes = array();

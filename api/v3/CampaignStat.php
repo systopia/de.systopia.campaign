@@ -34,7 +34,7 @@ function civicrm_api3_campaign_stat_activity_counter($params) {
     $campaignId = $params['id'];
     $campaigns = CRM_Campaign_Tree::getCampaignIds($campaignId, 99);
     $children = $campaigns['children'];
-    $stat = CRM_Campaign_Stat::activityCounter($campaignId, $children);
+    $stat = CRM_Campaign_KPIActivity::activityCounter($campaignId, $children);
     return civicrm_api3_create_success($stat, $params);
   }
   catch (Exception $exception) {
@@ -67,7 +67,7 @@ function civicrm_api3_campaign_stat_activity_report($params) {
     $campaignId = $params['id'];
     $campaigns = CRM_Campaign_Tree::getCampaignIds($campaignId, 99);
     $children = $campaigns['children'];
-    $stat = CRM_Campaign_Stat::activityReport($campaignId, $children);
+    $stat = CRM_Campaign_KPIActivity::activityReport($campaignId, $children);
     return civicrm_api3_create_success($stat, $params);
   }
   catch (Exception $exception) {
@@ -89,7 +89,7 @@ function _civicrm_api3_campaign_stat_activity_sequence(&$params) {
 
 function civicrm_api3_campaign_stat_activity_sequence($params) {
   try {
-    return civicrm_api3_create_success(CRM_Campaign_Stat::sequence(), $params);
+    return civicrm_api3_create_success(CRM_Campaign_KPIActivity::sequence(), $params);
   }
   catch (Exception $exception) {
     $data = array(
