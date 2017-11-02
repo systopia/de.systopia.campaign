@@ -122,6 +122,9 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
   }
 
   // Get list of custom fields in group
+  if (!$customGroupId['values']) {
+    return array();
+  }
   $apiParams = array(
     'custom_group_id' => array('IN' => array_keys($customGroupId['values'])),
   );
