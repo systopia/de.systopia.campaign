@@ -41,7 +41,7 @@
              return crmApi('CampaignExpense', 'getsum', {campaign_id: $route.current.params.id});
           },
           expenses: function($route, crmApi) {
-             return crmApi('CampaignExpense', 'get', {campaign_id: $route.current.params.id});
+             return crmApi('CampaignExpense', 'get', {campaign_id: $route.current.params.id, 'options': {'limit' : 0}});
           },
           actions: function($route, crmApi) {
              return crmApi('CampaignTree', 'getlinks', {id: $route.current.params.id});
@@ -153,7 +153,7 @@
      };
 
      $scope.updateKpiAndExpenses = function() {
-       crmApi('CampaignExpense', 'get', {campaign_id: $scope.currentCampaign.id}).then(function (apiResult) {
+       crmApi('CampaignExpense', 'get', {campaign_id: $scope.currentCampaign.id, 'options': {'limit' : 0}}).then(function (apiResult) {
          $scope.expenses = apiResult.values;
        }, function(apiResult) {
          CRM.alert(apiResult.error_message, ts('Error while fetching expenses'), "error");
