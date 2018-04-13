@@ -15,6 +15,7 @@
 
 (function(angular, $, _) {
    var resourceUrl = CRM.resourceUrls['de.systopia.campaign'];
+  CRM.loadScript(resourceUrl + '/js/lib/d3-context-menu.js');
    var campaign = angular.module('campaign', ['ngRoute', 'crmUtil', 'crmUi', 'crmD3']);
 
    campaign.config(['$routeProvider',
