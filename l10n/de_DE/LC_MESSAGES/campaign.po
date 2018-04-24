@@ -1,0 +1,725 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: de_DE\n"
+
+#: CRM/Campaign/KPI.php
+msgid "Total Revenue Goal"
+msgstr "Gesamtziel Einnahmen"
+
+#: CRM/Campaign/KPI.php
+msgid "Total Costs"
+msgstr "Gesamtkosten"
+
+#: CRM/Campaign/KPI.php
+msgid "Sum of (known) expenses to this campaign"
+msgstr "Summer (bekannter) Aufwendung dieser Kampagne"
+
+#: CRM/Campaign/KPI.php
+msgid "ROI"
+msgstr "ROI"
+
+#: CRM/Campaign/KPI.php
+msgid "Return on investment"
+msgstr "Return on investment (Rentabilität)"
+
+#: CRM/Campaign/KPI.php
+msgid "Total Revenue Reached"
+msgstr "Erzielte Gesamteinnahmen"
+
+#: CRM/Campaign/KPI.php
+msgid "Number of First Contributions"
+msgstr "Anzahl erster Zuwendungen"
+
+#: CRM/Campaign/KPI.php
+msgid "Number of first contributions associated with this campaign"
+msgstr "Anzahl erster Zuwendungen die dieser Kampagne zugeordnet sind"
+
+#: CRM/Campaign/KPI.php
+msgid "Average Cost per First Contribution"
+msgstr "Durchschnittliche Kosten pro Erstzuwendung"
+
+#: CRM/Campaign/KPI.php
+msgid "Average Cost per first contribution associated with this campaign"
+msgstr ""
+"Durchschnittliche Kosten pro Erstzuwendung die dieser Kampagen zugeordnet "
+"sind"
+
+#: CRM/Campaign/KPI.php
+msgid "Average Cost per Second or Later Contribution"
+msgstr "Durchschnittliche Kosten pro Zuwendung (von Bestandsspendern)"
+
+#: CRM/Campaign/KPI.php
+msgid ""
+"Average Cost per second or later contribution associated with this campaign"
+msgstr ""
+"Durchschnittliche Kosten pro Zuwendung (von Bestandsspendern) die dieser "
+"Kampagne zugeordnet sind"
+
+#: CRM/Campaign/KPI.php
+msgid "Total Revenue"
+msgstr "Gesamteinnahmen"
+
+#: CRM/Campaign/KPI.php
+msgid "Number of Contributions (completed)"
+msgstr "Anzahl (abgeschlossener) Zuwendungen"
+
+#: CRM/Campaign/KPI.php
+msgid "Number of completed contributions"
+msgstr "Anzahl abgeschlossener Zuwendungen"
+
+#: CRM/Campaign/KPI.php
+msgid "Average Amount of Contributions"
+msgstr "Durchschnittsbetrag aller Zuwendungen"
+
+#: CRM/Campaign/KPI.php
+msgid "Average amount of completed contributions"
+msgstr "Durchschnittsbetrag abgeschlossener Zuwendungen"
+
+#: CRM/Campaign/KPI.php
+msgid "Number of Contributions (all but cancelled/refunded/failed)"
+msgstr ""
+"Anzahl Zuwendungen (ausgenommen stornierter, fehlgeschlagener, "
+"rückerstatteter)"
+
+#: CRM/Campaign/KPI.php
+msgid "Number of Contributions (all but cancelled/failed)"
+msgstr "Anzahl Zuwendungen (ausgenommen stornierter und fehlgeschlagener)"
+
+#: CRM/Campaign/KPI.php
+msgid "Revenue Breakdown"
+msgstr "Aufteilung Einnahmen"
+
+#: CRM/Campaign/KPI.php
+msgid "Donation Heartbeat"
+msgstr "Aufkommen Zuwendungen"
+
+#: CRM/Campaign/KPICache.php
+msgid "KPI Cache Timestamp"
+msgstr "Timestamp des KPI Cache"
+
+#: CRM/Campaign/KPICache.php
+msgid ""
+"Describes the exact time when this KPI data set was calculated. For more "
+"details have a look at the caching options."
+msgstr ""
+"Gibt den Zeitpunkt an, auf dem die KPI basieren. Weitere Details in den "
+"Einstellungen zum Caching."
+
+#: CRM/CampaignTree/BAO/Campaign.php
+msgid "more"
+msgstr "mehr"
+
+#: CRM/CampaignTree/BAO/Campaign.php campaign.php
+msgid "View"
+msgstr "Anzeigen"
+
+#: CRM/CampaignTree/BAO/Campaign.php campaign.php js/campaign.js
+#: partials/campaign_tree.html
+msgid "View Campaign"
+msgstr "Kampagne anzeigen"
+
+#: CRM/CampaignTree/BAO/Campaign.php partials/campaign_dashboard.html
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: CRM/CampaignTree/BAO/Campaign.php
+msgid "Update Campaign"
+msgstr "Kampagne aktualisieren"
+
+#: CRM/CampaignTree/BAO/Campaign.php
+msgid "Disable"
+msgstr "Deaktivieren"
+
+#: CRM/CampaignTree/BAO/Campaign.php
+msgid "Disable Campaign"
+msgstr "Kampagne deaktivieren"
+
+#: CRM/CampaignTree/BAO/Campaign.php
+msgid "Enable"
+msgstr "Aktivieren"
+
+#: CRM/CampaignTree/BAO/Campaign.php
+msgid "Enable Campaign"
+msgstr "Kampagne aktivieren"
+
+#: CRM/CampaignTree/BAO/Campaign.php partials/campaign_dashboard.html
+msgid "Delete"
+msgstr "Löschen"
+
+#: CRM/CampaignTree/BAO/Campaign.php
+msgid "Delete Campaign"
+msgstr "Kampagne löschen"
+
+#: CRM/CampaignTree/Form/Search.php templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Name"
+msgstr "Name"
+
+#: CRM/CampaignTree/Form/Search.php partials/campaign_dashboard.html
+#: partials/campaign_expense.html templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Description"
+msgstr "Beschreibung"
+
+#: CRM/CampaignTree/Form/Search.php templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Created By"
+msgstr "Angelegt von"
+
+#: CRM/CampaignTree/Form/Search.php templates/CRM/CampaignTree/Form/Search.tpl
+msgid "External ID"
+msgstr "Externe ID"
+
+#: CRM/CampaignTree/Form/Search.php templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Start Date"
+msgstr "Startdatum"
+
+#: CRM/CampaignTree/Form/Search.php templates/CRM/CampaignTree/Form/Search.tpl
+msgid "End Date"
+msgstr "Enddatum"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Root"
+msgstr "Root (oberste Ebene)"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Parent"
+msgstr "Elternkampagne"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Child"
+msgstr "Kind"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Other"
+msgstr "Andere"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Show Campaigns:"
+msgstr "Kampagnen anzeigen:"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Active"
+msgstr "Aktiv"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Disabled"
+msgstr "Dekativiert"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Campaign Type"
+msgstr "Kampagnentyp"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "- any -"
+msgstr "- beliebig -"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Campaign Status"
+msgstr "Kampagnenstatus"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Search"
+msgstr "Suchen"
+
+#: CRM/CampaignTree/Form/Search.php
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: CRM/CampaignTree/Page/Dashboard.php
+msgid "Campaign Dashboard"
+msgstr "Kampagnen-Dashboard"
+
+#: CRM/CampaignTree/Page/Dashboard.php
+msgid "Campaigns"
+msgstr "Kampagnen"
+
+#: CRM/CampaignTree/Page/Dashboard.php
+msgid "Surveys"
+msgstr "Umfragen"
+
+#: CRM/CampaignTree/Page/Dashboard.php
+msgid "Petitions"
+msgstr "Petitionen"
+
+#: CRM/CampaignTree/Page/Dashboard.php
+msgid "Search Campaigns"
+msgstr "Suche Kampagnen"
+
+#: CRM/CampaignTree/Page/Dashboard.php
+msgid "Search Survey"
+msgstr "Suche Umfrage"
+
+#: CRM/CampaignTree/Page/Dashboard.php
+msgid "Search Petition"
+msgstr "Suche Petition"
+
+#: CRM/CampaignTree/Tree.php
+msgid "de.systopia.campaign: cycle detected! id: %1"
+msgstr "de.systopia.campaign: Unzulässige Verknüpfung erkannt! id: %1"
+
+#: CRM/CampaignTree/Tree.php
+msgid "de.systopia.campaign: can't set self as parent! id: %1 -> %2"
+msgstr ""
+"de.systopia.campaign: Übergeordnete Kampagne kann nicht identisch sein! id: "
+"%1 -> %2"
+
+#: api/v3/CampaignExpense.php
+msgid "Contact associated with this expense"
+msgstr "Kontakt, der mit dieser Aufwendung assoziiert ist"
+
+#: api/v3/CampaignExpense.php
+msgid "Date of the expense"
+msgstr "Datum der Aufwendung"
+
+#: api/v3/CampaignExpense.php
+msgid "Description of the expense"
+msgstr "Beschriebung der Aufwendung"
+
+#: api/v3/CampaignExpense.php
+msgid "Total amount of the expense"
+msgstr "Gesamtsumme der Aufwendung"
+
+#: api/v3/CampaignExpense.php
+msgid "Currency of the expense"
+msgstr "Währung der Aufwendung"
+
+#: api/v3/CampaignExpense.php
+msgid "Financial account of the expense"
+msgstr "Sachkonto der Aufwendung"
+
+#: api/v3/CampaignExpense.php
+msgid "Status of the expense (see option group contribution_status)"
+msgstr "Status der Aufwendung (vergleiche Optionsgruppe contribution_status)"
+
+#: api/v3/CampaignExpense.php
+msgid ""
+"Refers to option group civicrm_campaign_expense_types for categorisation"
+msgstr "Nutzt die Optionsgruppe civicrm_campaign_expense_types für Kategorien"
+
+#: api/v3/CampaignExpense.php
+msgid "A CampaignExpense with ID '%1' doesn't exist."
+msgstr "Eine Aufwendung mit der ID  '%1' existiert nicht."
+
+#: api/v3/CampaignExpense.php
+msgid "CampaignExpense ID"
+msgstr "ID der Aufwendung"
+
+#: api/v3/CampaignTree.php partials/campaign_dashboard.html
+msgid "No"
+msgstr "Nein"
+
+#: api/v3/CampaignTree.php partials/campaign_dashboard.html
+msgid "Yes"
+msgstr "Ja"
+
+#: campaign.php
+msgid "Parent ID"
+msgstr "Übergeordnete ID"
+
+#: campaign.php
+msgid "- select Parent -"
+msgstr "- Unterkampagne von -"
+
+#: campaign.php
+msgid "Campaign Expense Types"
+msgstr "Kategorien von Aufwendungen"
+
+#: campaign.php
+msgid "Default"
+msgstr "Standard"
+
+#: js/campaign.js
+msgid "de.systopia.campaign"
+msgstr "de.systopia.campaign"
+
+#: js/campaign.js
+msgid "Error while fetching expenses"
+msgstr "Fehler beim Sammeln von Aufwendungen"
+
+#: js/campaign.js
+msgid "Successfully removed expense %1"
+msgstr "Aufwendung %1 erfolgreich entfernt"
+
+#: js/campaign.js
+msgid "Expense deleted"
+msgstr "Aufwendung gelöscht"
+
+#: js/campaign.js
+msgid "Could not delete expense"
+msgstr "Konnte Aufwendung nicht löschen"
+
+#: js/campaign.js partials/campaign_dashboard.html
+msgid "Add Expense"
+msgstr "Aufwendung hinzufügen"
+
+#: js/campaign.js
+msgid "Edit Expense"
+msgstr "Aufwendung bearbeiten"
+
+#: js/campaign.js
+msgid "Successfully added expense %1"
+msgstr "Aufwendung %1 erfolgreich hinzugefügt"
+
+#: js/campaign.js
+msgid "Expense added"
+msgstr "Aufwendung hinzugefügt"
+
+#: js/campaign.js
+msgid "Could not add expense"
+msgstr "Konnte Aufwendung nicht hinzufügen"
+
+#: js/campaign.js
+msgid "No Data"
+msgstr "Keine Daten"
+
+#: js/campaign.js
+msgid "(INACTIVE)"
+msgstr "(DEAKTIVIERT)"
+
+#: js/campaign.js
+msgid "Successfully cloned campaign"
+msgstr "Kampagne erfolgreich geklont"
+
+#: js/campaign.js
+msgid "Campaign cloned"
+msgstr "Kampagne geklont"
+
+#: js/campaign.js
+msgid "Could not clone campaign"
+msgstr "Konnte Kampagne nicht klonen"
+
+#: js/campaign.js partials/campaign_dashboard.html
+msgid "Edit Campaign"
+msgstr "Kampagne bearbeiten"
+
+#: js/campaign.js partials/campaign_dashboard.html
+msgid "Create Subcampaign"
+msgstr "Unterkampagne erstellen"
+
+#: partials/campaign_copy.html
+msgid "Clone"
+msgstr "Klonen"
+
+#: partials/campaign_copy.html
+msgid "Include subtree"
+msgstr "Untergeordnete Kampagnen einschließen"
+
+#: partials/campaign_copy.html
+msgid "Title Match Pattern"
+msgstr "Muster für Zuordnung von Titeln"
+
+#: partials/campaign_copy.html
+msgid "Title Replacement Pattern"
+msgstr "Muster für Ersetzung von Titeln"
+
+#: partials/campaign_copy.html
+msgid "Start Date Offset"
+msgstr "Anpassung des Startdatums "
+
+#: partials/campaign_copy.html
+msgid "End Date Offset"
+msgstr "Anpassung des Enddatums "
+
+#: partials/campaign_copy.html
+msgid "Save"
+msgstr "Speicher n"
+
+#: partials/campaign_copy.html
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: partials/campaign_dashboard.html
+msgid "Parent Campaign(s)"
+msgstr "Elternkampagne(n)"
+
+#: partials/campaign_dashboard.html
+msgid "This is a root campaign"
+msgstr "Dies ist eine Root-Kampagne"
+
+#: partials/campaign_dashboard.html
+msgid "Subcampaign(s)"
+msgstr "Untergeordnete Kampagne(n)"
+
+#: partials/campaign_dashboard.html
+msgid "none"
+msgstr "keine"
+
+#: partials/campaign_dashboard.html
+msgid "Clone Campaign"
+msgstr "Kampagne klonen"
+
+#: partials/campaign_dashboard.html
+msgid "View Campaign Tree"
+msgstr "Kampagnenbaum ansehen"
+
+#: partials/campaign_dashboard.html
+msgid "Return to Dashboard"
+msgstr "Zurück zum Dashborad"
+
+#: partials/campaign_dashboard.html templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Status"
+msgstr "Status"
+
+#: partials/campaign_dashboard.html
+msgid "not set"
+msgstr "nicht gesetzt"
+
+#: partials/campaign_dashboard.html
+msgid "Are you sure you want to apply this status id to all subcampaigns?"
+msgstr ""
+"Sind Sie sich sicher, dass Sie diese Status-ID allen Unterkampagnen "
+"zuweisen möchten?"
+
+#: partials/campaign_dashboard.html
+msgid "Apply to Subcampaigns"
+msgstr "Auf Unterkampagnen anwenden"
+
+#: partials/campaign_dashboard.html
+msgid "Propagate"
+msgstr "Übertragen"
+
+#: partials/campaign_dashboard.html
+msgid "Is Active"
+msgstr "Ist aktiv"
+
+#: partials/campaign_dashboard.html
+msgid "Are you sure you want to apply this status to all subcampaigns?"
+msgstr ""
+"Sind Sie sich sicher, dass Sie diesen Status allen Unterkampagnen zuweisen "
+"möchten?"
+
+#: partials/campaign_dashboard.html
+msgid "External Identifier"
+msgstr "Externe ID"
+
+#: partials/campaign_dashboard.html
+msgid "Start date"
+msgstr "Startdatum"
+
+#: partials/campaign_dashboard.html
+msgid "Are you sure you want to apply this start date to all subcampaigns?"
+msgstr ""
+"Sind Sie sich sicher, dass Sie dieses Startdatum allen Unterkampagnen "
+"zuweisen möchten?"
+
+#: partials/campaign_dashboard.html
+msgid "End date"
+msgstr "Enddatum"
+
+#: partials/campaign_dashboard.html
+msgid "Are you sure you want to apply this end date to all subcampaigns?"
+msgstr ""
+"Sind Sie sich sicher, dass Sie dieses Enddatum allen Unterkampagnen "
+"zuweisen möchten?"
+
+#: partials/campaign_dashboard.html
+msgid "Revenue Goal"
+msgstr "Einnahmenziel"
+
+#: partials/campaign_dashboard.html
+msgid "Campaign Information"
+msgstr "Informationen zur Kampagne"
+
+#: partials/campaign_dashboard.html
+msgid "KPI Charts"
+msgstr "KPI Visualisierung"
+
+#: partials/campaign_dashboard.html
+msgid "Key Performance Indicators (includes subcampaigns)"
+msgstr "Key Performance Indikatoren (Unterkampagnen eingeschlossen)"
+
+#: partials/campaign_dashboard.html
+msgid "Campaign Expenses (only this campaign)"
+msgstr "Kampagnenaufwendungen (nur diese Kampagne)"
+
+#: partials/campaign_dashboard.html
+msgid "Costs (only this campaign)"
+msgstr "Kosten (nur diese Kampagne)"
+
+#: partials/campaign_dashboard.html partials/campaign_expense.html
+msgid "Amount"
+msgstr "Betrag"
+
+#: partials/campaign_dashboard.html partials/campaign_expense.html
+msgid "Category"
+msgstr "Kategorie"
+
+#: partials/campaign_dashboard.html
+msgid "Date"
+msgstr "Datum"
+
+#: partials/campaign_dashboard.html
+msgid "Actions"
+msgstr "Aktionen"
+
+#: partials/campaign_dashboard.html
+msgid "Are you sure you want to delete this expense?"
+msgstr "Sind Sie sich sicher, dass Sie diese Aufwendung löschen möchten?"
+
+#: partials/campaign_dashboard.html
+msgid "No expenses found"
+msgstr "Keine Aufwendungen gefunden"
+
+#: partials/campaign_expense.html
+msgid "Transaction Date"
+msgstr "Transaktionsdatum"
+
+#: partials/campaign_expense.html
+msgid "Submit"
+msgstr "Übermitteln"
+
+#: partials/campaign_tree.html
+msgid "View Root"
+msgstr "Oberste Ebene ansehen"
+
+#: partials/campaign_tree.html
+msgid "View Parent"
+msgstr "Elternkampagne ansehen"
+
+#: partials/campaign_tree.html
+msgid "Reset View"
+msgstr "Ansicht zurücksetzen"
+
+#: partials/campaign_tree.html
+msgid "Help"
+msgstr "Hilfe"
+
+#: templates/CRM/Campaign/Form/Settings.tpl
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: templates/CRM/Campaign/Form/Settings.tpl
+msgid "Enable built-in KPIs"
+msgstr "Vorgefertigte KPI aktivieren"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "None found."
+msgstr "Keine gefunden."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Add Campaign"
+msgstr "Kampagne hinzufügen"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Find Campaigns"
+msgstr "Kampagnen finden"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Complete OR partial campaign name."
+msgstr "Name der Kampagne (vollständig oder teilweise)."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Complete OR partial description."
+msgstr "Beschreibung (vollständig oder teilweise)."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Filter search by campaign type."
+msgstr "Suchergebnis nach Kampagnentyp filtern."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Filter search by campaign status."
+msgstr "Suchergebnis nach Kampagnenstatus filtern."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Complete OR partial creator name."
+msgstr "Name des Erstellers (vollständig oder teilweise)."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Type"
+msgstr "Art"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "No matching Campaigns found for your search criteria. Suggestions:"
+msgstr "Keine übereinstimmenden Kampagnen gefunden. Vorschläge:"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Check your spelling."
+msgstr "Prüfen Sie Ihre Schreibweise."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Try a different spelling or use fewer letters."
+msgstr ""
+"Nutzen Sie eine andere Schreibweise oder nutzen Sie weniger Buchstaben."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Make sure you have enough privileges in the access control system."
+msgstr "Stellen Sie sicher, dass Sie die erforderlichen Zugriffsrechte haben."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid ""
+"<div class=\"status messages\">No Campaigns have been created for this site."
+msgstr ""
+"<div class=\"status messages\">Für diese Seite wurden keine Kampagnen "
+"angelegt."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Processing..."
+msgstr "Verarbeitung..."
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Show _MENU_ entries"
+msgstr "Zeige _MENU_ Einträge"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Zeige Einträge _START_ bis _END_ von _TOTAL_"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Zeige 0 bis 0 von 0 Einträgen"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(gefiltert von _MAX_ Gesamteinträgen)"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Search:"
+msgstr "Suche:"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "First"
+msgstr "Erste"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Previous"
+msgstr "Zurück"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Next"
+msgstr "Weiter"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Last"
+msgstr "Letzte"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "show child campaigns"
+msgstr "Unterkampagnen anzeigen"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Root Campaign"
+msgstr "Root Kampagne (Oberste Ebene)"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Parent Campaign"
+msgstr "Elternkampagne"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Child Campaign"
+msgstr "Unterkampagne"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "Campaign"
+msgstr "Kampagne"
+
+#: templates/CRM/CampaignTree/Form/Search.tpl
+msgid "hide child campaigns"
+msgstr "Unterkampagnen ausblenden"
