@@ -529,8 +529,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       ),
       CRM_Core_Action::DELETE => array(
         'name' => ts('Delete'),
-        'url' => CRM_Utils_System::url('civicrm/campaign/add'),
-        'qs' => 'action=delete&reset=1&id=%%id%%',
+        'url' => CRM_Utils_System::url('civicrm/campaign/add', "action=delete&reset=1&id={$objectId}"),
         'title' => ts('Delete Campaign'),
       ),
     );
