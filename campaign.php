@@ -283,6 +283,7 @@ function campaign_civicrm_alterAPIPermissions($entity, $action, &$params, &$perm
   $permissions['campaign_tree']['setnodeparent'] = array('manage campaign');
   $permissions['campaign_tree']['clone'] = array('manage campaign');
   $permissions['campaign_tree']['getcustominfo'] = array('manage campaign');
+  $permissions['campaign_tree']['getlinks'] = array('manage campaign');
 }
 
 /**
