@@ -5,7 +5,7 @@
          <div class="parents">
            {{ts('Parent Campaign(s)', {domain: 'de.systopia.campaign'})}} [{{numberof.parents}}]:
            <!-- parents -->
-           <a ng-repeat-start="(key, value) in parents | orderBy:'$index':true" href="#/campaign/{{value.id}}/view" ng-if="numberof.parents > 0">{{value.title}}</a> <span ng-repeat-end>&gt; </span>
+           <a ng-repeat-start="(key, value) in parents | orderBy:'$index':false" href="#/campaign/{{value.id}}/view" ng-if="numberof.parents > 0">{{value.title}}</a> <span ng-repeat-end>&gt; </span>
            <a ng-if="numberof.parents == 0">{{ts('This is a root campaign', {domain: 'de.systopia.campaign'})}}</a>
            <!-- current -->
            <a href="#/campaign/{{currentCampaign.id}}/view" class="current" ng-if="numberof.parents > 0">{{currentCampaign.title}}</a>
