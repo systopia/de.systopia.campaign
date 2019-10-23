@@ -114,6 +114,7 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
     $custom_groups = civicrm_api3('CustomGroup', 'get', array(
       'extends' => "Campaign",
       'return' => "id,extends_entity_column_value",
+      'option.limit' => 0,
     ));
   }
   catch (Exception $e) {
