@@ -109,11 +109,11 @@ function _civicrm_api3_campaign_tree_clone_spec(&$params) {
 
 
 function civicrm_api3_campaign_tree_getcustominfo($params) {
-  // Get the Custom Group ID for campaign_information
+  // Get custom group IDs extending the current campaign.
   try {
-    $customGroupId = civicrm_api3('CustomGroup', 'get', array(
+    $custom_groups = civicrm_api3('CustomGroup', 'get', array(
       'extends' => "Campaign",
-      'return' => "id",
+      'return' => "id,extends_entity_column_value",
     ));
   }
   catch (Exception $e) {
@@ -121,115 +121,64 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
     return array();
   }
 
-  // Get list of custom fields in group
-  if (!$customGroupId['values']) {
+  // Abort when there are no custom groups for the current campaign.
+  if (!$custom_groups['values']) {
     return array();
   }
-  $apiParams = array(
-    'custom_group_id' => array('IN' => array_keys($customGroupId['values'])),
-  );
-  $customGroupFields = civicrm_api3('CustomField', 'get', $apiParams);
 
-  $customValueFields = array(); // Selector Array for CustomValue_get
-  $customValueData = array(); // Data array to collect fields for output
-  // Create the selector array and store some values for use later
-  $customValueFields['entity_id'] = $params['entity_id'];
-  foreach ($customGroupFields['values'] as $id => $fields) {
-    $customValueFields['return.custom_' . $id] = 1;
-    // These values are used later to build the output array
-    $customValueData[$fields['id']]['name'] = $fields['name'];
-    $customValueData[$fields['id']]['label'] = $fields['label'];
-    $customValueData[$fields['id']]['data_type'] = $fields['data_type'];
-    $customValueData[$fields['id']]['html_type'] = $fields['html_type'];
-    $customValueData[$fields['id']]['option_group_id'] = $fields['option_group_id'];
-  }
+  $customInfo = array();
+  foreach ($custom_groups['values'] as $group_id => $custom_group) {
+    // Filter for custom group sub-types.
+    if (!empty($custom_group['extends_entity_column_value'])) {
+      static $campaign;
+      if (!isset($campaign)) {
+        $campaign = civicrm_api3('Campaign', 'getsingle', array(
+          'id' => $params['entity_id'],
+          'return' => 'campaign_type_id',
+        ));
+      }
+      if (!in_array($campaign['campaign_type_id'], $custom_group['extends_entity_column_value'])) {
+        continue;
+      }
+    }
 
-  // Custom values
-  $customValues = civicrm_api3('CustomValue', 'get', $customValueFields);
-  if (!isset($customValues)) {
-    return;
-  }
-
-  foreach ($customGroupId['values'] as $custom_group) {
+    // Retrieve custom field data.
     // TODO: Add support for multi-value custom groups.
-    $groupTree = CRM_Core_BAO_CustomGroup::getTree('Campaign', NULL, $params['entity_id'], $custom_group['id']);
-    $dummy_page = new CRM_Core_Page();
-    $cd_details = CRM_Core_BAO_CustomGroup::buildCustomDataView($dummy_page, $groupTree, FALSE, NULL, NULL, NULL, $params['entity_id']);
-    $customInfo = array();
-    foreach ($cd_details as $cgId => $group_details) {
-      $customRecId = key($group_details);
-      $customInfo[$cgId]['title'] = $group_details[$customRecId]['title'];
-      $fields = $group_details[$customRecId]['fields'];
-      foreach ($fields as $key => $field) {
-        $customInfo[$cgId]['fields'][$key]['title'] = $field['field_title'];
-        $customInfo[$cgId]['fields'][$key]['value'] = $field['field_value'];
-        // Get actual values for references
-        if (!empty($field['field_value'])) {
-          switch ($field['field_data_type']) {
-            case 'ContactReference':
-              // Return the contact name, not the ID
-              $customInfo[$cgId]['fields'][$key]['value'] = '<a href="' . CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $field['contact_ref_id']) . '" title="' . ts('View contact') . '">' . $field['field_value'] . '</a>';
-              break;
+    $groupTree = CRM_Core_BAO_CustomGroup::getTree(
+      'Campaign',
+      NULL,
+      $params['entity_id'],
+      $custom_group['id'],
+      (isset($custom_group['extends_entity_column_value']) ? $custom_group['extends_entity_column_value'] : array())
+    );
+    $cd_details = CRM_Core_BAO_CustomGroup::buildCustomDataView(
+      $dummy_page = new CRM_Core_Page(),
+      $groupTree,
+      FALSE,
+      NULL,
+      NULL,
+      NULL,
+      $params['entity_id']
+    );
+    $customRecId = key($cd_details[$custom_group['id']]);
+    $customInfo[$custom_group['id']]['title'] = $cd_details[$custom_group['id']][$customRecId]['title'];
+    foreach ($cd_details[$custom_group['id']][$customRecId]['fields'] as $field_id => $field) {
+      // Set field data.
+      $customInfo[$custom_group['id']]['fields'][$field_id]['title'] = $field['field_title'];
+      $customInfo[$custom_group['id']]['fields'][$field_id]['value'] = $field['field_value'];
 
-            case 'String':
-              if ($customValueData[$id]['field_type'] == 'Select') {
-                try {
-                  // Return the label, not the OptionValue ID
-                  $optionGroupId = civicrm_api3('OptionGroup', 'getsingle', array(
-                    'return' => "id",
-                    'title' => $customValueData[$id]['label'],
-                  ));
-                  $optionLabel = civicrm_api3('OptionValue', 'getsingle', array(
-                    'return' => "label",
-                    'option_group_id' => $optionGroupId['id'],
-                    'value' => $field['field_value'],
-                  ));
-                }
-                catch (Exception $e) {
-                  CRM_Core_Error::debug_log_message("Cannot find OptionGroup or OptionValue. " . print_r($e, TRUE));
-                }
-                $customInfo[$cgId]['fields'][$key]['value'] = $optionLabel['label'];
-              }
-              elseif ($customValueData[$id]['field_type'] == 'CheckBox') {
-                try {
-                  $optionLabel = civicrm_api3('OptionValue', 'get', array(
-                    'return' => "label",
-                    'option_group_id' => $customValueData[$id]['option_group_id'],
-                    'value' => array('IN' => $field['field_value']),
-                  ));
-                  $labels = array();
-                  foreach ($optionLabel['values'] as $v) {
-                    $labels[] = $v['label'];
-                  }
-                } catch (Exception $e) {
-                  CRM_Core_Error::debug_log_message("Cannot find OptionGroup or OptionValue. " . print_r($e, TRUE));
-                }
-                $customInfo[$cgId]['fields'][$key]['value'] = implode(', ', $labels);
-              }
-              elseif ($customValueData[$id]['field_type'] == 'Radio') {
-                try {
-                  $optionLabel = civicrm_api3('OptionValue', 'getsingle', array(
-                    'return' => "label",
-                    'option_group_id' => $customValueData[$id]['option_group_id'],
-                    'value' => $field['field_value'],
-                  ));
-                } catch (Exception $e) {
-                  CRM_Core_Error::debug_log_message("Cannot find OptionGroup or OptionValue. " . print_r($e, TRUE));
-                }
-                $customInfo[$cgId]['fields'][$key]['value'] = $optionLabel['label'];
-              }
-              else {
-                $customInfo[$cgId]['fields'][$key]['value'] = $field['field_value'];
-              }
-              break;
-
-            default:
-              $customInfo[$cgId]['fields'][$key]['value'] = $field['field_value'];
-          }
+      // Enhance displayed values depending on field type.
+      if (!empty($field['field_value'])) {
+        switch ($field['field_data_type']) {
+          case 'ContactReference':
+            // Return a link to the contact instead of just the display name.
+            $customInfo[$custom_group['id']]['fields'][$field_id]['value'] = '<a href="' . CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $field['contact_ref_id']) . '" title="' . ts('View contact') . '">' . $field['field_value'] . '</a>';
+            break;
         }
       }
     }
   }
+
   return $customInfo;
 }
 
