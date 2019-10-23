@@ -103,11 +103,14 @@
    <div crm-ui-accordion="{title: ts('Campaign Information', {domain: 'de.systopia.campaign'}), collapsed: false}" >
       <div class="label">{{ts('Description', {domain: 'de.systopia.campaign'})}}: {{currentCampaign.description ? currentCampaign.description : "---"}}</div>
       <div class="content">
-          <table class="custominfotable">
-              <tr ng-repeat="(key, value) in customInfo | filterCustomInfo">
-                  <td>{{value.title}}</td>
-                  <td>{{value.value}}</td>
-              </tr>
+          <table class="custominfotable" ng-repeat="(groupId, groupData) in customInfo">
+            <tr>
+              <th colspan="2">{{groupData.title}}</th>
+            </tr>
+            <tr ng-repeat="(key, value) in groupData.fields | filterCustomInfo">
+              <th>{{value.title}}</th>
+              <td ng-bind-html="value.value"></td>
+            </tr>
           </table>
       </div>
       <div class="clear"></div>
