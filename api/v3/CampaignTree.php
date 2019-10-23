@@ -109,11 +109,12 @@ function _civicrm_api3_campaign_tree_clone_spec(&$params) {
 
 
 function civicrm_api3_campaign_tree_getcustominfo($params) {
-  // Get the Custom Group ID for campaign_information
+  // Get custom group IDs extending the current campaign.
   try {
-    $customGroupId = civicrm_api3('CustomGroup', 'get', array(
+    $custom_groups = civicrm_api3('CustomGroup', 'get', array(
       'extends' => "Campaign",
-      'return' => "id",
+      'return' => "id,extends_entity_column_value",
+      'option.limit' => 0,
     ));
   }
   catch (Exception $e) {
@@ -121,121 +122,64 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
     return array();
   }
 
-  // Get list of custom fields in group
-  if (!$customGroupId['values']) {
+  // Abort when there are no custom groups for the current campaign.
+  if (!$custom_groups['values']) {
     return array();
   }
-  $apiParams = array(
-    'custom_group_id' => array('IN' => array_keys($customGroupId['values'])),
-  );
-  $customGroupFields = civicrm_api3('CustomField', 'get', $apiParams);
 
-  $customValueFields = array(); // Selector Array for CustomValue_get
-  $customValueData = array(); // Data array to collect fields for output
-  // Create the selector array and store some values for use later
-  $customValueFields['entity_id'] = $params['entity_id'];
-  foreach ($customGroupFields['values'] as $id => $fields) {
-    $customValueFields['return.custom_' . $id] = 1;
-    // These values are used later to build the output array
-    $customValueData[$fields['id']]['name'] = $fields['name'];
-    $customValueData[$fields['id']]['label'] = $fields['label'];
-    $customValueData[$fields['id']]['data_type'] = $fields['data_type'];
-    $customValueData[$fields['id']]['html_type'] = $fields['html_type'];
-    $customValueData[$fields['id']]['option_group_id'] = $fields['option_group_id'];
-  }
-
-  // Custom values
-  $customValues = civicrm_api3('CustomValue', 'get', $customValueFields);
-  if (!isset($customValues)) {
-    return;
-  }
-
-  $customInfo = array(); // This is the output array
-  // Merge together information from the $customValues array and the $customValueData array
-  // to generate the $customInfo output array
-  foreach ($customValues['values'] as $id => $values) {
-    $key = strtolower($customValueData[$id]['name']);
-    // We assume that customvalue has a single value '0'.
-    if (!isset($values[0])) {
-      return array();
+  $customInfo = array();
+  foreach ($custom_groups['values'] as $group_id => $custom_group) {
+    // Filter for custom group sub-types.
+    if (!empty($custom_group['extends_entity_column_value'])) {
+      static $campaign;
+      if (!isset($campaign)) {
+        $campaign = civicrm_api3('Campaign', 'getsingle', array(
+          'id' => $params['entity_id'],
+          'return' => 'campaign_type_id',
+        ));
+      }
+      if (!in_array($campaign['campaign_type_id'], $custom_group['extends_entity_column_value'])) {
+        continue;
+      }
     }
-    $value = $values[0];
-    $customInfo[$key]['title'] = $customValueData[$id]['label'];
-    $customInfo[$key]['value'] = ''; // Default to empty string if not defined
-    // Get actual values for references
-    if (!empty($value)) {
-      switch ($customValueData[$id]['data_type']) {
-        case 'Boolean':
-          $yn = array(0 => ts('No'), 1 => ts('Yes'));
-          $customInfo[$key]['value'] = $yn[$value];
-          break;
 
-        case 'ContactReference':
-          // Return the contact name, not the ID
-          $contactName = civicrm_api3('Contact', 'getvalue', array(
-            'return' => "display_name",
-            'id' => $value,
-          ));
-          $customInfo[$key]['value'] = $contactName;
-          break;
+    // Retrieve custom field data.
+    // TODO: Add support for multi-value custom groups.
+    $groupTree = CRM_Core_BAO_CustomGroup::getTree(
+      'Campaign',
+      NULL,
+      $params['entity_id'],
+      $custom_group['id'],
+      (isset($custom_group['extends_entity_column_value']) ? $custom_group['extends_entity_column_value'] : array())
+    );
+    $cd_details = CRM_Core_BAO_CustomGroup::buildCustomDataView(
+      $dummy_page = new CRM_Core_Page(),
+      $groupTree,
+      FALSE,
+      NULL,
+      NULL,
+      NULL,
+      $params['entity_id']
+    );
+    $customRecId = key($cd_details[$custom_group['id']]);
+    $customInfo[$custom_group['id']]['title'] = $cd_details[$custom_group['id']][$customRecId]['title'];
+    foreach ($cd_details[$custom_group['id']][$customRecId]['fields'] as $field_id => $field) {
+      // Set field data.
+      $customInfo[$custom_group['id']]['fields'][$field_id]['title'] = $field['field_title'];
+      $customInfo[$custom_group['id']]['fields'][$field_id]['value'] = $field['field_value'];
 
-        case 'String':
-          if ($customValueData[$id]['html_type'] == 'Select') {
-            try {
-              // Return the label, not the OptionValue ID
-              $optionGroupId = civicrm_api3('OptionGroup', 'getsingle', array(
-                'return' => "id",
-                'title' => $customValueData[$id]['label'],
-              ));
-              $optionLabel = civicrm_api3('OptionValue', 'getsingle', array(
-                'return' => "label",
-                'option_group_id' => $optionGroupId['id'],
-                'value' => $value,
-              ));
-            }
-            catch (Exception $e) {
-              CRM_Core_Error::debug_log_message("Cannot find OptionGroup or OptionValue. " . print_r($e, TRUE));
-            }
-            $customInfo[$key]['value'] = $optionLabel['label'];
-          }
-          elseif ($customValueData[$id]['html_type'] == 'CheckBox') {
-            try {
-              $optionLabel = civicrm_api3('OptionValue', 'get', array(
-                'return' => "label",
-                'option_group_id' => $customValueData[$id]['option_group_id'],
-                'value' => array('IN' => $value),
-              ));
-              $labels = array();
-              foreach ($optionLabel['values'] as $v) {
-                $labels[] = $v['label'];
-              }
-            } catch (Exception $e) {
-              CRM_Core_Error::debug_log_message("Cannot find OptionGroup or OptionValue. " . print_r($e, TRUE));
-            }
-            $customInfo[$key]['value'] = implode(', ', $labels);
-          }
-          elseif ($customValueData[$id]['html_type'] == 'Radio') {
-            try {
-              $optionLabel = civicrm_api3('OptionValue', 'getsingle', array(
-                'return' => "label",
-                'option_group_id' => $customValueData[$id]['option_group_id'],
-                'value' => $value,
-              ));
-            } catch (Exception $e) {
-              CRM_Core_Error::debug_log_message("Cannot find OptionGroup or OptionValue. " . print_r($e, TRUE));
-            }
-            $customInfo[$key]['value'] = $optionLabel['label'];
-          }
-          else {
-            $customInfo[$key]['value'] = $value;
-          }
-          break;
-
-        default:
-          $customInfo[$key]['value'] = $value;
+      // Enhance displayed values depending on field type.
+      if (!empty($field['field_value'])) {
+        switch ($field['field_data_type']) {
+          case 'ContactReference':
+            // Return a link to the contact instead of just the display name.
+            $customInfo[$custom_group['id']]['fields'][$field_id]['value'] = '<a href="' . CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $field['contact_ref_id']) . '" title="' . ts('View contact') . '">' . $field['field_value'] . '</a>';
+            break;
+        }
       }
     }
   }
+
   return $customInfo;
 }
 
