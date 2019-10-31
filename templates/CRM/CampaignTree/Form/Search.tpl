@@ -242,20 +242,20 @@
                     }
 
                     if ($(nRow).hasClass('crm-campaign-root')) {
-                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-root" title="{ts}Root Campaign{/ts}"/><img class="campaign-icon" src="' +
-                            CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-root_20x20.png" /></span>{literal}');
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-root" title="{ts}Root Campaign{/ts}"/>' +
+                            '<i class="campaign-fa-icon fa fa-folder" aria-hidden="true"></i></span>{literal}');
                     }
                     else if ($(nRow).hasClass('crm-campaign-parent')) {
-                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-parent" title="{ts}Parent Campaign{/ts}"/><img class="campaign-icon" src="' +
-                            CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-parent_20x20.png" /></span>{literal}');
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-parent" title="{ts}Parent Campaign{/ts}">' +
+                            '<i class="campaign-fa-icon fa fa-sitemap" aria-hidden="true"></i></span>{literal}');
                     }
                     else if ($(nRow).hasClass('crm-campaign-child')) {
-                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}"/><img class="campaign-icon" src="' +
-                            CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-child_20x20.png" /></span>{literal}');
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}">' +
+                            '<i class="campaign-fa-icon fa fa-file" aria-hidden="true"></i></span>{literal}');
                     }
                     else {
-                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-other" title="{ts}Campaign{/ts}"/><img class="campaign-icon" src="' +
-                            CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-other_20x20.png" /></span>{literal}');
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-other" title="{ts}Campaign{/ts}">' +
+                            '<i class="campaign-fa-icon fa fa-file-o" aria-hidden="true"></i></span>{literal}');
                     }
                     return nRow;
                 },
@@ -364,14 +364,14 @@
                             appendHTML += '<tr id="row_'+ val.id +'_'+parent_id+'" data-entity="campaign" data-id="'+ val.id +'" class="parent_is_' + parent_id + ' crm-row-child ' + val.class.split(',')[1] + '">';
                             if ( val.is_parent ) {
                                 appendHTML += '<td class="crm-campaign-name ' + levelClass + '">'{/literal} +
-                                               '<span class="campaign-icon-parent" title="{ts}Parent Campaign{/ts}"/><img class="campaign-icon" src="' +
-                                               CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-parent_20x20.png" /></span>' +
+                                               '<span class="campaign-icon-parent" title="{ts}Parent Campaign{/ts}">' +
+                                               '<i class="campaign-fa-icon fa fa-sitemap" aria-hidden="true"></i></span>' +
                                                '<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}' + val.name + '</td>';
                             }
                             else {
                                 appendHTML += '<td class="crm-campaign-name ' + levelClass + '">'{/literal} +
-                                               '<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}"/><img class="campaign-icon" src="' +
-                                               CRM.vars.campaigntree.baseUrl + '/images/campaign-icon-child_20x20.png" /></span>' +
+                                               '<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}">' +
+                                               '<i class="campaign-fa-icon fa fa-file" aria-hidden="true"></i></span>' +
                                                '<span class="crm-no-children"></span>{literal}' + val.name + '</td>';
                             }
                             appendHTML += '<td class="crm-editable crmf-description" data-type="textarea">' + (val.description || '') + "</td>";

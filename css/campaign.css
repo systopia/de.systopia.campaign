@@ -155,18 +155,18 @@ linegraph .axis line {
 /* alter display of parent and child groups in Manage Groups selector */
 /* from civicrm.css: #crm-container .crm-group-parent td.crm-group-name { */
 #crm-container td.crm-campaign-name {
-    padding-left: 20px;
+    padding-left: 30px;
     text-indent: -20px;
 }
 
 /* from civicrm.css: #crm-container .crm-group-child td.crm-group-name.level_2 { */
 #crm-container td.crm-campaign-name.level_2 {
-    padding-left: 40px;
+    padding-left: 50px;
     text-indent: -20px;
 }
 /* from civicrm.css: #crm-container .crm-group-child td.crm-group-name.level_3 { */
 #crm-container td.crm-campaign-name.level_3 {
-    padding-left: 60px;
+    padding-left: 70px;
     text-indent: -20px;
 }
 /* from civicrm.css: #crm-container .crm-group-name span.crm-editable-enabled { */
@@ -177,6 +177,17 @@ linegraph .axis line {
 .campaign-icon {
     max-width: 20px;
     vertical-align: middle;
+}
+
+.campaign-fa-icon {
+    max-width: 20px;
+    max-height: 20px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    vertical-align: middle;
+    text-indent: 0;
 }
 
 #crm-campaign-actions-list {
@@ -194,5 +205,5 @@ linegraph .axis line {
 }
 
 .crm-create-new-list-inner, .crm-create-new-list-inner ul {
-  width: 160px!important;
+  width: 160px !important;
 }
