@@ -1,6 +1,7 @@
 site_name: Campaign Manager
 repo_url: https://github.com/systopia/de.systopia.campaign
-theme: material
+theme:
+  name: material
 
 nav:
 - 'About Campaign Manager': index.md
