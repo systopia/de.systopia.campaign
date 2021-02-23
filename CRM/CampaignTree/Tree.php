@@ -55,7 +55,7 @@ class CRM_Campaign_Tree {
          $campaign = CRM_Core_DAO::executeQuery($query, array(1 => array($current_id, 'Integer')));
 
          while ($campaign->fetch()) {
-            if( (array_key_exists($children, $campaign->id) && $children[$campaign->id]['id'] == $campaign->id) || $campaign->id == $root) {
+            if( (array_key_exists($campaign->id, $children) && $children[$campaign->id]['id'] == $campaign->id) || $campaign->id == $root) {
                throw new CRM_Core_Exception(ts("de.systopia.campaign: cycle detected! id: %1", array(1 => $campaign->id, 'domain' => 'de.systopia.campaign')));
             }
             $new_nodes[] = $campaign->id;
