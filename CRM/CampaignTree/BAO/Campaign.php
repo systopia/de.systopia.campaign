@@ -136,14 +136,29 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       }
     }
 
+    $campaignTypeID   = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', 'campaign_type', 'id', 'name');
+    $campaignStatusID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', 'campaign_status', 'id', 'name');
+
     $query = "
-            SELECT  camp.*, createdBy.sort_name as created_by
+            SELECT camp.*, 
+            createdBy.sort_name as created_by, 
+            option_campaign_types.label as campaign_type_label,
+            option_campaign_status.label as campaign_status_label
             FROM  civicrm_campaign camp
+
             LEFT JOIN civicrm_contact createdBy
             ON createdBy.id = camp.created_id
+
+            LEFT JOIN civicrm_option_value option_campaign_types
+            ON option_campaign_types.option_group_id = {$campaignTypeID} AND option_campaign_types.value = camp.campaign_type_id
+
+            LEFT JOIN civicrm_option_value option_campaign_status
+            ON option_campaign_status.option_group_id = {$campaignStatusID} AND option_campaign_status.value = camp.status_id
+
             WHERE $whereClause
             {$orderBy}
             {$limit}";
+
 
     $object = CRM_Core_DAO::executeQuery($query, $params, TRUE, 'CRM_Campaign_DAO_Campaign');
     //skip total if we are making call to show only children

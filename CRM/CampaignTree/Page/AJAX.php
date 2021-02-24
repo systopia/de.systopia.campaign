@@ -40,7 +40,11 @@ class CRM_CampaignTree_Page_AJAX {
         0 => 'camp.title',
         1 => 'camp.description',
         2 => 'camp.start_date',
-        3 => 'camp.end_date'
+        3 => 'camp.end_date',
+        4 => 'campaign_type_label',
+        5 => 'campaign_status_label',
+        6 => 'createdBy.sort_name',   
+        7 => 'camp.external_identifier'
       );
       $sEcho = isset($_REQUEST['sEcho']) ? CRM_Utils_Type::escape($_REQUEST['sEcho'], 'Integer') : 1;
       $offset = isset($_REQUEST['iDisplayStart']) ? CRM_Utils_Type::escape($_REQUEST['iDisplayStart'], 'Integer') : 0;
