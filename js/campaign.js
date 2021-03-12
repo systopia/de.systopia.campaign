@@ -429,7 +429,7 @@
             })
           .attr("text-anchor", "middle")
           .text( function(d, i) {return data[i].label;} )
-          .attr("class", function(d, i) { return data[i].value <= 0.2 ? "hovertext": "" });
+          .attr("class", function(d, i) { return data[i].value < 0.2 ? "hovertext": "" });
       }
     }
   });
