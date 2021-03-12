@@ -133,6 +133,14 @@ piechart svg {
   margin: auto;
 }
 
+piechart svg g.slice text.hovertext {
+  display: none;
+}
+
+piechart svg g.slice:hover text.hovertext {
+  display: block;
+}
+
 linegraph svg {
   display: block;
   margin: auto;
