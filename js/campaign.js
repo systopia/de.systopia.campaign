@@ -420,8 +420,7 @@
             });
 
         // add label
-        var labels = enter.append("svg:g").attr("class", "slice");
-        labels.append("svg:text")
+        arcs.append("svg:text")
           .attr("transform",
             function(d) {
         	    d.innerRadius = 0;
