@@ -420,7 +420,8 @@
             });
 
         // add label
-        arcs.append("svg:text")
+        var labels = enter.append("svg:g").attr("class", "slice");
+        labels.append("svg:text")
           .attr("transform",
             function(d) {
         	    d.innerRadius = 0;
@@ -428,33 +429,7 @@
               return "translate(" + arc.centroid(d) + ")";
             })
           .attr("text-anchor", "middle")
-          .text( function(d, i) {return data[i].label;} )
-          .attr("class", function(d, i) { return data[i].value < 0.2 ? "hovertext": "" });
-
-        // Add background colours for the text elements; this is achieved with rects of the same size and position:
-        const textElements = document.querySelectorAll('g.slice text');
-        for (const textElement of textElements.values())
-        {
-          // Make sure the element is visible for the bounding box to not be empty:
-          textElement.style.display = 'block';
-          const bbox = textElement.getBBox();
-          textElement.style.display = null;
-
-          const backgroundRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          backgroundRect.setAttribute('x', bbox.x);
-          backgroundRect.setAttribute('y', bbox.y);
-          backgroundRect.setAttribute('width', bbox.width);
-          backgroundRect.setAttribute('height', bbox.height);
-          backgroundRect.setAttribute('transform', textElement.getAttribute('transform'));
-          backgroundRect.setAttribute('fill', '#FFFFFF80');
-
-          if (textElement.classList.contains('hovertext'))
-          {
-            backgroundRect.classList.add('hovertext');
-          }
-
-          textElement.parentNode.insertBefore(backgroundRect, textElement);
-        }
+          .text( function(d, i) {return data[i].label;} );
       }
     }
   });
