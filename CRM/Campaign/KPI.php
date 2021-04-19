@@ -78,7 +78,7 @@ class CRM_Campaign_KPI {
       // finally: run the hook
       CRM_Utils_CampaignCustomisationHooks::campaign_kpis($campaign_id, $kpi, 99);
 
-      // cach result
+      // cache result
       CRM_Campaign_KPICache::pushToCache($campaign_id, $kpi);
 
       return json_encode($kpi);
@@ -332,7 +332,11 @@ class CRM_Campaign_KPI {
       $contribution = CRM_Core_DAO::executeQuery(sprintf($query, $campaign_id));
       while ($contribution->fetch()) {
          if ($contribution->revenue) {
-            $revenue_breakdown[] = array("label" => $contribution->label, "value" => (double) ($contribution->revenue / $total_revenue));
+            if ($total_revenue == 0) {
+              $revenue_breakdown[] = array("label" => $contribution->label, "value" => 0.0);
+            } else {
+              $revenue_breakdown[] = array("label" => $contribution->label, "value" => (double) ($contribution->revenue / $total_revenue));
+            }
          }
       }
 
@@ -357,7 +361,11 @@ class CRM_Campaign_KPI {
            $curr_contrib = CRM_Core_DAO::executeQuery(sprintf($query, $id_string));
            while ($curr_contrib->fetch()) {
              if ($curr_contrib->revenue) {
-               $revenue_breakdown[] = array("label" => $label, "value" => (double) $curr_contrib->revenue / $total_revenue);
+               if ($total_revenue == 0) {
+                 $revenue_breakdown[] = array("label" => $label, "value" => (double) 0.0);
+               } else {
+                 $revenue_breakdown[] = array("label" => $label, "value" => (double) $curr_contrib->revenue / $total_revenue);
+               }
              }
            }
          }
