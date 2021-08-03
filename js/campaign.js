@@ -393,6 +393,8 @@
         var color = d3.scale.category20c();
 
         var data = chartdata.value;
+        // Sort by value for coherent rendering.
+        data.sort((a, b) => (a.value > b.value) ? 1 : -1);
 
         angular.forEach(data, function(d, i) {
           if(typeof(d.label) === 'undefined' || typeof(d.value) === 'undefined' || d.value === false) {
@@ -441,10 +443,10 @@
           textElement.style.display = null;
 
           const backgroundRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          backgroundRect.setAttribute('x', bbox.x);
-          backgroundRect.setAttribute('y', bbox.y);
-          backgroundRect.setAttribute('width', bbox.width);
-          backgroundRect.setAttribute('height', bbox.height);
+          backgroundRect.setAttribute('x', bbox.x - 5);
+          backgroundRect.setAttribute('y', bbox.y - 5);
+          backgroundRect.setAttribute('width', bbox.width + 10);
+          backgroundRect.setAttribute('height', bbox.height + 10);
           backgroundRect.setAttribute('transform', textElement.getAttribute('transform'));
           backgroundRect.setAttribute('fill', '#FFFFFF80');
 
