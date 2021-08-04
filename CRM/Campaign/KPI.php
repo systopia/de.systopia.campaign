@@ -403,7 +403,7 @@ class CRM_Campaign_KPI {
       FROM  civicrm_contribution contrib
       WHERE contrib.campaign_id IN ( {$all_ids_list} )
       AND contrib.contribution_status_id NOT IN ({$negative_status_list})
-      GROUP BY DATE(`receive_date`);";
+      GROUP BY DATE(`receive_date`), date;";
       $all_contribs = array();
 
       $contribution = CRM_Core_DAO::executeQuery($query_contribs);
