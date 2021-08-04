@@ -134,7 +134,7 @@ piechart path.slice {
 
 piechart .labels text.hidden,
 piechart .lines polyline.hidden {
-  display: none;
+  visibility: hidden;
 }
 
 piechart polyline {
@@ -147,14 +147,6 @@ piechart polyline {
 piechart svg {
   display: block;
   margin: auto;
-}
-
-piechart svg g.slice .hovertext {
-  display: none;
-}
-
-piechart svg g.slice:hover .hovertext {
-  display: block;
 }
 
 linegraph svg {

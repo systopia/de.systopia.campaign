@@ -390,13 +390,12 @@
         var width = 600;
         var height = 300;
         var radius = Math.min(width, height) / 2;
+        var labelWidth = (width - Math.min(width, height)) / 2;
         var color = d3.scale.category20c();
 
         var data = chartdata.value;
         // Sort by value for coherent rendering.
         data.sort((a, b) => (a.value > b.value) ? 1 : -1);
-
-        console.log(data);
 
         angular.forEach(data, function(d, i) {
           if(typeof(d.label) === 'undefined' || typeof(d.value) === 'undefined' || d.value === false) {
@@ -479,7 +478,6 @@
 
         text.enter()
           .append("text")
-          .attr("dy", ".35em")
           .text(function(d) {
             return d.data.label;
           })
@@ -496,6 +494,12 @@
           })
           .classed('hidden hide', function(d) {
             return d.data.value < 0.1;
+          })
+          .each(function(d, i) {
+            svg_textMultiline(this, labelWidth);
+          })
+          .attr('y', function() {
+            return -(this.getBBox().height / 2);
           });
 
         text.exit()
@@ -967,5 +971,48 @@
       }
     };
   });
+
+  /**
+   * @url https://stackoverflow.com/a/38162224
+   *
+   * @param element
+   *   The SVG TEXT element to wrap.
+   * @param width
+   *   The desired width of the wrapped text.
+   */
+  function svg_textMultiline(element, width) {
+    var y = '1.15em';
+
+    /* get the text */
+    var text = element.innerHTML;
+
+    /* split the words into array */
+    var words = text.split(' ');
+    var line = '';
+
+    /* Make a tspan for testing */
+    element.innerHTML = '<tspan id="PROCESSING">busy</tspan >';
+
+    for (var n = 0; n < words.length; n++) {
+      var testLine = line + words[n] + ' ';
+      var testElem = document.getElementById('PROCESSING');
+      /*  Add line in testElement */
+      testElem.innerHTML = testLine;
+      /* Messure textElement */
+      var metrics = testElem.getBoundingClientRect();
+      testWidth = metrics.width;
+
+      if (testWidth > width && n > 0) {
+        element.innerHTML += '<tspan x="0" dy="' + y + '">' + line + '</tspan>';
+        line = words[n] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+
+    element.innerHTML += '<tspan x="0" dy="' + y + '">' + line + '</tspan>';
+
+    document.getElementById("PROCESSING").remove();
+  }
 
 })(angular, CRM.$, CRM._);
