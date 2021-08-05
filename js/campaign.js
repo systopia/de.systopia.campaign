@@ -445,6 +445,8 @@
             width  = 600 - margin.left - margin.right,
             height = 300 - margin.top  - margin.bottom;
 
+        var color = d3.scale.category20c();
+
         var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
         var x = d3.time.scale().range([0, width]);
@@ -479,10 +481,16 @@
         });
 
 
-          data.forEach(function(d) {
-              d.date = parseDate(d.date);
-              d.value = +d.value;
-          });
+        data.forEach(function (d) {
+          d.date = parseDate(d.date);
+          if (d.start_date) {
+            d.start_date = parseDate(d.start_date);
+          }
+          if (d.end_date) {
+            d.end_date = parseDate(d.end_date);
+          }
+          d.value = +d.value;
+        });
 
           x.domain(d3.extent(data, function(d) { return d.date; }))
                   .ticks(d3.time.day);
@@ -515,6 +523,53 @@
                   .attr("y", height/2)
                   .text(ts('No Data'));
           }
+
+
+        var num_campaigns = data.reduce(function(count, entry) {
+          return count + (entry.type == 'campaign_range' ? 1 : 0);
+        }, 0);
+
+          var spanH = 23;
+          var height = num_campaigns * spanH;
+
+        var bands_y = d3.scale.linear().range([height, 0]),
+          bands_x = x;
+
+        bands_y.domain([
+          d3.min(data, function(d) { return d.pos; }),
+          d3.max(data, function(d) { return d.pos; })
+        ]);
+
+        var spanX = function (d, i) {
+            return bands_x(d['start_date']);
+          },
+          spanY = function (d) {
+            return bands_y(d.pos);
+          },
+          spanW = function (d, i) {
+            return bands_x(d['end_date']) - bands_x(d['start_date']);
+          };
+
+        var chart = d3.select(elem[0]).append("svg")
+          .attr('width', width + margin.left + margin.right)
+          .attr('height', height + margin.top + margin.bottom)
+          .append('g')
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Add spans
+        var span = chart.selectAll('.chart-span')
+          .data(data.filter(function(dataPoint) {
+            return dataPoint['type'] == 'campaign_range';
+          }))
+          .enter()
+          .append('rect')
+          .attr('title', function(d) { return d.campaign })
+          .style("fill", function(d) { return color(d.campaign); })
+          .classed('chart-span', true)
+          .attr('x', spanX)
+          .attr('y', spanY)
+          .attr('width', spanW)
+          .attr('height', spanH);
 
       }
     }
