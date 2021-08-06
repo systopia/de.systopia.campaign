@@ -550,14 +550,26 @@
             return bands_x(d['end_date']) - bands_x(d['start_date']);
           };
 
-        var chart = d3.select(elem[0]).append("svg")
+        var wrappedLabel = function(d) {
+          // Cut the label at a character count approximated based on the
+          // font-size (13px) and the band rect width.
+          var label = d.campaign.substr(0, spanW(d) / 13 * 2);
+          return (d.campaign.length > label.length ? label.concat('…') : label);
+        };
+
+        var bands_svg = d3.select(elem[0]).append("svg")
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
           .append('g')
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+        bands_svg.append("g")
+          .attr("class", "bands");
+        bands_svg.append("g")
+          .attr("class", "labels");
+
         // Add spans
-        var span = chart.selectAll('.chart-span')
+        var span = bands_svg.select(".bands").selectAll('.chart-span')
           .data(data.filter(function(dataPoint) {
             return dataPoint['type'] == 'campaign_range';
           }))
@@ -571,6 +583,38 @@
           .attr('width', spanW)
           .attr('height', spanH);
 
+        bands_svg.select(".labels").selectAll("text.stroke")
+          .data(data.filter(function(dataPoint) {
+            return dataPoint['type'] == 'campaign_range';
+          }))
+          .enter()
+          .append("text")
+          .text(wrappedLabel)
+          .attr('x', spanX)
+          .attr('y', spanY)
+          .attr('dx', 4)
+          .attr('dy', spanH / 2)
+          .attr('width', spanW)
+          .attr('height', spanH)
+          .attr('stroke', 'white')
+          .attr('stroke-width', 4)
+          .style('dominant-baseline', 'middle');
+
+        bands_svg.select(".labels").selectAll("text.label")
+          .data(data.filter(function(dataPoint) {
+            return dataPoint['type'] == 'campaign_range';
+          }))
+          .enter()
+          .append("text")
+          .text(wrappedLabel)
+          .attr('x', spanX)
+          .attr('y', spanY)
+          .attr('dx', 4)
+          .attr('dy', spanH / 2)
+          .attr('width', spanW)
+          .attr('height', spanH)
+          .attr('fill', 'black')
+          .style('dominant-baseline', 'middle');
       }
     }
   });
