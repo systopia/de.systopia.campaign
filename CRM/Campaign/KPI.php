@@ -407,7 +407,7 @@ class CRM_Campaign_KPI {
       $all_contribs = array();
 
       $contribution = CRM_Core_DAO::executeQuery($query_contribs);
-      $max_date = new DateTime(); // Now.
+      $max_date = NULL;
       while ($contribution->fetch()) {
         $date = new DateTime($contribution->date);
         $max_date = max($max_date, $date);
