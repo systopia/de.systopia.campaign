@@ -552,8 +552,8 @@
 
         var wrappedLabel = function(d) {
           // Cut the label at a character count approximated based on the
-          // font-size (13px) and the band rect width.
-          var label = d.campaign.substr(0, spanW(d) / 13 * 2);
+          // font-size (13px) and the chart width.
+          var label = d.campaign.substr(0, width / 13 * 2);
           return (d.campaign.length > label.length ? label.concat('…') : label);
         };
 
@@ -566,7 +566,8 @@
         bands_svg.append("g")
           .attr("class", "bands");
         bands_svg.append("g")
-          .attr("class", "labels");
+          .attr("class", "labels")
+          .attr('transform', 'translate(-' + margin.left + ', 0)');
 
         // Add spans
         var span = bands_svg.select(".bands").selectAll('.chart-span')
@@ -590,14 +591,13 @@
           .enter()
           .append("text")
           .text(wrappedLabel)
-          .attr('x', spanX)
+          .attr('x', '50%')
           .attr('y', spanY)
-          .attr('dx', 4)
           .attr('dy', spanH / 2)
-          .attr('width', spanW)
           .attr('height', spanH)
           .attr('stroke', 'white')
           .attr('stroke-width', 4)
+          .style('text-anchor', 'middle')
           .style('dominant-baseline', 'middle');
 
         bands_svg.select(".labels").selectAll("text.label")
@@ -607,13 +607,12 @@
           .enter()
           .append("text")
           .text(wrappedLabel)
-          .attr('x', spanX)
+          .attr('x', '50%')
           .attr('y', spanY)
-          .attr('dx', 4)
           .attr('dy', spanH / 2)
-          .attr('width', spanW)
           .attr('height', spanH)
           .attr('fill', 'black')
+          .style('text-anchor', 'middle')
           .style('dominant-baseline', 'middle');
       }
     }
