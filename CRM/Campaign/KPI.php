@@ -407,11 +407,56 @@ class CRM_Campaign_KPI {
       $all_contribs = array();
 
       $contribution = CRM_Core_DAO::executeQuery($query_contribs);
+      $max_date = NULL;
       while ($contribution->fetch()) {
         $date = new DateTime($contribution->date);
+        $max_date = max($max_date, $date);
         $date = $date->format('Y-m-d 00:00:00');
         $all_contribs[] = array("date" => $date, "value" => $contribution->value);
       }
+
+      // Add (sub) campaign start/end dates as data points.
+     $campaign_count = 0;
+     foreach ($all_ids as $campaign_id) {
+       $campaign = civicrm_api3('Campaign', 'getsingle', array('id' => $campaign_id));
+       $start_date = new DateTime($campaign['start_date']);
+       $all_contribs[] = array(
+         'date' => $start_date->format('Y-m-d 00:00:00'),
+         'value' => 0,
+         'type' => 'campaign_start',
+         'campaign' => $campaign['title'],
+       );
+       $end_date = !empty($campaign['end_date']) ? new DateTime($campaign['end_date']) : NULL;
+       $max_date = max($max_date, $start_date, $end_date);
+       $all_contribs[] = array(
+         'date' => $end_date ? $end_date->format('Y-m-d 00:00:00') : NULL,
+         'value' => 0,
+         'type' => 'campaign_end',
+         'campaign' => $campaign['title'],
+       );
+       $all_contribs[] = array(
+         'date' => $start_date->format('Y-m-d 00:00:00'),
+         'value' => 0,
+         'type' => 'campaign_range',
+         'start_date' => $start_date->format('Y-m-d 00:00:00'),
+         'end_date' => $end_date ? $end_date->format('Y-m-d 00:00:00') : NULL,
+         'pos' => $campaign_count++,
+         'campaign' => $campaign['title'],
+       );
+     }
+     // Set open-ended campaigns' end date to latest date in the chart.
+     foreach ($all_contribs as &$data_point) {
+       if ($data_point['type'] == 'campaign_end' && empty($data_point['date'])) {
+         $data_point['date'] = $max_date->format('Y-m-d 00:00:00');
+       }
+       if ($data_point['type'] == 'campaign_range' && empty($data_point['end_date'])) {
+         $data_point['end_date'] = $max_date->format('Y-m-d 00:00:00');
+       }
+     }
+     // Sort data points by date.
+     usort($all_contribs, function($a, $b) {
+       return strtotime($a['date']) - strtotime($b['date']);
+     });
 
       if (!empty($all_contribs)) {
          $kpi["donation_heartbeat"] = array(

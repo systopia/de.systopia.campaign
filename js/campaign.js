@@ -546,6 +546,8 @@
             width  = 600 - margin.left - margin.right,
             height = 300 - margin.top  - margin.bottom;
 
+        var color = d3.scale.category20c();
+
         var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
         var x = d3.time.scale().range([0, width]);
@@ -580,10 +582,16 @@
         });
 
 
-          data.forEach(function(d) {
-              d.date = parseDate(d.date);
-              d.value = +d.value;
-          });
+        data.forEach(function (d) {
+          d.date = parseDate(d.date);
+          if (d.start_date) {
+            d.start_date = parseDate(d.start_date);
+          }
+          if (d.end_date) {
+            d.end_date = parseDate(d.end_date);
+          }
+          d.value = +d.value;
+        });
 
           x.domain(d3.extent(data, function(d) { return d.date; }))
                   .ticks(d3.time.day);
@@ -617,6 +625,96 @@
                   .text(ts('No Data'));
           }
 
+
+        var num_campaigns = data.reduce(function(count, entry) {
+          return count + (entry.type == 'campaign_range' ? 1 : 0);
+        }, 0);
+
+          var spanH = 23;
+          var height = num_campaigns * spanH;
+
+        var bands_y = d3.scale.linear().range([height, 0]),
+          bands_x = x;
+
+        bands_y.domain([
+          d3.min(data, function(d) { return d.pos; }),
+          d3.max(data, function(d) { return d.pos; })
+        ]);
+
+        var spanX = function (d, i) {
+            return bands_x(d['start_date']);
+          },
+          spanY = function (d) {
+            return bands_y(d.pos);
+          },
+          spanW = function (d, i) {
+            return bands_x(d['end_date']) - bands_x(d['start_date']);
+          };
+
+        var wrappedLabel = function(d) {
+          // Cut the label at a character count approximated based on the
+          // font-size (13px) and the chart width.
+          var label = d.campaign.substr(0, width / 13 * 2);
+          return (d.campaign.length > label.length ? label.concat('…') : label);
+        };
+
+        var bands_svg = d3.select(elem[0]).append("svg")
+          .attr('width', width + margin.left + margin.right)
+          .attr('height', height + margin.top + margin.bottom)
+          .append('g')
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        bands_svg.append("g")
+          .attr("class", "bands");
+        bands_svg.append("g")
+          .attr("class", "labels")
+          .attr('transform', 'translate(-' + margin.left + ', 0)');
+
+        // Add spans
+        var span = bands_svg.select(".bands").selectAll('.chart-span')
+          .data(data.filter(function(dataPoint) {
+            return dataPoint['type'] == 'campaign_range';
+          }))
+          .enter()
+          .append('rect')
+          .attr('title', function(d) { return d.campaign })
+          .style("fill", function(d) { return color(d.campaign); })
+          .classed('chart-span', true)
+          .attr('x', spanX)
+          .attr('y', spanY)
+          .attr('width', spanW)
+          .attr('height', spanH);
+
+        bands_svg.select(".labels").selectAll("text.stroke")
+          .data(data.filter(function(dataPoint) {
+            return dataPoint['type'] == 'campaign_range';
+          }))
+          .enter()
+          .append("text")
+          .text(wrappedLabel)
+          .attr('x', '50%')
+          .attr('y', spanY)
+          .attr('dy', spanH / 2)
+          .attr('height', spanH)
+          .attr('stroke', 'white')
+          .attr('stroke-width', 4)
+          .style('text-anchor', 'middle')
+          .style('dominant-baseline', 'middle');
+
+        bands_svg.select(".labels").selectAll("text.label")
+          .data(data.filter(function(dataPoint) {
+            return dataPoint['type'] == 'campaign_range';
+          }))
+          .enter()
+          .append("text")
+          .text(wrappedLabel)
+          .attr('x', '50%')
+          .attr('y', spanY)
+          .attr('dy', spanH / 2)
+          .attr('height', spanH)
+          .attr('fill', 'black')
+          .style('text-anchor', 'middle')
+          .style('dominant-baseline', 'middle');
       }
     }
   });
