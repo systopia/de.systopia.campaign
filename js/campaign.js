@@ -145,6 +145,7 @@
      $scope.add_link = CRM.url('civicrm/a/#/campaign/' + $scope.currentCampaign.id + '/expense/add', {});
      $scope.clone_link = CRM.url('civicrm/a/#/campaign/' + $scope.currentCampaign.id + '/clone', {});
      $scope.btd_link = CRM.url('civicrm/campaign', {reset: 1});
+     $scope.kpi_download_link = CRM.url('civicrm/campaign/kpi_export?campaign_id=' + $scope.currentCampaign.id + '&kpi_name=', {});
 
      $scope.predicate = 'amount';
      $scope.reverse = true;
