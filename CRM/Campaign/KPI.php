@@ -446,10 +446,10 @@ class CRM_Campaign_KPI {
      }
      // Set open-ended campaigns' end date to latest date in the chart.
      foreach ($all_contribs as &$data_point) {
-       if ($data_point['type'] == 'campaign_end' && empty($data_point['date'])) {
+       if (!empty($data_point['type']) && $data_point['type'] == 'campaign_end' && empty($data_point['date'])) {
          $data_point['date'] = $max_date->format('Y-m-d 00:00:00');
        }
-       if ($data_point['type'] == 'campaign_range' && empty($data_point['end_date'])) {
+       if (!empty($data_point['type']) && $data_point['type'] == 'campaign_range' && empty($data_point['end_date'])) {
          $data_point['end_date'] = $max_date->format('Y-m-d 00:00:00');
        }
      }
