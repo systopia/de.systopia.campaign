@@ -119,7 +119,12 @@
    <div crm-ui-accordion="{title: ts('KPI Charts', {domain: 'de.systopia.campaign'})}" >
      <div id="kpivis">
        <div class="kpivisitem" ng-repeat="(key, value) in kpi | filterKPI">
-         <div class="title"><h3>{{value.title}}</h3></div>
+         <div class="title">
+           <h3>{{value.title}}</h3>
+           <ul class="kpivisitem__links">
+             <li><a crm-icon="fa-bar-chart" class="pull-right" href="{{ kpi_report_link }}" title="{{ts('Contribution Details Report')}}"></a></li>
+           </ul>
+         </div>
          <div class="visualization"><kpivisualization kpi="value"></kpivisualization></div>
        </div>
        <div style="clear:both"></div>

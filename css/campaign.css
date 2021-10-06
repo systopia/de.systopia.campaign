@@ -123,9 +123,26 @@
   float: left;
   padding: 20px 20px 20px 20px;
 }
-
-.kpivisitem h3 {
+.kpivisitem .title {
+  display: flex;
+}
+.crm-container .kpivisitem h3 {
   text-align: center;
+  flex: 1 0 100%;
+  padding-right: 4.5em; /* 2 * 2em button width + .5em right padding */
+  box-sizing: border-box;
+}
+.kpivisitem .kpivisitem__links {
+  position: relative;
+  align-self: center;
+  margin: 0 0 0 -5em; /* 2 * 2em button width + 2 * .5em padding */
+  width: 4em;
+  display: flex;
+}
+.kpivisitem .kpivisitem__links > li {
+  display: block;
+  width: 1em;
+  padding: .5em;
 }
 
 piechart svg {
