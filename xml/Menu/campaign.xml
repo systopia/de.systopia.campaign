@@ -26,4 +26,10 @@
     <adminGroup>CiviCampaign</adminGroup>
     <component>CiviCampaign</component>
   </item>
+  <item>
+    <path>civicrm/campaign/kpi_export</path>
+    <page_callback>CRM_Campaign_Page_CampaignKPIExport</page_callback>
+    <title>Export Campaign KPIs</title>
+    <access_arguments>administer CiviCampaign</access_arguments>
+  </item>
 </menu>

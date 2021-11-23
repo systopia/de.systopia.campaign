@@ -144,6 +144,10 @@ piechart polyline {
   fill: none;
 }
 
+.visualization {
+  margin-bottom: 8px;
+}
+
 piechart svg {
   display: block;
   margin: auto;
