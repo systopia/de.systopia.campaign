@@ -387,12 +387,15 @@
         var chartdata=scope[attrs.chartdata];
         var d3 = $window.d3;
 
-        var w = 300;
-        var h = 300;
-        var r = h/2;
+        var width = 600;
+        var height = 300;
+        var radius = Math.min(width, height) / 2;
+        var labelWidth = (width - Math.min(width, height)) / 2;
         var color = d3.scale.category20c();
 
         var data = chartdata.value;
+        // Sort by value for coherent rendering.
+        data.sort((a, b) => (a.value > b.value) ? 1 : -1);
 
         angular.forEach(data, function(d, i) {
           if(typeof(d.label) === 'undefined' || typeof(d.value) === 'undefined' || d.value === false) {
@@ -405,28 +408,126 @@
           data.push({label: ts('No Data'), value: 100});
         }
 
-        var vis = d3.select(elem[0]).append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
-        var pie = d3.layout.pie().value(function(d){return d.value;});
-        var arc = d3.svg.arc().outerRadius(r);
+        var svg = d3.select(elem[0])
+          .append("svg:svg")
+          .style('width', width)
+          .style('height', height)
+          .append("g");
 
-        var enter = vis.selectAll("g.slice").data(pie).enter();
-        var arcs  = enter.insert("svg:g",":first-child").attr("class", "slice");
-        arcs.append("svg:path")
-            .attr("fill", function(d, i){
-                return color(i);
-            })
-            .attr("d", function (d) {
-                return arc(d);
-            });
+        svg.append("g")
+          .attr("class", "slices");
+        svg.append("g")
+          .attr("class", "labels");
+        svg.append("g")
+          .attr("class", "lines");
 
-        // add label
-        var labels = enter.append("svg:g").attr("class", "slice");
-        labels.append("svg:text").attr("transform", function(d){
-        			d.innerRadius = 0;
-        			d.outerRadius = r;
-            return "translate(" + arc.centroid(d) + ")";})
-                   .attr("text-anchor", "middle")
-                   .text( function(d, i) {return data[i].label;} );
+        var pie = d3.layout.pie()
+          .sort(null)
+          .value(function(d) {
+            return d.value;
+          });
+
+        var arc = d3.svg.arc()
+          .outerRadius(radius * 0.8)
+          .innerRadius(radius * 0.4);
+
+        var outerArc = d3.svg.arc()
+          .innerRadius(radius * 0.9)
+          .outerRadius(radius * 0.9);
+
+        svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        var key = function(d){ return d.data.label; };
+
+        /* ------- PIE SLICES -------*/
+        function toggleLabel(d, i) {
+          var label = svg.select('.labels text[data-index="' + i + '"]')
+          var line = svg.select('.lines polyline[data-index="' + i + '"]')
+          if (label.classed('hide')) {
+            label.classed('hidden', !label.classed('hidden'));
+          }
+          if (line.classed('hide')) {
+            line.classed('hidden', !line.classed('hidden'));
+          }
+        }
+
+        var slice = svg.select(".slices").selectAll("path.slice")
+          .data(pie(data), key);
+
+        slice.enter()
+          .insert("path")
+          .style("fill", function(d) { return color(d.data.label); })
+          .attr("class", "slice")
+          .attr('d', arc)
+          .on('mouseover', toggleLabel)
+          .on('mouseout', toggleLabel)
+          .on('touchstart', toggleLabel)
+          .on('touchend', toggleLabel);
+
+        slice.exit()
+          .remove();
+
+        /* ------- TEXT LABELS -------*/
+
+        function midAngle(d){
+          return d.startAngle + (d.endAngle - d.startAngle)/2;
+        }
+
+        var text = svg.select(".labels").selectAll("text")
+          .data(pie(data), key);
+
+        text.enter()
+          .append("text")
+          .text(function(d) {
+            return d.data.label;
+          })
+          .attr('transform', function(d) {
+            var pos = outerArc.centroid(d);
+            pos[0] = radius * (midAngle(d) < Math.PI ? 1 : -1);
+            return "translate("+ pos +")";
+          })
+          .style('text-anchor', function(d) {
+            return midAngle(d) < Math.PI ? "start":"end";
+          })
+          .attr('data-index', function(d, i) {
+            return i;
+          })
+          .classed('hidden hide', function(d) {
+            return d.data.value < 0.1;
+          })
+          .each(function(d, i) {
+            svg_textMultiline(this, labelWidth);
+          })
+          .attr('y', function() {
+            return -(this.getBBox().height / 2);
+          });
+
+        text.exit()
+          .remove();
+
+        /* ------- SLICE TO TEXT POLYLINES -------*/
+
+        var polyline = svg.select(".lines").selectAll("polyline")
+          .data(pie(data), key);
+
+        polyline.enter()
+          .append("polyline");
+
+        polyline
+          .attr('points', function(d) {
+            var pos = outerArc.centroid(d);
+            pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
+            return [arc.centroid(d), outerArc.centroid(d), pos];
+          })
+          .attr('data-index', function(d, i) {
+            return i;
+          })
+          .classed('hidden hide', function(d) {
+            return d.data.value < 0.1;
+          });
+
+        polyline.exit()
+          .remove();
       }
     }
   });
@@ -870,5 +971,48 @@
       }
     };
   });
+
+  /**
+   * @url https://stackoverflow.com/a/38162224
+   *
+   * @param element
+   *   The SVG TEXT element to wrap.
+   * @param width
+   *   The desired width of the wrapped text.
+   */
+  function svg_textMultiline(element, width) {
+    var y = '1.15em';
+
+    /* get the text */
+    var text = element.innerHTML;
+
+    /* split the words into array */
+    var words = text.split(' ');
+    var line = '';
+
+    /* Make a tspan for testing */
+    element.innerHTML = '<tspan id="PROCESSING">busy</tspan >';
+
+    for (var n = 0; n < words.length; n++) {
+      var testLine = line + words[n] + ' ';
+      var testElem = document.getElementById('PROCESSING');
+      /*  Add line in testElement */
+      testElem.innerHTML = testLine;
+      /* Messure textElement */
+      var metrics = testElem.getBoundingClientRect();
+      testWidth = metrics.width;
+
+      if (testWidth > width && n > 0) {
+        element.innerHTML += '<tspan x="0" dy="' + y + '">' + line + '</tspan>';
+        line = words[n] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+
+    element.innerHTML += '<tspan x="0" dy="' + y + '">' + line + '</tspan>';
+
+    document.getElementById("PROCESSING").remove();
+  }
 
 })(angular, CRM.$, CRM._);
