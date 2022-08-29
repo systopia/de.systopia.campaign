@@ -26,17 +26,6 @@ function campaign_civicrm_config(&$config) {
 }
 
 /**
- * Implementation of hook_civicrm_xmlMenu
- *
- * @param $files array(string)
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_xmlMenu
- */
-function campaign_civicrm_xmlMenu(&$files) {
-  _campaign_civix_civicrm_xmlMenu($files);
-}
-
-/**
  * Implementation of hook_civicrm_install
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
@@ -89,40 +78,6 @@ function campaign_civicrm_disable() {
  */
 function campaign_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
   return _campaign_civix_civicrm_upgrade($op, $queue);
-}
-
-/**
- * Implementation of hook_civicrm_managed
- *
- * Generate a list of entities to create/deactivate/delete when this module
- * is installed, disabled, uninstalled.
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_managed
- */
-function campaign_civicrm_managed(&$entities) {
-  _campaign_civix_civicrm_managed($entities);
-}
-
-/**
- * Implementation of hook_civicrm_caseTypes
- *
- * Generate a list of case-types
- *
- * Note: This hook only runs in CiviCRM 4.4+.
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseTypes
- */
-function campaign_civicrm_caseTypes(&$caseTypes) {
-  _campaign_civix_civicrm_caseTypes($caseTypes);
-}
-
-/**
- * Implementation of hook_civicrm_alterSettingsFolders
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterSettingsFolders
- */
-function campaign_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
-  _campaign_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
 
 /**
@@ -185,7 +140,6 @@ function campaign_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &
       array_unshift($links, $viewLink);
     }
 }
-
 
 function campaign_civicrm_install_options($data) {
   foreach ($data as $groupName => $group) {
@@ -297,3 +251,20 @@ function campaign_civicrm_coreResourceList(&$list, $region) {
     ->addStyleFile('de.systopia.campaign', 'css/campaign.css', 0, $region);
 }
 
+/**
+ * Implements hook_civicrm_postInstall().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_postInstall
+ */
+function campaign_civicrm_postInstall() {
+  _campaign_civix_civicrm_postInstall();
+}
+
+/**
+ * Implements hook_civicrm_entityTypes().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
+ */
+function campaign_civicrm_entityTypes(&$entityTypes) {
+  _campaign_civix_civicrm_entityTypes($entityTypes);
+}
