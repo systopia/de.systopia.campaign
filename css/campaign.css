@@ -138,6 +138,7 @@
   margin: 0 0 0 -5em; /* 2 * 2em button width + 2 * .5em padding */
   width: 4em;
   display: flex;
+  padding-left: 0px;
 }
 .kpivisitem .kpivisitem__links > li {
   display: block;
