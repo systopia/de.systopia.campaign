@@ -412,8 +412,8 @@
 
         var svg = d3.select(elem[0])
           .append("svg:svg")
-          .style('width', width)
-          .style('height', height)
+          .style('width', width + "px")
+          .style('height', height + "px")
           .append("g");
 
         svg.append("g")
