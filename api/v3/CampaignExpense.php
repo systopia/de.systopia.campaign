@@ -22,7 +22,7 @@
 function civicrm_api3_campaign_expense_get($params) {
   $params['entity_table'] = 'civicrm_campaign';
   $params['entity_id'] = $params['campaign_id'];
-  $reply = _civicrm_api3_basic_get(CRM_Financial_BAO_FinancialItem, $params);
+  $reply = _civicrm_api3_basic_get('CRM_Financial_BAO_FinancialItem', $params);
 
   // extract the encoded expense_type_id from description
   if (isset($reply['values'])) {
@@ -115,7 +115,7 @@ function civicrm_api3_campaign_expense_create($params) {
     $params['transaction_date'] = date('YmdHis', strtotime($params['transaction_date']));
   }
 
-  return _civicrm_api3_basic_create(CRM_Financial_BAO_FinancialItem, $params);
+  return _civicrm_api3_basic_create('CRM_Financial_BAO_FinancialItem', $params);
 }
 
 function _civicrm_api3_campaign_expense_create_spec(&$params) {
@@ -161,7 +161,7 @@ function civicrm_api3_campaign_expense_delete($params) {
   // make sure, this is really a campaign expense
   $expense = civicrm_api3('CampaignExpense', 'getsingle', array('id' => $params['id']));
   if ($expense['entity_table'] == 'civicrm_campaign') {
-    return _civicrm_api3_basic_delete(CRM_Financial_BAO_FinancialItem, $params);
+    return _civicrm_api3_basic_delete('CRM_Financial_BAO_FinancialItem', $params);
   } else {
     return civicrm_api3_create_error(ts("A CampaignExpense with ID '%1' doesn't exist.", array(1 => $params['id'], 'domain' => 'de.systopia.campaign')));
   }
