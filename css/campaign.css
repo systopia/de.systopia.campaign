@@ -233,7 +233,7 @@ linegraph .axis line {
   display: block;
   top: 150px;
   width: 256px;
-  left: 128;
+  left: 128px;
   z-index: 15;
 }
 
