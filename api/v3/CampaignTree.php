@@ -172,8 +172,15 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
       if (!empty($field['field_value'])) {
         switch ($field['field_data_type']) {
           case 'ContactReference':
-            // Return a link to the contact instead of just the display name.
-            $customInfo[$custom_group['id']]['fields'][$field_id]['value'] = '<a href="' . CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $field['contact_ref_id']) . '" title="' . ts('View contact') . '">' . $field['field_value'] . '</a>';
+            // If possible, return a link to the contact instead of just the display name.
+            if ($field['contact_ref_links']) {
+              $contact_value = $field['contact_ref_links'][0];
+            } elseif ($field['contact_ref_id']) {
+              $contact_value = '<a href="' . CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $field['contact_ref_id']) . '" title="' . ts('View contact') . '">' . $field['field_value'] . '</a>';
+            } else {
+              $contact_value = $field['field_value'];
+            }
+            $customInfo[$custom_group['id']]['fields'][$field_id]['value'] = $contact_value;
             break;
         }
       }
