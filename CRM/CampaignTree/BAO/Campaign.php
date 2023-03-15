@@ -179,7 +179,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
       $links = self::actionLinks($object->id);
       $action = array_sum(array_keys($links));
 
-      if (array_key_exists('is_active', $object)) {
+      if (array_key_exists('is_active', $object->toArray())) {
         if ($object->is_active) {
           $action -= CRM_Core_Action::ENABLE;
         } else {
@@ -503,7 +503,7 @@ class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
    * @return array
    *   array of action links
    */
-  public function actionLinks($objectId) {
+  public static function actionLinks($objectId) {
     $links = array(
       CRM_Core_Action::VIEW => array(
         'name' => ts('View'),
