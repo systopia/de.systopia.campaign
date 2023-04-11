@@ -42,7 +42,12 @@ function civicrm_api3_campaign_expense_get($params) {
         $reply['values'][$expense_id]['description']     = '';
       }
       $reply['values'][$expense_id]['expense_type'] =
-      CRM_Core_OptionGroup::getLabel('campaign_expense_types', $reply['values'][$expense_id]['expense_type_id']);
+      $reply['values'][$expense_id]['expense_type'] = \Civi\Api4\OptionValue::get(FALSE)
+        ->addSelect('label')
+        ->addWhere('option_group_id:name', '=', 'campaign_expense_types')
+        ->addWhere('value', '=', $reply['values'][$expense_id]['expense_type_id'])
+        ->execute()
+        ->first();
     }
   }
   return $reply;
