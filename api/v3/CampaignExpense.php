@@ -41,8 +41,7 @@ function civicrm_api3_campaign_expense_get($params) {
         $reply['values'][$expense_id]['expense_type_id'] = 1;  // TODO: use default?
         $reply['values'][$expense_id]['description']     = '';
       }
-      $reply['values'][$expense_id]['expense_type'] =
-      CRM_Core_OptionGroup::getLabel('campaign_expense_types', $reply['values'][$expense_id]['expense_type_id']);
+      $reply['values'][$expense_id]['expense_type'] = CRM_Legacycode_OptionGroup::getLabel('campaign_expense_types', $reply['values'][$expense_id]['expense_type_id']);
     }
   }
   return $reply;

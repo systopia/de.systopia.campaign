@@ -20,6 +20,9 @@
   <compatibility>
     <ver>5.34</ver>
   </compatibility>
+  <requires>
+    <ext>legacycode</ext>
+  </requires>
   <comments>This extension was originally developed as part of the 2015 Google
     Summer of Code as described at
     https://civicrm.org/blogs/niko-bochan/civicrm-strategic-fundraising-and-campaigning-gsoc-completion-report.
