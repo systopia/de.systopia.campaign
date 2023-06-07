@@ -508,11 +508,11 @@ class CRM_Campaign_KPI {
     */
    protected static function getContributionStatusList() {
       if (!isset(self::$cache['contribution_status_list'])) {
-         $status_list = array();
-         $status_list['completed'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name');
-         $status_list['refunded']  = CRM_Core_OptionGroup::getValue('contribution_status', 'Refunded',  'name');
-         $status_list['cancelled'] = CRM_Core_OptionGroup::getValue('contribution_status', 'Cancelled', 'name');
-         $status_list['failed']    = CRM_Core_OptionGroup::getValue('contribution_status', 'Failed',    'name');
+         $status_list = [];
+         $status_list['completed'] = \CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Completed');
+         $status_list['refunded']  = \CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Refunded');
+         $status_list['cancelled'] = \CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Cancelled');
+         $status_list['failed']    = \CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Failed');
          self::$cache['contribution_status_list'] = $status_list;
       }
       return self::$cache['contribution_status_list'];
