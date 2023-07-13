@@ -13,14 +13,14 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-use CRM_Campaign_ExtensionUtil as E;
+use CRM_CampaignManager_ExtensionUtil as E;
 
 /**
  * Download for KPI data
  *
  * @todo permissions? formatting?
  */
-class CRM_Campaign_Page_CampaignKPIExport extends CRM_Core_Page {
+class CRM_CampaignManager_Page_CampaignKPIExport extends CRM_Core_Page {
 
   public function run() {
     CRM_Utils_System::setTitle(E::ts('Export KPI Data'));
@@ -30,7 +30,7 @@ class CRM_Campaign_Page_CampaignKPIExport extends CRM_Core_Page {
     $kpi_name = CRM_Utils_Request::retrieve('kpi_name', 'String');
 
     // get all KPIs (seems to be the easiest way)
-    $kpis_json = CRM_Campaign_KPI::getCampaignKPI($campaign_id);
+    $kpis_json = CRM_CampaignManager_KPI::getCampaignKPI($campaign_id);
     $kpis = json_decode($kpis_json, 1);
 
     // some sanity checks

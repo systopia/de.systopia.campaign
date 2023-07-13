@@ -13,9 +13,9 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-use CRM_Campaign_ExtensionUtil as E;
+use CRM_CampaignManager_ExtensionUtil as E;
 
-class CRM_Campaign_KPIActivity {
+class CRM_CampaignManager_KPIActivity {
 
   /**
    * Create or drop configuration tables for statistics.
@@ -126,7 +126,7 @@ class CRM_Campaign_KPIActivity {
 
   public static function calculateActivityStats(&$kpi, $campaign_id, $children) {
     $stats = self::activityReport($campaign_id, $children);
-    $sequence = CRM_Campaign_KPIActivity::sequence();
+    $sequence = CRM_CampaignManager_KPIActivity::sequence();
     $report = array();
     $columns = array();
     $activityTypes = array();

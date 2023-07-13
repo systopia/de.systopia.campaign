@@ -19,7 +19,7 @@
   </item>
   <item>
     <path>civicrm/campaign/settings</path>
-    <page_callback>CRM_Campaign_Form_Settings</page_callback>
+    <page_callback>CRM_CampaignManager_Form_Settings</page_callback>
     <title>Campaign Manager Settings</title>
     <access_arguments>administer CiviCampaign</access_arguments>
     <icon>admin/small/05.png</icon>
@@ -28,7 +28,7 @@
   </item>
   <item>
     <path>civicrm/campaign/kpi_export</path>
-    <page_callback>CRM_Campaign_Page_CampaignKPIExport</page_callback>
+    <page_callback>CRM_CampaignManager_Page_CampaignKPIExport</page_callback>
     <title>Export Campaign KPIs</title>
     <access_arguments>administer CiviCampaign</access_arguments>
   </item>

@@ -13,14 +13,14 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-use CRM_Campaign_ExtensionUtil as E;
+use CRM_CampaignManager_ExtensionUtil as E;
 
 /**
  * Form controller class
  *
  * @see https://wiki.civicrm.org/confluence/display/CRMDOC/QuickForm+Reference
  */
-class CRM_Campaign_Form_Settings extends CRM_Core_Form {
+class CRM_CampaignManager_Form_Settings extends CRM_Core_Form {
 
   private $currentValues = array();
 
@@ -28,7 +28,7 @@ class CRM_Campaign_Form_Settings extends CRM_Core_Form {
 
     CRM_Utils_System::setTitle(E::ts('Campaign Manager Settings'));
 
-    $kpis = CRM_Campaign_KPI::builtInKPIs();
+    $kpis = CRM_CampaignManager_KPI::builtInKPIs();
     $this->assign('kpis', $kpis);
 
     // add switches for all
@@ -43,7 +43,7 @@ class CRM_Campaign_Form_Settings extends CRM_Core_Form {
     $this->addElement('select',
                       'cache',
                       E::ts('KPI Caching (TTL)'),
-                      CRM_Campaign_KPICache::getTTLOptions(),
+                      CRM_CampaignManager_KPICache::getTTLOptions(),
                       array());
 
     $this->addButtons(array(
@@ -64,13 +64,13 @@ class CRM_Campaign_Form_Settings extends CRM_Core_Form {
     $current_values = array();
 
     // add enabled built-in KPIs
-    $enabled_kpis = CRM_Campaign_Config::getActiveBuiltInKPIs();
+    $enabled_kpis = CRM_CampaignManager_Config::getActiveBuiltInKPIs();
     foreach ($enabled_kpis as $key) {
       $current_values[$key] = 1;
     }
 
     // add general settings
-    $settings = CRM_Campaign_Config::getCMSettings();
+    $settings = CRM_CampaignManager_Config::getCMSettings();
     foreach ($settings as $key => $value) {
       $current_values[$key] = $value;
     }
@@ -85,19 +85,19 @@ class CRM_Campaign_Form_Settings extends CRM_Core_Form {
     // the activity KPI needs some extra care when they are enabled/disabled
     $enabled     = (int) CRM_Utils_Array::value('activities', $values);
     $was_enabled = (int) CRM_Utils_Array::value('activities', $this->currentValues);
-    CRM_Campaign_KPIActivity::setEnabled($enabled, $was_enabled);
+    CRM_CampaignManager_KPIActivity::setEnabled($enabled, $was_enabled);
 
     // store KPIs
-    CRM_Campaign_Config::setActiveBuiltInKPIs($values);
+    CRM_CampaignManager_Config::setActiveBuiltInKPIs($values);
 
     // store settings
     $settings = array(
       'cache' => CRM_Utils_Array::value('cache', $values),
     );
-    CRM_Campaign_Config::setCMSettings($settings);
+    CRM_CampaignManager_Config::setCMSettings($settings);
 
     // clear cache
-    CRM_Campaign_KPICache::clearCache();
+    CRM_CampaignManager_KPICache::clearCache();
 
     parent::postProcess();
   }

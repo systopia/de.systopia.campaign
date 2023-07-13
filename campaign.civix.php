@@ -6,7 +6,7 @@
  * The ExtensionUtil class provides small stubs for accessing resources of this
  * extension.
  */
-class CRM_Campaign_ExtensionUtil {
+class CRM_CampaignManager_ExtensionUtil {
   const SHORT_NAME = 'campaign';
   const LONG_NAME = 'de.systopia.campaign';
   const CLASS_PREFIX = 'CRM_Campaign';
@@ -77,7 +77,7 @@ class CRM_Campaign_ExtensionUtil {
 
 }
 
-use CRM_Campaign_ExtensionUtil as E;
+use CRM_CampaignManager_ExtensionUtil as E;
 
 function _campaign_civix_mixin_polyfill() {
   if (!class_exists('CRM_Extension_MixInfo')) {

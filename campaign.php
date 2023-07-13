@@ -32,7 +32,7 @@ function campaign_civicrm_config(&$config) {
  */
 function campaign_civicrm_install() {
   _campaign_civix_civicrm_install();
-  CRM_Campaign_Config::installScheduledJob();
+  CRM_CampaignManager_Config::installScheduledJob();
 }
 
 /**

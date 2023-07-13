@@ -26,7 +26,7 @@
     Additional thanks to M. Wire, T. Pietrzkowski and K. Pomara&#x144;ska.
   </comments>
   <civix>
-    <namespace>CRM/Campaign</namespace>
+    <namespace>CRM/CampaignManager</namespace>
     <format>23.02.1</format>
   </civix>
   <mixins>

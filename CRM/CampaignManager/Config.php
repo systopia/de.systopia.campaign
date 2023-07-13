@@ -13,13 +13,13 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-use CRM_Campaign_ExtensionUtil as E;
+use CRM_CampaignManager_ExtensionUtil as E;
 
 /**
  * General Campaing Manager Configuration
  *
  */
-class CRM_Campaign_Config extends CRM_Core_Form {
+class CRM_CampaignManager_Config extends CRM_Core_Form {
 
   /**
    * Get the generat CampaignManager Settings
@@ -59,7 +59,7 @@ class CRM_Campaign_Config extends CRM_Core_Form {
   public static function setActiveBuiltInKPIs($enabled) {
     // filter for actual KPIs
     $active_kpis = array('dummy');
-    $all_kpis = CRM_Campaign_KPI::builtInKPIs();
+    $all_kpis = CRM_CampaignManager_KPI::builtInKPIs();
     foreach ($all_kpis as $key => $label) {
       if (!empty($enabled[$key])) {
         $active_kpis[] = $key;

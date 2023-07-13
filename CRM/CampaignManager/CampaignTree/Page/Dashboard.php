@@ -13,7 +13,7 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-class CRM_CampaignTree_Page_Dashboard extends CRM_Core_Page {
+class CRM_CampaignTree_CampaignManager_Page_Dashboard extends CRM_Core_Page {
 
   public function run() {
     // Set the page title
@@ -110,7 +110,7 @@ class CRM_CampaignTree_Page_Dashboard extends CRM_Core_Page {
     $this->assign('hasCampaigns', TRUE);
 
     //build the ajaxify campaign search and selector.
-    $controller = new CRM_Core_Controller_Simple('CRM_CampaignTree_Form_Search', ts('Search Campaigns'), CRM_Core_Action::ADD);
+    $controller = new CRM_Core_Controller_Simple('CRM_CampaignManager_CampaignTree_Form_Search', ts('Search Campaigns'), CRM_Core_Action::ADD);
     $controller->set('searchTab', 'campaign');
     $controller->setEmbedded(TRUE);
     $controller->setParent($this);

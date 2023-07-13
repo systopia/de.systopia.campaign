@@ -14,7 +14,7 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-class CRM_Campaign_Tree {
+class CRM_CampaignManager_CampaignTree_Tree {
 
    /**
    * Get position related information of a campaign in the campaign tree

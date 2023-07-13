@@ -13,11 +13,11 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-use CRM_Campaign_ExtensionUtil as E;
+use CRM_CampaignManager_ExtensionUtil as E;
 
 require_once('CRM/CampaignTree/Tree.php');
 
-class CRM_Campaign_KPI {
+class CRM_CampaignManager_KPI {
 
    protected static $cache = array();
 
@@ -37,7 +37,7 @@ class CRM_Campaign_KPI {
    * Get Key Performance Indicators (KPIs) for a specific campaign (+subtree):
    */
    public static function getCampaignKPI($campaign_id) {
-      $kpi = CRM_Campaign_KPICache::fetchFromCache($campaign_id);
+      $kpi = CRM_CampaignManager_KPICache::fetchFromCache($campaign_id);
       if ($kpi !== NULL) {
          return json_encode($kpi);
       } else {
@@ -46,12 +46,12 @@ class CRM_Campaign_KPI {
       }
 
       // get all sub-campaigns
-      $campaigns = CRM_Campaign_Tree::getCampaignIds($campaign_id, 99);
+      $campaigns = CRM_CampaignManager_CampaignTree_Tree::getCampaignIds($campaign_id, 99);
       $children = $campaigns['children'];
 
 
       // NOW CALCULATE all the (enabled) KPIs
-      $enabled_kpis = CRM_Campaign_Config::getActiveBuiltInKPIs();
+      $enabled_kpis = CRM_CampaignManager_Config::getActiveBuiltInKPIs();
 
       if (in_array('contribution_count', $enabled_kpis)) {
          self::calculateGenericContributionStats($kpi, $campaign_id, $children);
@@ -72,14 +72,14 @@ class CRM_Campaign_KPI {
          self::calculateCosts($kpi, $campaign_id, $children);
       }
       if (in_array('activities', $enabled_kpis)) {
-          CRM_Campaign_KPIActivity::calculateActivityStats($kpi, $campaign_id, $children);
+          CRM_CampaignManager_KPIActivity::calculateActivityStats($kpi, $campaign_id, $children);
       }
 
       // finally: run the hook
       CRM_Utils_CampaignCustomisationHooks::campaign_kpis($campaign_id, $kpi, 99);
 
       // cache result
-      CRM_Campaign_KPICache::pushToCache($campaign_id, $kpi);
+      CRM_CampaignManager_KPICache::pushToCache($campaign_id, $kpi);
 
       return json_encode($kpi);
    }
@@ -343,13 +343,13 @@ class CRM_Campaign_KPI {
       // RUN QUERY FOR EACH SUBCAMPAIGN
       $revenue_subcampaigns = array();
       $subcampaign_child_ids = array();
-      $children = CRM_Campaign_Tree::getCampaignIds($campaign_id, 0);
+      $children = CRM_CampaignManager_CampaignTree_Tree::getCampaignIds($campaign_id, 0);
 
       if(count($children['children']) > 0) {
          $children = $children['children'];
 
          foreach ($children as $child_id => $label) {
-           $subcampaigns = CRM_Campaign_Tree::getCampaignIds($child_id, 99);
+           $subcampaigns = CRM_CampaignManager_CampaignTree_Tree::getCampaignIds($child_id, 99);
            $subcampaign_child_ids = array($child_id);
            if(count($subcampaigns['children']) > 0) {
               $subcampaigns = $subcampaigns['children'];
