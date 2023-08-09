@@ -13,7 +13,7 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-class CRM_CampaignTree_CampaignManager_Page_Dashboard extends CRM_Core_Page {
+class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
 
   public function run() {
     // Set the page title
