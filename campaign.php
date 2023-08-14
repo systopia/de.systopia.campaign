@@ -77,7 +77,7 @@ function campaign_civicrm_buildForm($formName, &$form) {
         $select->setSelected($_GET['pid']);
       }
       CRM_Core_Region::instance('form-body')->add(array(
-        		'template' => 'CRM/Campaign/Form/ExtendedCampaign.tpl',
+        		'template' => 'CRM/CampaignManager/Form/ExtendedCampaign.tpl',
       	));
     }elseif (($action == CRM_Core_Action::UPDATE || $action == CRM_Core_Action::ADD) && !isset($_GET['qfKey'])) {
       $cid = $form->get('id');
@@ -89,7 +89,7 @@ function campaign_civicrm_buildForm($formName, &$form) {
         );
       }
       CRM_Core_Region::instance('form-body')->add(array(
-        		'template' => 'CRM/Campaign/Form/ExtendedCampaign.tpl',
+        		'template' => 'CRM/CampaignManager/Form/ExtendedCampaign.tpl',
       	));
     }
 	}
