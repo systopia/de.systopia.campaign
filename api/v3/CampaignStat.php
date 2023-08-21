@@ -14,9 +14,9 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-use CRM_Campaign_ExtensionUtil as E;
+use CRM_CampaignManager_ExtensionUtil as E;
 
-require_once 'CRM/CampaignTree/Tree.php';
+require_once 'CRM/CampaignManager/CampaignTree/Tree.php';
 
 function _civicrm_api3_campaign_stat_activity_counter(&$params) {
   $params['id'] = array(
@@ -32,9 +32,9 @@ function _civicrm_api3_campaign_stat_activity_counter(&$params) {
 function civicrm_api3_campaign_stat_activity_counter($params) {
   try {
     $campaignId = $params['id'];
-    $campaigns = CRM_Campaign_Tree::getCampaignIds($campaignId, 99);
+    $campaigns = CRM_CampaignManager_CampaignTree_Tree::getCampaignIds($campaignId, 99);
     $children = $campaigns['children'];
-    $stat = CRM_Campaign_KPIActivity::activityCounter($campaignId, $children);
+    $stat = CRM_CampaignManager_KPIActivity::activityCounter($campaignId, $children);
     return civicrm_api3_create_success($stat, $params);
   }
   catch (Exception $exception) {
@@ -65,9 +65,9 @@ function _civicrm_api3_campaign_stat_activity_report(&$params) {
 function civicrm_api3_campaign_stat_activity_report($params) {
   try {
     $campaignId = $params['id'];
-    $campaigns = CRM_Campaign_Tree::getCampaignIds($campaignId, 99);
+    $campaigns = CRM_CampaignManager_CampaignTree_Tree::getCampaignIds($campaignId, 99);
     $children = $campaigns['children'];
-    $stat = CRM_Campaign_KPIActivity::activityReport($campaignId, $children);
+    $stat = CRM_CampaignManager_KPIActivity::activityReport($campaignId, $children);
     return civicrm_api3_create_success($stat, $params);
   }
   catch (Exception $exception) {
@@ -89,7 +89,7 @@ function _civicrm_api3_campaign_stat_activity_sequence(&$params) {
 
 function civicrm_api3_campaign_stat_activity_sequence($params) {
   try {
-    return civicrm_api3_create_success(CRM_Campaign_KPIActivity::sequence(), $params);
+    return civicrm_api3_create_success(CRM_CampaignManager_KPIActivity::sequence(), $params);
   }
   catch (Exception $exception) {
     $data = array(

@@ -18,7 +18,7 @@
  *
  * @see https://wiki.civicrm.org/confluence/display/CRMDOC/QuickForm+Reference
  */
-class CRM_CampaignTree_Form_Search extends CRM_Core_Form {
+class CRM_CampaignManager_CampaignTree_Form_Search extends CRM_Core_Form {
 
   public function preProcess() {
     parent::preProcess();

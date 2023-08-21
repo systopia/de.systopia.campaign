@@ -13,17 +13,17 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-use CRM_Campaign_ExtensionUtil as E;
+use CRM_CampaignManager_ExtensionUtil as E;
 
-require_once('CRM/CampaignTree/Tree.php');
+require_once('CRM/CampaignManager/CampaignTree/Tree.php');
 
-class CRM_Campaign_KPICache {
+class CRM_CampaignManager_KPICache {
 
   /**
   * Check if caching is enabled
   */
   public static function isCacheEnabled() {
-    $settings = CRM_Campaign_Config::getCMSettings();
+    $settings = CRM_CampaignManager_Config::getCMSettings();
     return !empty($settings['cache']);
   }
 
@@ -45,7 +45,7 @@ class CRM_Campaign_KPICache {
   public static function cacheCampaigns($campaign_ids) {
     self::clearCache();
     foreach ($campaign_ids as $campaign_id) {
-      CRM_Campaign_KPI::getCampaignKPI($campaign_id);
+      CRM_CampaignManager_KPI::getCampaignKPI($campaign_id);
     }
   }
 
@@ -107,7 +107,7 @@ class CRM_Campaign_KPICache {
     if (!self::isCacheEnabled()) return;
 
     $path = "kpis_campaign_{$campaign_id}";
-    $settings = CRM_Campaign_Config::getCMSettings();
+    $settings = CRM_CampaignManager_Config::getCMSettings();
     $expired_date = date('Y-m-d H:i:s', strtotime($settings['cache']));
 
     // INSERT a new record

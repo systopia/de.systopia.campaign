@@ -27,10 +27,10 @@
 * @return array
 */
 
-require_once('CRM/CampaignTree/Tree.php');
+require_once('CRM/CampaignManager/CampaignTree/Tree.php');
 
 function civicrm_api3_campaign_tree_getids($params) {
-   return CRM_Campaign_Tree::getCampaignIds($params['id'], $params['depth']);
+   return CRM_CampaignManager_CampaignTree_Tree::getCampaignIds($params['id'], $params['depth']);
 }
 
 function _civicrm_api3_campaign_tree_getids_spec(&$params) {
@@ -47,7 +47,7 @@ function _civicrm_api3_campaign_tree_getids_spec(&$params) {
 */
 
 function civicrm_api3_campaign_tree_getparentids($params) {
-  return CRM_Campaign_Tree::getCampaignParentIds($params['id']);
+  return CRM_CampaignManager_CampaignTree_Tree::getCampaignParentIds($params['id']);
 }
 
 function _civicrm_api3_campaign_tree_getparentids_spec(&$params) {
@@ -64,7 +64,7 @@ function _civicrm_api3_campaign_tree_getparentids_spec(&$params) {
 */
 
 function civicrm_api3_campaign_tree_gettree($params) {
-  return CRM_Campaign_Tree::getCampaignTree($params['id'], $params['depth']);
+  return CRM_CampaignManager_CampaignTree_Tree::getCampaignTree($params['id'], $params['depth']);
 }
 
 function _civicrm_api3_campaign_tree_gettree_spec(&$params) {
@@ -82,7 +82,7 @@ function _civicrm_api3_campaign_tree_gettree_spec(&$params) {
 */
 
 function civicrm_api3_campaign_tree_setnodeparent($params) {
-  return CRM_Campaign_Tree::setNodeParent($params['id'], $params['parentid']);
+  return CRM_CampaignManager_CampaignTree_Tree::setNodeParent($params['id'], $params['parentid']);
 }
 
 function _civicrm_api3_campaign_tree_setnodeparent_spec(&$params) {
@@ -99,7 +99,7 @@ function _civicrm_api3_campaign_tree_setnodeparent_spec(&$params) {
 */
 
 function civicrm_api3_campaign_tree_clone($params) {
-  return CRM_Campaign_Tree::cloneCampaign($params['id'], 0, $params['depth'], $params);
+  return CRM_CampaignManager_CampaignTree_Tree::cloneCampaign($params['id'], 0, $params['depth'], $params);
 }
 
 function _civicrm_api3_campaign_tree_clone_spec(&$params) {

@@ -17,7 +17,7 @@
 // Cache of all campaign parent IDs
 $_cache_campaign_all_parent_ids = NULL;
 
-class CRM_CampaignTree_BAO_Campaign extends CRM_Campaign_DAO_Campaign
+class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
 {
   /**
    * wrapper for ajax campaign selector.

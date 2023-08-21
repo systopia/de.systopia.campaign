@@ -26,7 +26,7 @@
 * @return array
 */
 function civicrm_api3_campaign_kpi_get($params) {
-   return CRM_Campaign_KPI::getCampaignKPI($params['id']);
+   return CRM_CampaignManager_KPI::getCampaignKPI($params['id']);
 }
 
 function _civicrm_api3_campaign_kpi_get_spec(&$params) {
@@ -39,7 +39,7 @@ function _civicrm_api3_campaign_kpi_get_spec(&$params) {
  */
 function civicrm_api3_campaign_kpi_cache($params) {
   // check if caching is enabled
-  if (!CRM_Campaign_KPICache::isCacheEnabled()) {
+  if (!CRM_CampaignManager_KPICache::isCacheEnabled()) {
     return civicrm_api3_create_success("KPI Caching disabled");
   }
 
@@ -54,7 +54,7 @@ function civicrm_api3_campaign_kpi_cache($params) {
 
   // run the cache
   $timestamp = microtime(TRUE);
-  CRM_Campaign_KPICache::cacheCampaigns($campaign_ids);
+  CRM_CampaignManager_KPICache::cacheCampaigns($campaign_ids);
 
   // stats and return
   $runtime = number_format(microtime(TRUE) - $timestamp, 3);

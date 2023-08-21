@@ -19,7 +19,7 @@
 {if !empty($subPageType)}
     {* load campaign/survey/petition tab *}
     {if ($subPageType == 'Campaign')}
-        {include file="CRM/CampaignTree/Form/Search.tpl"}
+        {include file="CRM/CampaignManager/CampaignTree/Form/Search.tpl"}
     {else}
         {include file="CRM/Campaign/Form/Search/$subPageType.tpl"}
     {/if}

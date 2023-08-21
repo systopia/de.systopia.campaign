@@ -17,7 +17,7 @@
 /**
  * This class contains all campaign tree related functions that are called using AJAX (jQuery)
  */
-class CRM_CampaignTree_Page_AJAX {
+class CRM_CampaignManager_CampaignTree_Page_AJAX {
 
   /*
    * getCampaignList()
@@ -31,7 +31,7 @@ class CRM_CampaignTree_Page_AJAX {
       // requesting child groups for a given parent
       $params['page'] = 1;
       $params['rp'] = 0;
-      $campaigns = CRM_CampaignTree_BAO_Campaign::getCampaignListSelector($params);
+      $campaigns = CRM_CampaignManager_BAO_CampaignTree::getCampaignListSelector($params);
 
       CRM_Utils_JSON::output($campaigns);
     }
@@ -78,7 +78,7 @@ class CRM_CampaignTree_Page_AJAX {
       $params['rp'] = $rowCount;
 
       // get campaign list
-      $campaigns = CRM_CampaignTree_BAO_Campaign::getCampaignListSelector($params);
+      $campaigns = CRM_CampaignManager_BAO_CampaignTree::getCampaignListSelector($params);
       $iFilteredTotal = $iTotal = $params['total'];
 
       $selectorElements = array(
