@@ -13,6 +13,10 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+use CRM_CampaignManager_ExtensionUtil as E;
+use Civi\Api4\Campaign;
+use Civi\Api4\Survey;
+
 class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
 
   public function run() {
@@ -101,7 +105,7 @@ class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
     $this->assign('campaignStatus', json_encode(NULL));
 
     $this->assign('addCampaignUrl', CRM_Utils_System::url('civicrm/campaign/add', 'reset=1&action=add'));
-    $campaignCount = \Civi\Api4\Campaign::get(FALSE)
+    $campaignCount = Campaign::get(FALSE)
       ->selectRowCount()
       ->execute()
       ->countMatched();
@@ -133,7 +137,7 @@ class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
 
     $this->assign('addSurveyUrl', CRM_Utils_System::url('civicrm/survey/add', 'reset=1&action=add'));
 
-    $surveyCount = \Civi\Api4\Survey::get(FALSE)
+    $surveyCount = Survey::get(FALSE)
       ->selectRowCount()
       ->execute()
       ->countMatched();
@@ -165,7 +169,7 @@ class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
 
     $this->assign('addPetitionUrl', CRM_Utils_System::url('civicrm/petition/add', 'reset=1&action=add'));
 
-    $petitionCount = \Civi\Api4\Survey::get(FALSE)
+    $petitionCount = Survey::get(FALSE)
       ->selectRowCount()
       ->addWhere('activity_type_id:name', '=', 'Petition')
       ->execute()
