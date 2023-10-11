@@ -13,6 +13,10 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
+use CRM_CampaignManager_ExtensionUtil as E;
+use Civi\Api4\Campaign;
+use Civi\Api4\Survey;
+
 class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
 
   public function run() {
@@ -101,7 +105,10 @@ class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
     $this->assign('campaignStatus', json_encode(NULL));
 
     $this->assign('addCampaignUrl', CRM_Utils_System::url('civicrm/campaign/add', 'reset=1&action=add'));
-    $campaignCount = CRM_Campaign_BAO_Campaign::getCampaignCount();
+    $campaignCount = Campaign::get(FALSE)
+      ->selectRowCount()
+      ->execute()
+      ->countMatched();
     //don't load find interface when no campaigns in db.
     if (!$campaignCount) {
       $this->assign('hasCampaigns', FALSE);
@@ -130,7 +137,10 @@ class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
 
     $this->assign('addSurveyUrl', CRM_Utils_System::url('civicrm/survey/add', 'reset=1&action=add'));
 
-    $surveyCount = CRM_Campaign_BAO_Survey::getSurveyCount();
+    $surveyCount = Survey::get(FALSE)
+      ->selectRowCount()
+      ->execute()
+      ->countMatched();
     //don't load find interface when no survey in db.
     if (!$surveyCount) {
       $this->assign('hasSurveys', FALSE);
@@ -159,7 +169,11 @@ class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
 
     $this->assign('addPetitionUrl', CRM_Utils_System::url('civicrm/petition/add', 'reset=1&action=add'));
 
-    $petitionCount = CRM_Campaign_BAO_Petition::getPetitionCount();
+    $petitionCount = Survey::get(FALSE)
+      ->selectRowCount()
+      ->addWhere('activity_type_id:name', '=', 'Petition')
+      ->execute()
+      ->countMatched();
     //don't load find interface when no petition in db.
     if (!$petitionCount) {
       $this->assign('hasPetitions', FALSE);
