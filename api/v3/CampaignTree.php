@@ -161,6 +161,9 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
       NULL,
       $params['entity_id']
     );
+    if(!isset($cd_details[$custom_group['id']])){
+      continue;
+    }
     $customRecId = key($cd_details[$custom_group['id']]);
     $customInfo[$custom_group['id']]['title'] = $cd_details[$custom_group['id']][$customRecId]['title'];
     foreach ($cd_details[$custom_group['id']][$customRecId]['fields'] as $field_id => $field) {
