@@ -98,7 +98,7 @@ class CRM_CampaignManager_CampaignTree_Tree {
          $current_id = $campaign->parent_id;
       }
 
-      $result = array('parents' => $parents, 'root' => $root);
+      $result = array('parents' => $parents, 'root' => $root ?? null);
       return $result;
    }
 
