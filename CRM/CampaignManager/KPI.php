@@ -199,7 +199,7 @@ class CRM_CampaignManager_KPI {
          "kpi_type"    => "money",
          "vis_type"    => "none",
          "description" => ts("Average Cost per first contribution associated with this campaign", array('domain' => 'de.systopia.campaign')),
-         "value"       => $total_costs / $first_contribution_count,
+         "value"       => !empty($first_contribution_count) ? $total_costs / $first_contribution_count : 0.00,
          "link"        => ""
       );
 
