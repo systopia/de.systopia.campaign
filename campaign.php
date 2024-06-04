@@ -23,6 +23,13 @@ require_once 'campaign.civix.php';
  */
 function campaign_civicrm_config(&$config) {
   _campaign_civix_civicrm_config($config);
+  if (isset(Civi::$statics[__FUNCTION__])) { return; }
+  Civi::$statics[__FUNCTION__] = 1;
+  Civi::dispatcher()->addListener(
+    'hook_civicrm_alterMenu',
+    ['CRM_CampaignManager_MenuReplacer', 'replaceCampaignMenu'],
+    -1000
+  );
 }
 
 /**
