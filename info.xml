@@ -18,7 +18,7 @@
   <version>1.5-dev</version>
   <develStage>dev</develStage>
   <compatibility>
-    <ver>5.34</ver>
+    <ver>5.67</ver>
   </compatibility>
   <comments>This extension was originally developed as part of the 2015 Google
     Summer of Code as described at
