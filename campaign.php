@@ -75,6 +75,7 @@ function campaign_civicrm_angularModules(&$angularModules) {
 
 /**
  * Implementation of hook_civicrm_buildForm:
+ * @throws CRM_Core_Exception
  */
 function campaign_civicrm_buildForm($formName, &$form) {
 	if ($formName == 'CRM_Campaign_Form_Campaign') {
@@ -89,13 +90,26 @@ function campaign_civicrm_buildForm($formName, &$form) {
         		'template' => 'CRM/CampaignManager/Form/ExtendedCampaign.tpl',
       	));
     }elseif (($action == CRM_Core_Action::UPDATE || $action == CRM_Core_Action::ADD) && !isset($_GET['qfKey'])) {
-      $cid = $form->get('id');
-      $campaigns = CRM_Campaign_BAO_Campaign::getCampaigns(CRM_Utils_Array::value('parent_id', $form->get('values')), $cid);
+      $cid = $form->getVar('_campaignId');
+      $parent_id = \Civi\Api4\Campaign::get()
+        ->addSelect('parent_id')
+        ->addWhere('id', '=', $cid)
+        ->execute()
+        ->single()['parent_id'] ?? NULL;
+      $campaigns = CRM_Campaign_BAO_Campaign::getCampaigns($parent_id, $cid);
       if (!empty($campaigns)) {
-        $form->addElement('select', 'parent_id', ts('Parent ID', array('domain' => 'de.systopia.campaign')),
-          array('' => ts('- select Parent -', array('domain' => 'de.systopia.campaign'))) + $campaigns,
-          array('class' => 'crm-select2')
+        $form->addElement(
+          'select',
+          'parent_id',
+          ts('Parent ID', ['domain' => 'de.systopia.campaign']),
+          ['' => ts('- select Parent -', ['domain' => 'de.systopia.campaign'])] + $campaigns,
+          ['class' => 'crm-select2'],
         );
+        // pre-select element
+        if ($parent_id) {
+          $defaults = ['parent_id' => $parent_id];
+          $form->setDefaults($defaults);
+        }
       }
       CRM_Core_Region::instance('form-body')->add(array(
         		'template' => 'CRM/CampaignManager/Form/ExtendedCampaign.tpl',
