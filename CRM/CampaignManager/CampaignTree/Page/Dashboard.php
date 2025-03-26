@@ -200,6 +200,10 @@ class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
       );
     }
     $allTabs['campaign']['class'] = 'livePage';
+    // @phpstan-ignore function.alreadyNarrowedType
+    if (method_exists(CRM_Core_Smarty::class, 'setRequiredTabTemplateKeys')) {
+      $allTabs = \CRM_Core_Smarty::setRequiredTabTemplateKeys($allTabs);
+    }
     $this->assign('tabHeader', $allTabs);
   }
 }
