@@ -92,10 +92,11 @@ function campaign_civicrm_buildForm($formName, &$form) {
       $cid = $form->get('id');
       $campaigns = CRM_Campaign_BAO_Campaign::getCampaigns(CRM_Utils_Array::value('parent_id', $form->get('values')), $cid);
       if (!empty($campaigns)) {
-        $form->addElement('select', 'parent_id', ts('Parent ID', array('domain' => 'de.systopia.campaign')),
+        $element = $form->addElement('select', 'parent_id', ts('Parent ID', array('domain' => 'de.systopia.campaign')),
           array('' => ts('- select Parent -', array('domain' => 'de.systopia.campaign'))) + $campaigns,
           array('class' => 'crm-select2')
         );
+        $element->setValue($form->lookup('Campaign', 'parent_id'));
       }
       CRM_Core_Region::instance('form-body')->add(array(
         		'template' => 'CRM/CampaignManager/Form/ExtendedCampaign.tpl',
