@@ -44,10 +44,10 @@ class CRM_CampaignManager_CampaignTree_Form_Search extends CRM_Core_Form {
     );
 
     //campaign start date.
-    $this->addDate('start_date', ts('Start Date'), FALSE, array('formatType' => 'searchDate'));
+    $this->add('datepicker', 'start_date', ts('Start Date'), [], FALSE, ['time' => FALSE]);
 
     //campaign end date.
-    $this->addDate('end_date', ts('End Date'), FALSE, array('formatType' => 'searchDate', 'name' => 'end_date'));
+    $this->add('datepicker', 'end_date', ts('End Date'), [], FALSE, ['time' => FALSE]);
 
     $campaignShow = array(ts('Root') => 1, ts('Parent') => 2, ts('Child') => 3, ts('Other') => 4);
     $this->addCheckBox('show',
