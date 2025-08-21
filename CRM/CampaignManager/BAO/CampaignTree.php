@@ -109,7 +109,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       'isCampaignEnabled' => FALSE,
     );
     //do check for component.
-    $values['isCampaignEnabled'] = $isValid = CRM_Campaign_BAO_Campaign::isCampaignEnable();
+    $values['isCampaignEnabled'] = $isValid = CRM_Campaign_BAO_Campaign::isComponentEnabled();
     //do check for permissions.
     $values['hasAccessCampaign'] = $isValid = CRM_Campaign_BAO_Campaign::accessCampaign();
     if (!$values['isCampaignEnabled'] || !$values['hasAccessCampaign']) {
