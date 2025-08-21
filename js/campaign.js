@@ -13,7 +13,7 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-(function(angular, $, _) {
+(function(angular, $, _, d3) {
    var resourceUrl = CRM.resourceUrls['de.systopia.campaign'];
   CRM.loadScript(resourceUrl + '/js/lib/d3-context-menu.js');
    var campaign = angular.module('campaign', ['ngRoute', 'crmUtil', 'crmUi', 'crmD3']);
@@ -387,7 +387,6 @@
       restrict: 'E',
       link: function(scope, elem, attrs){
         var chartdata=scope[attrs.chartdata];
-        var d3 = $window.d3;
 
         var width = 600;
         var height = 300;
@@ -542,7 +541,6 @@
       restrict: 'E',
       link: function(scope, elem, attrs){
         var chartdata=scope[attrs.chartdata];
-        var d3 = $window.d3;
 
         var margin = {top: 30, right: 20, bottom: 30, left: 50},
             width  = 600 - margin.left - margin.right,
@@ -792,7 +790,6 @@
 
         var center = [width / 2, height / 2];
 
-        var d3 = $window.d3;
         var rawSvg = elem.find("svg")[0];
 
         var svg = d3.select(rawSvg)
@@ -1115,4 +1112,4 @@
     document.getElementById("PROCESSING").remove();
   }
 
-})(angular, CRM.$, CRM._);
+})(angular, CRM.$, CRM._, CRM.visual.d3);
