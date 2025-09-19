@@ -238,23 +238,23 @@
                     }
 
                     if ($(nRow).hasClass('crm-campaign-parent')) {
-                        $(nRow).find('td:first').prepend('{/literal}<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}');
+                        $(nRow).find('td:first').prepend('{/literal}<span class="collapsed show-children" title="{ts escape='htmlattribute'}show child campaigns{/ts}"/></span>{literal}');
                     }
 
                     if ($(nRow).hasClass('crm-campaign-root')) {
-                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-root" title="{ts}Root Campaign{/ts}"/>' +
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-root" title="{ts escape='htmlattribute'}Root Campaign{/ts}"/>' +
                             '<i class="campaign-fa-icon fa fa-folder" aria-hidden="true"></i></span>{literal}');
                     }
                     else if ($(nRow).hasClass('crm-campaign-parent')) {
-                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-parent" title="{ts}Parent Campaign{/ts}">' +
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-parent" title="{ts escape='htmlattribute'}Parent Campaign{/ts}">' +
                             '<i class="campaign-fa-icon fa fa-sitemap" aria-hidden="true"></i></span>{literal}');
                     }
                     else if ($(nRow).hasClass('crm-campaign-child')) {
-                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}">' +
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-child" title="{ts escape='htmlattribute'}Child Campaign{/ts}">' +
                             '<i class="campaign-fa-icon fa fa-file" aria-hidden="true"></i></span>{literal}');
                     }
                     else {
-                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-other" title="{ts}Campaign{/ts}">' +
+                        $(nRow).find('td:first').prepend('{/literal}<span class="campaign-icon-other" title="{ts escape='htmlattribute'}Campaign{/ts}">' +
                             '<i class="campaign-fa-icon fa fa-file-o" aria-hidden="true"></i></span>{literal}');
                     }
                     return nRow;
@@ -364,13 +364,13 @@
                             appendHTML += '<tr id="row_'+ val.id +'_'+parent_id+'" data-entity="campaign" data-id="'+ val.id +'" class="parent_is_' + parent_id + ' crm-row-child ' + val.class.split(',')[1] + '">';
                             if ( val.is_parent ) {
                                 appendHTML += '<td class="crm-campaign-name ' + levelClass + '">'{/literal} +
-                                               '<span class="campaign-icon-parent" title="{ts}Parent Campaign{/ts}">' +
+                                               '<span class="campaign-icon-parent" title="{ts escape='htmlattribute'}Parent Campaign{/ts}">' +
                                                '<i class="campaign-fa-icon fa fa-sitemap" aria-hidden="true"></i></span>' +
-                                               '<span class="collapsed show-children" title="{ts}show child campaigns{/ts}"/></span>{literal}' + val.name + '</td>';
+                                               '<span class="collapsed show-children" title="{ts escape='htmlattribute'}show child campaigns{/ts}"/></span>{literal}' + val.name + '</td>';
                             }
                             else {
                                 appendHTML += '<td class="crm-campaign-name ' + levelClass + '">'{/literal} +
-                                               '<span class="campaign-icon-child" title="{ts}Child Campaign{/ts}">' +
+                                               '<span class="campaign-icon-child" title="{ts escape='htmlattribute'}Child Campaign{/ts}">' +
                                                '<i class="campaign-fa-icon fa fa-file" aria-hidden="true"></i></span>' +
                                                '<span class="crm-no-children"></span>{literal}' + val.name + '</td>';
                             }
