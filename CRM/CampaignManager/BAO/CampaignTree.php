@@ -37,7 +37,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
     // format the params
     $params['offset'] = ($params['page'] - 1) * $params['rp'];
     $params['rowCount'] = $params['rp'];
-    $params['sort'] = CRM_Utils_Array::value('sortBy', $params);
+    $params['sort'] = $params['sortBy'] ?? NULL;
 
     $campaignList = array();
     $campaigns = self::getCampaignList($params);
@@ -69,7 +69,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
         $value['class'][] = 'crm-entity';
         $campaignList[$id]['class'] = $value['id'] . ',' . implode(' ', $value['class']);
 
-        $campaignList[$id]['description'] = CRM_Utils_Array::value('description', $value);
+        $campaignList[$id]['description'] = $value['description'] ?? NULL;
         if (!empty($value['type'])) {
           $campaignList[$id]['type'] = $value['type'];
         } else {
@@ -87,7 +87,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
         }
         $campaignList[$id]['status'] = $value['status'];
         $campaignList[$id]['links'] = $value['action'];
-        $campaignList[$id]['created_by'] = CRM_Utils_Array::value('created_by', $value);
+        $campaignList[$id]['created_by'] = $value['created_by'] ?? NULL;
         if ((boolean)$value['is_active']) {
           $campaignList[$id]['is_active'] = 'Yes';
         }
@@ -96,7 +96,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
         }
 
         $campaignList[$id]['is_parent'] = $value['is_parent'];
-        $campaignList[$id]['external_id'] = CRM_Utils_Array::value('external_id', $value);
+        $campaignList[$id]['external_id'] = $value['external_id'] ?? NULL;
       }
       return $campaignList;
     }
@@ -343,7 +343,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
    * @return string
    */
   public static function whereClause(&$params, $sortBy = TRUE, $excludeHidden = TRUE) {
-    $title = CRM_Utils_Array::value('title', $params);
+    $title = $params['title'] ?? NULL;
     if ($title) {
       $clauses[] = "camp.title LIKE %1";
       if (strpos($title, '%') !== FALSE) {
@@ -354,7 +354,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       }
     }
 
-    $description = CRM_Utils_Array::value('description', $params);
+    $description = $params['description'] ?? NULL;
     if ($description) {
       $clauses[] = "camp.description LIKE %2";
       if (strpos($description, '%') !== FALSE) {
@@ -377,7 +377,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       $params[4] = array($end_date, 'String');
     }
 
-    $campaign_type = CRM_Utils_Array::value('type', $params);
+    $campaign_type = $params['type'] ?? NULL;
     if ($campaign_type) {
       if (is_array($campaign_type)) {
         $campaign_type = implode(' , ', $campaign_type);
@@ -385,7 +385,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       $clauses[] = "( camp.campaign_type_id IN ( {$campaign_type} ) )";
     }
 
-    $campaign_status = CRM_Utils_Array::value('status', $params);
+    $campaign_status = $params['status'] ?? NULL;
     if ($campaign_status) {
       if (is_array($campaign_status)) {
         $campaign_status = implode(' , ', $campaign_status);
@@ -393,7 +393,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       $clauses[] = "( camp.status_id IN ( {$campaign_status} ) )";
     }
 
-    $external_id = CRM_Utils_Array::value('external_id', $params);
+    $external_id = $params['external_id'] ?? NULL;
     if ($external_id) {
       $clauses[] = "camp.external_identifier LIKE %5";
       if (strpos($external_id, '%') !== FALSE) {
@@ -412,7 +412,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       $where[] = "( campaign.status_id IN ( {$statusId} ) )";
     }
 
-    $groupType = CRM_Utils_Array::value('group_type', $params);
+    $groupType = $params['group_type'] ?? NULL;
     if ($groupType) {
       $types = explode(',', $groupType);
       if (!empty($types)) {
@@ -422,7 +422,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       }
     }
 
-    $showActive = CRM_Utils_Array::value('showActive', $params);
+    $showActive = $params['showActive'] ?? NULL;
     if ($showActive) {
       switch ($showActive) {
         case 1:
@@ -441,13 +441,13 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       }
     }
 
-    $rootOnly = CRM_Utils_Array::value('rootOnly', $params);
+    $rootOnly = $params['rootOnly'] ?? NULL;
     if ($rootOnly) {
       $clauses[] = "(camp.parent_id IS NULL)";
     }
     else {
       // this is a bitmask: 1=root; 2=parents; 4=children, 8=other
-      $show = CRM_Utils_Array::value('show', $params);
+      $show = $params['show'] ?? NULL;
       if ($show & 1) {
         // show root campaigns (no parent_id AND has children)
         $showClauses[] = "((camp.parent_id IS NULL) AND EXISTS (SELECT parent_id FROM `civicrm_campaign` camp2 WHERE camp2.parent_id = camp.id))";
@@ -471,13 +471,13 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
     }
 
     // only show child groups of a specific parent group
-    $parent_id = CRM_Utils_Array::value('parent_id', $params);
+    $parent_id = $params['parent_id'] ?? NULL;
     if ($parent_id) {
       $clauses[] = 'camp.id IN (SELECT id FROM civicrm_campaign WHERE parent_id = %7)';
       $params[7] = array($parent_id, 'Integer');
     }
 
-    if ($createdBy = CRM_Utils_Array::value('created_by', $params)) {
+    if ($createdBy = $params['created_by'] ?? NULL) {
       $clauses[] = "createdBy.sort_name LIKE %8";
       if (strpos($createdBy, '%') !== FALSE) {
         $params[8] = array($createdBy, 'String', FALSE);

@@ -92,7 +92,7 @@ class CRM_CampaignManager_Form_Settings extends CRM_Core_Form {
 
     // store settings
     $settings = array(
-      'cache' => CRM_Utils_Array::value('cache', $values),
+      'cache' => $values['cache'] ?? NULL,
     );
     CRM_CampaignManager_Config::setCMSettings($settings);
 
