@@ -103,7 +103,7 @@ class CRM_CampaignManager_KPI {
       $query = "  SELECT camp.goal_revenue
                   FROM  civicrm_campaign camp
                   WHERE camp.id = {$campaign_id};";
-      $total_revenue_goal = (double) CRM_Core_DAO::singleValueQuery($query);
+      $total_revenue_goal = (float) CRM_Core_DAO::singleValueQuery($query);
 
       $kpi["total_revenue_goal"] = array(
          "id"          => "total_revenue_goal",
@@ -335,7 +335,7 @@ class CRM_CampaignManager_KPI {
             if ($total_revenue == 0) {
               $revenue_breakdown[] = array("label" => $contribution->label, "value" => 0.0);
             } else {
-              $revenue_breakdown[] = array("label" => $contribution->label, "value" => (double) ($contribution->revenue / $total_revenue));
+              $revenue_breakdown[] = array("label" => $contribution->label, "value" => (float) ($contribution->revenue / $total_revenue));
             }
          }
       }
@@ -362,9 +362,9 @@ class CRM_CampaignManager_KPI {
            while ($curr_contrib->fetch()) {
              if ($curr_contrib->revenue) {
                if ($total_revenue == 0) {
-                 $revenue_breakdown[] = array("label" => $label, "value" => (double) 0.0);
+                 $revenue_breakdown[] = array("label" => $label, "value" => (float) 0.0);
                } else {
-                 $revenue_breakdown[] = array("label" => $label, "value" => (double) $curr_contrib->revenue / $total_revenue);
+                 $revenue_breakdown[] = array("label" => $label, "value" => (float) $curr_contrib->revenue / $total_revenue);
                }
              }
            }
@@ -544,7 +544,7 @@ class CRM_CampaignManager_KPI {
    protected static function getTotalCosts($campaign_id, $children) {
       if (!isset(self::$cache[$campaign_id]['total_costs'])) {
          $result = civicrm_api3('CampaignExpense', 'getsum', array('campaign_id' => $campaign_id));
-         self::$cache[$campaign_id]['total_costs'] = (double) $result['values'][$result['id']];
+         self::$cache[$campaign_id]['total_costs'] = (float) $result['values'][$result['id']];
       }
       return self::$cache[$campaign_id]['total_costs'];
    }
@@ -566,7 +566,7 @@ class CRM_CampaignManager_KPI {
          FROM  civicrm_contribution contrib
          WHERE contrib.campaign_id IN ( {$all_ids_list} )
          AND   contrib.contribution_status_id = {$status['completed']};";
-         self::$cache[$campaign_id]['total_revenue'] = (double) CRM_Core_DAO::singleValueQuery($query);
+         self::$cache[$campaign_id]['total_revenue'] = (float) CRM_Core_DAO::singleValueQuery($query);
       }
 
       return self::$cache[$campaign_id]['total_revenue'];
