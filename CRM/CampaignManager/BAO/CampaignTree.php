@@ -88,7 +88,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
         $campaignList[$id]['status'] = $value['status'];
         $campaignList[$id]['links'] = $value['action'];
         $campaignList[$id]['created_by'] = $value['created_by'] ?? NULL;
-        if ((boolean)$value['is_active']) {
+        if ((bool)$value['is_active']) {
           $campaignList[$id]['is_active'] = 'Yes';
         }
         else {
