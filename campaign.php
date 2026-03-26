@@ -66,7 +66,10 @@ function campaign_civicrm_angularModules(&$angularModules) {
   );
   $angularModules['campaign'] = array(
     'ext' => 'de.systopia.campaign',
-    'js' => array('js/campaign.js'),
+    'js' => [
+      'js/campaign.js',
+      'js/lib/d3-context-menu.js',
+    ],
     'partials' => array('partials'),
     'css' => array('css/lib/d3-context-menu.css', 'css/campaign.css'),
     'requires' => array('crmD3'),
