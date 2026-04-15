@@ -14,19 +14,17 @@
 +--------------------------------------------------------*/
 
 (function(angular, $, _, d3) {
-   var resourceUrl = CRM.resourceUrls['de.systopia.campaign'];
-  CRM.loadScript(resourceUrl + '/js/lib/d3-context-menu.js');
    var campaign = angular.module('campaign', ['ngRoute', 'crmUtil', 'crmUi', 'crmD3']);
 
    campaign.config(['$routeProvider',
      function($routeProvider) {
       $routeProvider.when('/campaign', {
-         templateUrl: resourceUrl + '/partials/dashboard.html',
+         templateUrl: '~/campaign/dashboard.html',
          controller: 'DashboardCtrl'
       });
 
       $routeProvider.when('/campaign/:id/view', {
-         templateUrl: resourceUrl + '/partials/campaign_dashboard.html',
+         templateUrl: '~/campaign/campaign_dashboard.html',
          controller: 'CampaignDashboardCtrl',
          resolve: {
           currentCampaign: function($route, crmApi) {
@@ -54,7 +52,7 @@
       });
 
       $routeProvider.when('/campaign/:id/tree', {
-        templateUrl: resourceUrl + '/partials/campaign_tree.html',
+        templateUrl: '~/campaign/campaign_tree.html',
         controller: 'CampaignTreeCtrl',
         resolve: {
           tree: function($route, crmApi) {
@@ -70,12 +68,12 @@
       });
 
       $routeProvider.when('/campaign/:id/expense/add', {
-        templateUrl: resourceUrl + '/partials/campaign_expense.html',
+        templateUrl: '~/campaign/campaign_expense.html',
         controller: 'CampaignExpenseCtrl'
       });
 
       $routeProvider.when('/campaign/:id/clone', {
-         templateUrl: resourceUrl + '/partials/campaign_copy.html',
+         templateUrl: '~/campaign/campaign_copy.html',
          controller: 'CampaignCloneCtrl',
          resolve: {
           currentCampaign: function($route, crmApi) {
@@ -188,7 +186,7 @@
           autoOpen: false,
           title: ts('Add Expense')
         });
-        dialogService.open('addExpenseDialog', resourceUrl + '/partials/campaign_expense.html', model, options).then(function (result) {
+        dialogService.open('addExpenseDialog', '~/campaign/campaign_expense.html', model, options).then(function (result) {
           $scope.updateKpiAndExpenses();
         });
      };
@@ -209,7 +207,7 @@
           autoOpen: false,
           title: ts('Edit Expense')
         });
-        dialogService.open('addExpenseDialog', resourceUrl + '/partials/campaign_expense.html', model, options).then(function (result) {
+        dialogService.open('addExpenseDialog', '~/campaign/campaign_expense.html', model, options).then(function (result) {
           $scope.updateKpiAndExpenses();
         });
      };
@@ -373,7 +371,7 @@
         $scope.chartdata = $scope.kpi;
         //function used on the ng-include to resolve the template
         $scope.getTemplateUrl = function() {
-          return resourceUrl + '/partials/kpi_' + $scope.kpi.vis_type + '.html';
+          return '~/campaign/kpi_' + $scope.kpi.vis_type + '.html';
         }
       }
     };
@@ -769,7 +767,7 @@
     $scope.parents = parents;
 
     $scope.getTemplateUrl = function() {
-      return resourceUrl + '/partials/tree_help_text.html';
+      return '~/campaign/tree_help_text.html';
     }
 
     $scope.campaign_link = CRM.url('civicrm/a/#/campaign/' + $scope.current_campaign.id + '/view', {});
