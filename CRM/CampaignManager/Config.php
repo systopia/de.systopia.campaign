@@ -25,7 +25,7 @@ class CRM_CampaignManager_Config extends CRM_Core_Form {
    * Get the generat CampaignManager Settings
    */
   public static function getCMSettings() {
-    $settings = CRM_Core_BAO_Setting::getItem('CampaignManager', 'campaign_mgr_settings');
+    $settings = Civi::settings()->get('campaign_mgr_settings');
     if ($settings == NULL) {
       $settings = array();
     }
@@ -44,7 +44,7 @@ class CRM_CampaignManager_Config extends CRM_Core_Form {
    * get the list of KPIs keys enabled
    */
   public static function getActiveBuiltInKPIs() {
-    $enabled = CRM_Core_BAO_Setting::getItem('CampaignManager', 'enabled_built_in_kpis');
+    $enabled = Civi::settings()->get('enabled_built_in_kpis');
     if ($enabled == NULL) {
       // i.e. first time: enable some KPIs.
       $enabled = array('contribution_count', 'revenue', 'revenue_breakdown', 'donation_heartbeat');
