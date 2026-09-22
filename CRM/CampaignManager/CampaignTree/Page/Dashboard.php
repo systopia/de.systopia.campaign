@@ -55,11 +55,11 @@ class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
     $campaignPermission = CRM_Core_Permission::check('manage campaigns') ? CRM_Core_Permission::EDIT : CRM_Core_Permission::VIEW;
     $this->assign('campaignPermission', $campaignPermission);
 
-    $this->_tabs = array(
+    $this->_tabs = [
       'campaign' => ts('Campaigns'),
       'survey' => ts('Surveys'),
       'petition' => ts('Petitions'),
-    );
+    ];
 
     $subPageType = CRM_Utils_Request::retrieve('type', 'String', $this);
     if ($subPageType) {
@@ -76,13 +76,13 @@ class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
     }
     $res = CRM_Core_Resources::singleton();
     $res->addScriptFile('civicrm', 'templates/CRM/common/TabHeader.js', 1, 'html-header');
-    $res->addSetting(array(
-        'tabSettings' => array(
+    $res->addSetting([
+        'tabSettings' => [
           'active' => strtolower(CRM_Utils_Array::value('subPage', $_GET, 'campaign')),
-        )));
-    $res->addVars('campaigntree', array(
+        ]]);
+    $res->addVars('campaigntree', [
       'baseUrl' => $res->getUrl('de.systopia.campaign'),
-    ));
+    ]);
   }
 
   /**
@@ -190,14 +190,14 @@ class CRM_CampaignManager_CampaignTree_Page_Dashboard extends CRM_Core_Page {
   }
 
   public function buildTabs() {
-    $allTabs = array();
+    $allTabs = [];
     foreach ($this->_tabs as $name => $title) {
-      $allTabs[$name] = array(
+      $allTabs[$name] = [
         'title' => $title,
         'valid' => TRUE,
         'active' => TRUE,
         'link' => CRM_Utils_System::url('civicrm/campaign/dashboard', "reset=1&type=$name"),
-      );
+      ];
     }
     $allTabs['campaign']['class'] = 'livePage';
     // @phpstan-ignore function.alreadyNarrowedType

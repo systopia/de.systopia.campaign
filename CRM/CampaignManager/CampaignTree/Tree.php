@@ -45,18 +45,18 @@ class CRM_CampaignManager_CampaignTree_Tree {
       Order By  camp.id;
       ";
 
-      $children = array();
-      $new_nodes = array();
+      $children = [];
+      $new_nodes = [];
       $new_nodes[] = $root = $id;
       $current_depth = 0;
 
       while(!empty($new_nodes) && $current_depth <= $depth) {
          $current_id = array_shift($new_nodes);
-         $campaign = CRM_Core_DAO::executeQuery($query, array(1 => array($current_id, 'Integer')));
+         $campaign = CRM_Core_DAO::executeQuery($query, [1 => [$current_id, 'Integer']]);
 
          while ($campaign->fetch()) {
             if( (array_key_exists($campaign->id, $children) && $children[$campaign->id]['id'] == $campaign->id) || $campaign->id == $root) {
-               throw new CRM_Core_Exception(ts("de.systopia.campaign: cycle detected! id: %1", array(1 => $campaign->id, 'domain' => 'de.systopia.campaign')));
+               throw new CRM_Core_Exception(ts("de.systopia.campaign: cycle detected! id: %1", [1 => $campaign->id, 'domain' => 'de.systopia.campaign']));
             }
             $new_nodes[] = $campaign->id;
             $children[$campaign->id] = $campaign->title;
@@ -65,7 +65,7 @@ class CRM_CampaignManager_CampaignTree_Tree {
       }
 
 
-      $result = array('children' => $children);
+      $result = ['children' => $children];
       return $result;
    }
 
@@ -80,25 +80,25 @@ class CRM_CampaignManager_CampaignTree_Tree {
       Order By  camp.id;
       ";
 
-      $parents = array();
+      $parents = [];
       $current_id = $base = $id;
 
       while($current_id != NULL) {
-         $campaign = CRM_Core_DAO::executeQuery($query, array(1 => array($current_id, 'Integer')));
+         $campaign = CRM_Core_DAO::executeQuery($query, [1 => [$current_id, 'Integer']]);
          while($campaign->fetch()) {
             if(self::is_parent($campaign->id, $parents)) {
                break 2;
             } elseif ($campaign->id == $base) {
                continue;
             } else {
-               $parents[] = array("id" => $campaign->id, "title" => $campaign->title);
+               $parents[] = ["id" => $campaign->id, "title" => $campaign->title];
                $root = $campaign->id;
             }
          }
          $current_id = $campaign->parent_id;
       }
 
-      $result = array('parents' => $parents, 'root' => $root ?? null);
+      $result = ['parents' => $parents, 'root' => $root ?? null];
       return $result;
    }
 
@@ -122,7 +122,7 @@ class CRM_CampaignManager_CampaignTree_Tree {
    */
 
    public static function getCampaignTree($id, $depth) {
-     $children = array();
+     $children = [];
 
      // get current campaign
      $first_query = "
@@ -133,9 +133,9 @@ class CRM_CampaignManager_CampaignTree_Tree {
      WHERE camp.id = %1;
      ";
 
-     $campaign = CRM_Core_DAO::executeQuery($first_query, array(1 => array($id, 'Integer')));
+     $campaign = CRM_Core_DAO::executeQuery($first_query, [1 => [$id, 'Integer']]);
      while ($campaign->fetch()) {
-       $children[$campaign->id] = array('id' => $campaign->id, 'name' => $campaign->title, 'parentid' => 0);
+       $children[$campaign->id] = ['id' => $campaign->id, 'name' => $campaign->title, 'parentid' => 0];
      }
 
      // get all sub campaigns of current id
@@ -149,20 +149,20 @@ class CRM_CampaignManager_CampaignTree_Tree {
      ";
 
 
-     $new_nodes = array();
+     $new_nodes = [];
      $new_nodes[] = $root = $id;
      $current_depth = 0;
 
      while(!empty($new_nodes) && $current_depth <= $depth) {
         $current_id = array_shift($new_nodes);
-        $campaign = CRM_Core_DAO::executeQuery($query, array(1 => array($current_id, 'Integer')));
+        $campaign = CRM_Core_DAO::executeQuery($query, [1 => [$current_id, 'Integer']]);
 
         while ($campaign->fetch()) {
            if( (array_key_exists($campaign->id, $children) && $children[$campaign->id]['id'] == $campaign->id) || $campaign->id == $root) {
-             throw new CRM_Core_Exception(ts("de.systopia.campaign: cycle detected! id: %1", array(1 => $campaign->id, 'domain' => 'de.systopia.campaign')));
+             throw new CRM_Core_Exception(ts("de.systopia.campaign: cycle detected! id: %1", [1 => $campaign->id, 'domain' => 'de.systopia.campaign']));
            }
            $new_nodes[] = $campaign->id;
-           $children[] = array('id' => $campaign->id, 'name' => $campaign->title, 'parentid' => $campaign->parent_id);
+           $children[] = ['id' => $campaign->id, 'name' => $campaign->title, 'parentid' => $campaign->parent_id];
         }
         $current_depth++;
      }
@@ -172,7 +172,7 @@ class CRM_CampaignManager_CampaignTree_Tree {
     //    array('id'=>101, 'parentid'=>100, 'name'=>'a'),
     //   );
 
-      $new = array();
+      $new = [];
       foreach ($children as $a){
          $new[$a['parentid']][] = $a;
       }
@@ -182,7 +182,7 @@ class CRM_CampaignManager_CampaignTree_Tree {
    }
 
    public static function createTree(&$list, $parent){
-      $tree = array();
+      $tree = [];
       foreach ($parent as $k=>$v){
           if(isset($list[$v['id']])){
               $v['children'] = self::createTree($list, $list[$v['id']]);
@@ -211,10 +211,10 @@ class CRM_CampaignManager_CampaignTree_Tree {
      ";
 
      if($id == $parentid) {
-        throw new CRM_Core_Exception(ts("de.systopia.campaign: can't set self as parent! id: %1 -> %2", array(1 => $id, 2 => $parentid, 'domain' => 'de.systopia.campaign')));
+        throw new CRM_Core_Exception(ts("de.systopia.campaign: can't set self as parent! id: %1 -> %2", [1 => $id, 2 => $parentid, 'domain' => 'de.systopia.campaign']));
      }
 
-     CRM_Core_DAO::executeQuery($query, array(1 => array($parentid, 'Integer'), 2 => array($id, 'Integer')));
+     CRM_Core_DAO::executeQuery($query, [1 => [$parentid, 'Integer'], 2 => [$id, 'Integer']]);
      return civicrm_api3_create_success();
   }
 
@@ -230,7 +230,7 @@ class CRM_CampaignManager_CampaignTree_Tree {
 
   public static function cloneCampaign($node_id, $parent_id, $depth, $adjustments) {
       // get campaign
-      $campaign = civicrm_api3('Campaign', 'getsingle', array('id' => $node_id));
+      $campaign = civicrm_api3('Campaign', 'getsingle', ['id' => $node_id]);
       // strip ids etc
       unset($campaign['id'], $campaign['created_id'], $campaign['created_date'],
       $campaign['last_modified_id'], $campaign['last_modified_date'], $campaign['name'], $campaign['external_identifier']);

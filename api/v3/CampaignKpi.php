@@ -44,7 +44,7 @@ function civicrm_api3_campaign_kpi_cache($params) {
   }
 
   // pass query through to Campaign.get
-  $campaign_ids = array();
+  $campaign_ids = [];
   $params['option.limit'] = 0;
   $params['return'] = 'id';
   $campaign_query = civicrm_api3('Campaign', 'get', $params);
@@ -68,60 +68,60 @@ function civicrm_api3_campaign_kpi_cache($params) {
  * SPECS: Fill the KPI cache for the selected campaigns
  */
 function _civicrm_api3_campaign_kpi_cache_spec(&$params) {
-  $params['id'] = array(
+  $params['id'] = [
     'name'         => 'id',
     'api.required' => 0,
     'type'         => CRM_Utils_Type::T_INT,
     'title'        => 'Campaign ID',
     'description'  => 'Unique Campaign ID',
-    );
-  $params['start_date'] = array(
+    ];
+  $params['start_date'] = [
     'name'         => 'start_date',
     'api.required' => 0,
     'type'         => CRM_Utils_Type::T_DATE, //12
     'title'        => 'Campaign Start Date',
     'description'  => 'Date and time that Campaign starts.',
-    );
-  $params['end_date'] = array(
+    ];
+  $params['end_date'] = [
     'name'         => 'end_date',
     'api.required' => 0,
     'type'         => CRM_Utils_Type::T_DATE, //12
     'title'        => 'Campaign End Date',
     'description'  => 'Date and time that Campaign ends.',
-    );
-  $params['campaign_type_id'] = array(
+    ];
+  $params['campaign_type_id'] = [
     'name'         => 'campaign_type_id',
     'api.required' => 0,
     'type'         => CRM_Utils_Type::T_INT,
     'title'        => 'Campaign Type',
     'description'  => 'Campaign Type ID.Implicit FK to civicrm_option_value where option_group = campaign_type',
-    );
-  $params['status_id'] = array(
+    ];
+  $params['status_id'] = [
     'name'         => 'status_id',
     'api.required' => 0,
     'type'         => CRM_Utils_Type::T_INT,
     'title'        => 'Campaign Status',
     'description'  => 'Campaign status ID.Implicit FK to civicrm_option_value where option_group = campaign_status',
-    );
-  $params['external_identifier'] = array(
+    ];
+  $params['external_identifier'] = [
     'name'         => 'external_identifier',
     'api.required' => 0,
     'type'         => CRM_Utils_Type::T_STRING,
     'title'        => 'Campaign External ID',
     'description'  => 'Unique trusted external ID (generally from a legacy app/datasource). Particularly useful for deduping operations.',
-    );
-  $params['is_active'] = array(
+    ];
+  $params['is_active'] = [
     'name'         => 'is_active',
     'api.required' => 0,
     'type'         => CRM_Utils_Type::T_INT,
     'title'        => 'Is Campaign Active?',
     'description'  => 'Is this Campaign enabled or disabled/cancelled?',
-    );
-  $params['last_modified_date'] = array(
+    ];
+  $params['last_modified_date'] = [
     'name'         => 'last_modified_date',
     'api.required' => 0,
     'type'         => CRM_Utils_Type::T_DATE, //12
     'title'        => 'Campaign Modified Date',
     'description'  => 'Date and time that Campaign was edited last time.',
-    );
+    ];
 }

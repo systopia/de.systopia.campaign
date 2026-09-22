@@ -19,14 +19,14 @@ use CRM_CampaignManager_ExtensionUtil as E;
 require_once 'CRM/CampaignManager/CampaignTree/Tree.php';
 
 function _civicrm_api3_campaign_stat_activity_counter(&$params) {
-  $params['id'] = array(
+  $params['id'] = [
     'name' => 'id',
     'title' => E::ts('Campaign ID'),
     'description' => E::ts('ID of parent campaign'),
     'type' => CRM_Utils_Type::T_INT,
     'api.required' => 1,
     'api.default' => 0,
-  );
+  ];
 }
 
 function civicrm_api3_campaign_stat_activity_counter($params) {
@@ -38,28 +38,28 @@ function civicrm_api3_campaign_stat_activity_counter($params) {
     return civicrm_api3_create_success($stat, $params);
   }
   catch (Exception $exception) {
-    $data = array(
+    $data = [
       'params' => $params,
-      'exception' => array(
+      'exception' => [
         'message' => $exception->getMessage(),
         'file' => $exception->getFile(),
         'line' => $exception->getLine(),
         'object' => $exception,
-      ),
-    );
+      ],
+    ];
     return civicrm_api3_create_error('Problem with generating stats for campaign', $data);
   }
 }
 
 function _civicrm_api3_campaign_stat_activity_report(&$params) {
-  $params['id'] = array(
+  $params['id'] = [
     'name' => 'id',
     'title' => E::ts('Campaign ID'),
     'description' => E::ts('ID of parent campaign'),
     'type' => CRM_Utils_Type::T_INT,
     'api.required' => 1,
     'api.default' => 0,
-  );
+  ];
 }
 
 function civicrm_api3_campaign_stat_activity_report($params) {
@@ -71,15 +71,15 @@ function civicrm_api3_campaign_stat_activity_report($params) {
     return civicrm_api3_create_success($stat, $params);
   }
   catch (Exception $exception) {
-    $data = array(
+    $data = [
       'params' => $params,
-      'exception' => array(
+      'exception' => [
         'message' => $exception->getMessage(),
         'file' => $exception->getFile(),
         'line' => $exception->getLine(),
         'object' => $exception,
-      ),
-    );
+      ],
+    ];
     return civicrm_api3_create_error('Problem with generating stats for campaign', $data);
   }
 }
@@ -92,15 +92,15 @@ function civicrm_api3_campaign_stat_activity_sequence($params) {
     return civicrm_api3_create_success(CRM_CampaignManager_KPIActivity::sequence(), $params);
   }
   catch (Exception $exception) {
-    $data = array(
+    $data = [
       'params' => $params,
-      'exception' => array(
+      'exception' => [
         'message' => $exception->getMessage(),
         'file' => $exception->getFile(),
         'line' => $exception->getLine(),
         'object' => $exception,
-      ),
-    );
+      ],
+    ];
     return civicrm_api3_create_error('Problem with getting sequence', $data);
   }
 }

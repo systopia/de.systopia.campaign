@@ -31,12 +31,12 @@ class CRM_CampaignManager_KPICache {
   * get a list of options for cache TTL
   */
   public static function getTTLOptions() {
-    return array(
+    return [
        ''         => E::ts("no caching"),
        '+1 hour'  => E::ts("cache for 1 hour"),
        '+1 day'   => E::ts("cache for 24 hours"),
        '+1 week'  => E::ts("cache for 1 week"),
-    );
+    ];
   }
 
   /**
@@ -72,7 +72,7 @@ class CRM_CampaignManager_KPICache {
                                       WHERE `group_name` = 'de.systopia.campaign'
                                         AND `path` = %1
                                         AND `expired_date` < NOW()",
-                                         array(1 => array($path, 'String')));
+                                         [1 => [$path, 'String']]);
 
     // TRY AND FETCH A CURRENT ENTRY
     $data = CRM_Core_DAO::executeQuery('SELECT data, created_date
@@ -80,19 +80,19 @@ class CRM_CampaignManager_KPICache {
                                         WHERE `path` = %1
                                           AND `group_name` = "de.systopia.campaign"
                                           AND `expired_date` >= NOW()',
-                                    array(1 => array($path, 'String')));
+                                    [1 => [$path, 'String']]);
     if ($data->fetch()) {
        // error_log("CACHE HIT");
        $kpis = unserialize($data->data);
-       $kpis["cache_info"] = array(
+       $kpis["cache_info"] = [
           "id"          => "cache_info",
-          "title"       => ts("KPI Cache Timestamp", array('domain' => 'de.systopia.campaign')),
+          "title"       => ts("KPI Cache Timestamp", ['domain' => 'de.systopia.campaign']),
           "kpi_type"    => "date",
           "vis_type"    => "none",
-          "description" => ts("Describes the exact time when this KPI data set was calculated. For more details have a look at the caching options.", array('domain' => 'de.systopia.campaign')),
+          "description" => ts("Describes the exact time when this KPI data set was calculated. For more details have a look at the caching options.", ['domain' => 'de.systopia.campaign']),
           "value"       => date('Y-m-d H:i:s', strtotime($data->created_date)),
           "link"        => ""
-       );
+       ];
        return $kpis;
     } else {
        // error_log("CACHE MISS");
@@ -114,8 +114,8 @@ class CRM_CampaignManager_KPICache {
     // error_log("CACHED UNTIL {$expired_date}");
     CRM_Core_DAO::executeQuery("INSERT IGNORE INTO civicrm_cache (`group_name`, `path`, `data`, `expired_date`, `created_date`)
                                             VALUES ('de.systopia.campaign', %1, %2, %3, NOW())",
-                                         array(1 => array($path,           'String'),
-                                               2 => array(serialize($kpi), 'String'),
-                                               3 => array($expired_date,   'String')));
+                                         [1 => [$path,           'String'],
+                                               2 => [serialize($kpi), 'String'],
+                                               3 => [$expired_date,   'String']]);
   }
 }

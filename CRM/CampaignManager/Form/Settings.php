@@ -22,7 +22,7 @@ use CRM_CampaignManager_ExtensionUtil as E;
  */
 class CRM_CampaignManager_Form_Settings extends CRM_Core_Form {
 
-  private $currentValues = array();
+  private $currentValues = [];
 
   public function buildQuickForm() {
 
@@ -44,15 +44,15 @@ class CRM_CampaignManager_Form_Settings extends CRM_Core_Form {
                       'cache',
                       E::ts('KPI Caching (TTL)'),
                       CRM_CampaignManager_KPICache::getTTLOptions(),
-                      array());
+                      []);
 
-    $this->addButtons(array(
-      array(
+    $this->addButtons([
+      [
         'type' => 'submit',
         'name' => E::ts('Submit'),
         'isDefault' => TRUE,
-      ),
-    ));
+      ],
+    ]);
 
     parent::buildQuickForm();
   }
@@ -61,7 +61,7 @@ class CRM_CampaignManager_Form_Settings extends CRM_Core_Form {
    * set the default (=current) values in the form
    */
   public function setDefaultValues() {
-    $current_values = array();
+    $current_values = [];
 
     // add enabled built-in KPIs
     $enabled_kpis = CRM_CampaignManager_Config::getActiveBuiltInKPIs();
@@ -91,9 +91,9 @@ class CRM_CampaignManager_Form_Settings extends CRM_Core_Form {
     CRM_CampaignManager_Config::setActiveBuiltInKPIs($values);
 
     // store settings
-    $settings = array(
+    $settings = [
       'cache' => $values['cache'] ?? NULL,
-    );
+    ];
     CRM_CampaignManager_Config::setCMSettings($settings);
 
     // clear cache
