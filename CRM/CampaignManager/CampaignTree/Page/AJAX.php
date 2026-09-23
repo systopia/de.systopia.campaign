@@ -36,12 +36,12 @@ class CRM_CampaignManager_CampaignTree_Page_AJAX {
       CRM_Utils_JSON::output($campaigns);
     }
     else {
-      $sortMapper = array(
+      $sortMapper = [
         0 => 'camp.title',
         1 => 'camp.description',
         2 => 'camp.start_date',
         3 => 'camp.end_date'
-      );
+      ];
       $sEcho = isset($_REQUEST['sEcho']) ? CRM_Utils_Type::escape($_REQUEST['sEcho'], 'Integer') : 1;
       $offset = isset($_REQUEST['iDisplayStart']) ? CRM_Utils_Type::escape($_REQUEST['iDisplayStart'], 'Integer') : 0;
       $rowCount = isset($_REQUEST['iDisplayLength']) ? CRM_Utils_Type::escape($_REQUEST['iDisplayLength'], 'Integer') : 25;
@@ -56,7 +56,7 @@ class CRM_CampaignManager_CampaignTree_Page_AJAX {
       // When displayed in flatSearch there may be duplicates in the list
       $params['rootOnly'] = 1;
 
-      $flatSearch = array(
+      $flatSearch = [
         'title', // name
         'description',
         'start_date',
@@ -67,7 +67,7 @@ class CRM_CampaignManager_CampaignTree_Page_AJAX {
         'status',
         'created_by',
         'external_id',
-      );
+      ];
       foreach ($flatSearch as $p) {
         if (!empty($params[$p])) {
           $params['rootOnly'] = 0;
@@ -81,7 +81,7 @@ class CRM_CampaignManager_CampaignTree_Page_AJAX {
       $campaigns = CRM_CampaignManager_BAO_CampaignTree::getCampaignListSelector($params);
       $iFilteredTotal = $iTotal = $params['total'];
 
-      $selectorElements = array(
+      $selectorElements = [
         'name',
         'description',
         'start_date',
@@ -93,7 +93,7 @@ class CRM_CampaignManager_CampaignTree_Page_AJAX {
         'links',
         'is_active',
         'class', // This one MUST always be at the end, as the js code in search.tpl looks for the class in the last element
-      );
+      ];
 
       header('Content-Type: application/json');
       echo CRM_Utils_JSON::encodeDataTableSelector($campaigns, $sEcho, $iTotal, $iFilteredTotal, $selectorElements);

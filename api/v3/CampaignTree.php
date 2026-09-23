@@ -111,32 +111,32 @@ function _civicrm_api3_campaign_tree_clone_spec(&$params) {
 function civicrm_api3_campaign_tree_getcustominfo($params) {
   // Get custom group IDs extending the current campaign.
   try {
-    $custom_groups = civicrm_api3('CustomGroup', 'get', array(
+    $custom_groups = civicrm_api3('CustomGroup', 'get', [
       'extends' => "Campaign",
       'return' => "id,extends_entity_column_value",
       'option.limit' => 0,
-    ));
+    ]);
   }
   catch (Exception $e) {
     CRM_Core_Error::debug_log_message("Cannot find id for 'campaign_information' custom field group!");
-    return array();
+    return [];
   }
 
   // Abort when there are no custom groups for the current campaign.
   if (!$custom_groups['values']) {
-    return array();
+    return [];
   }
 
-  $customInfo = array();
+  $customInfo = [];
   foreach ($custom_groups['values'] as $group_id => $custom_group) {
     // Filter for custom group sub-types.
     if (!empty($custom_group['extends_entity_column_value'])) {
       static $campaign;
       if (!isset($campaign)) {
-        $campaign = civicrm_api3('Campaign', 'getsingle', array(
+        $campaign = civicrm_api3('Campaign', 'getsingle', [
           'id' => $params['entity_id'],
           'return' => 'campaign_type_id',
-        ));
+        ]);
       }
       if (!in_array($campaign['campaign_type_id'], $custom_group['extends_entity_column_value'])) {
         continue;
@@ -150,7 +150,7 @@ function civicrm_api3_campaign_tree_getcustominfo($params) {
       NULL,
       $params['entity_id'],
       $custom_group['id'],
-      (isset($custom_group['extends_entity_column_value']) ? $custom_group['extends_entity_column_value'] : array())
+      (isset($custom_group['extends_entity_column_value']) ? $custom_group['extends_entity_column_value'] : [])
     );
     $cd_details = CRM_Core_BAO_CustomGroup::buildCustomDataView(
       $dummy_page = new CRM_Core_Page(),
@@ -209,7 +209,7 @@ function _civicrm_api3_campaign_tree_getcustominfo_spec(&$params) {
  */
 function civicrm_api3_campaign_tree_getlinks($params) {
   // simply call the Hook to catch custom actions
-  $links = array();
+  $links = [];
   CRM_Utils_Hook::links('campaign.selector.row', 'Campaign', $params['id'], $links);
 
   // postprocess

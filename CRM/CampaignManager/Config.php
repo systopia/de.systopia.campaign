@@ -27,7 +27,7 @@ class CRM_CampaignManager_Config extends CRM_Core_Form {
   public static function getCMSettings() {
     $settings = Civi::settings()->get('campaign_mgr_settings');
     if ($settings == NULL) {
-      $settings = array();
+      $settings = [];
     }
 
     return $settings;
@@ -47,7 +47,7 @@ class CRM_CampaignManager_Config extends CRM_Core_Form {
     $enabled = Civi::settings()->get('enabled_built_in_kpis');
     if ($enabled == NULL) {
       // i.e. first time: enable some KPIs.
-      $enabled = array('contribution_count', 'revenue', 'revenue_breakdown', 'donation_heartbeat');
+      $enabled = ['contribution_count', 'revenue', 'revenue_breakdown', 'donation_heartbeat'];
     }
 
     return $enabled;
@@ -58,7 +58,7 @@ class CRM_CampaignManager_Config extends CRM_Core_Form {
    */
   public static function setActiveBuiltInKPIs($enabled) {
     // filter for actual KPIs
-    $active_kpis = array('dummy');
+    $active_kpis = ['dummy'];
     $all_kpis = CRM_CampaignManager_KPI::builtInKPIs();
     foreach ($all_kpis as $key => $label) {
       if (!empty($enabled[$key])) {
@@ -73,21 +73,21 @@ class CRM_CampaignManager_Config extends CRM_Core_Form {
    */
   public static function installScheduledJob() {
     // find all scheduled jobs calling CampaignKpi.cache
-    $query = civicrm_api3('Job', 'get', array(
+    $query = civicrm_api3('Job', 'get', [
       'api_entity'   => 'CampaignKpi',
       'api_action'   => 'cache',
-      'option.limit' => 0));
+      'option.limit' => 0]);
     $jobs = $query['values'];
 
     if (empty($jobs)) {
       // none found? create a new one
-      civicrm_api3('Job', 'create', array(
+      civicrm_api3('Job', 'create', [
         'api_entity'    => 'CampaignKpi',
         'api_action'    => 'cache',
         'run_frequency' => 'Daily',
         'name'          => E::ts('Fill CM KPI Cache'),
         'description'   => E::ts("Caches the CampaignManager's KPI cache, if caching is enabled."),
-        'is_active'     => '0'));
+        'is_active'     => '0']);
     }
   }
 }

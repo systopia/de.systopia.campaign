@@ -39,7 +39,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
     $params['rowCount'] = $params['rp'];
     $params['sort'] = $params['sortBy'] ?? NULL;
 
-    $campaignList = array();
+    $campaignList = [];
     $campaigns = self::getCampaignList($params);
     // Permission check, return empty array
     if (!$campaigns['isCampaignEnabled'] || !$campaigns['hasAccessCampaign']) {
@@ -50,7 +50,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
     unset($campaigns['hasAccessCampaign']);
 
     // format params and add links
-    $campaignList = array();
+    $campaignList = [];
     if (!empty($campaigns)) {
       foreach ($campaigns as $id => $value) {
         $campaignList[$id]['id'] = $value['id'];
@@ -104,10 +104,10 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
 
   public static function getCampaignList(&$params)
   {
-    $values = array(
+    $values = [
       'hasAccessCampaign' => FALSE,
       'isCampaignEnabled' => FALSE,
-    );
+    ];
     //do check for component.
     $values['isCampaignEnabled'] = $isValid = CRM_Campaign_BAO_Campaign::isComponentEnabled();
     //do check for permissions.
@@ -152,8 +152,8 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       $params['total'] = self::getCampaignCount($params);
     }
 
-    $campaignPermissions = array(CRM_Core_Permission::VIEW);
-    if (CRM_Core_Permission::check(array('administer CiviCampaign', 'manage campaign'))) {
+    $campaignPermissions = [CRM_Core_Permission::VIEW];
+    if (CRM_Core_Permission::check(['administer CiviCampaign', 'manage campaign'])) {
       $campaignPermissions[] = CRM_Core_Permission::EDIT;
       $campaignPermissions[] = CRM_Core_Permission::DELETE;
     }
@@ -163,10 +163,10 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
 
     $count = 0;
     while ($object->fetch()) {
-      $values[$object->id] = array(
-        'class' => array(),
+      $values[$object->id] = [
+        'class' => [],
         'count' => '0',
-      );
+      ];
       CRM_Core_DAO::storeValues($object, $values[$object->id]);
 
       if (in_array(CRM_Core_Permission::EDIT, $campaignPermissions)) {
@@ -207,7 +207,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       }
 
       // start_date / end_date
-      foreach (array('start_date', 'end_date') as $date) {
+      foreach (['start_date', 'end_date'] as $date) {
         if ($object->$date) {
           $values[$object->id][$date] = CRM_Utils_Date::customFormat($object->$date, $config->dateformatFull);
         }
@@ -215,9 +215,9 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
 
       $values[$object->id]['action'] = CRM_Core_Action::formLink($links,
         $action,
-        array(
+        [
           'id' => $object->id,
-        ),
+        ],
         ts('more'),
         FALSE,
         'campaign.selector.row',
@@ -269,11 +269,11 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
                    FROM civicrm_campaign
                    WHERE  parent_id = %1';
 
-    $parents = array();
+    $parents = [];
 
     $campaign = CRM_Core_DAO::executeQuery($query);
     while ($campaign->fetch()) {
-      $count = CRM_Core_DAO::singleValueQuery($queryCount, array(1 => array($campaign->id, 'String')));
+      $count = CRM_Core_DAO::singleValueQuery($queryCount, [1 => [$campaign->id, 'String']]);
       if ($count > 0) {
         $parents[] = $campaign->id;
       }
@@ -347,10 +347,10 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
     if ($title) {
       $clauses[] = "camp.title LIKE %1";
       if (strpos($title, '%') !== FALSE) {
-        $params[1] = array($title, 'String', FALSE);
+        $params[1] = [$title, 'String', FALSE];
       }
       else {
-        $params[1] = array($title, 'String', TRUE);
+        $params[1] = [$title, 'String', TRUE];
       }
     }
 
@@ -358,23 +358,23 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
     if ($description) {
       $clauses[] = "camp.description LIKE %2";
       if (strpos($description, '%') !== FALSE) {
-        $params[2] = array($description, 'String', FALSE);
+        $params[2] = [$description, 'String', FALSE];
       }
       else {
-        $params[2] = array($description, 'String', TRUE);
+        $params[2] = [$description, 'String', TRUE];
       }
     }
 
     $start_date = CRM_Utils_Date::processDate($params['start_date']);
     if ($start_date) {
       $clauses[] = "( camp.start_date >= %3 OR camp.start_date IS NULL )";
-      $params[3] = array($start_date, 'String');
+      $params[3] = [$start_date, 'String'];
     }
 
     $end_date = CRM_Utils_Date::processDate($params['end_date'],'235959');
     if ($end_date) {
       $clauses[] = "( camp.end_date <= %4 OR camp.end_date IS NULL )";
-      $params[4] = array($end_date, 'String');
+      $params[4] = [$end_date, 'String'];
     }
 
     $campaign_type = $params['type'] ?? NULL;
@@ -397,10 +397,10 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
     if ($external_id) {
       $clauses[] = "camp.external_identifier LIKE %5";
       if (strpos($external_id, '%') !== FALSE) {
-        $params[5] = array($external_id, 'String', FALSE);
+        $params[5] = [$external_id, 'String', FALSE];
       }
       else {
-        $params[5] = array($external_id, 'String', TRUE);
+        $params[5] = [$external_id, 'String', TRUE];
       }
     }
 
@@ -418,7 +418,7 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       if (!empty($types)) {
         $clauses[] = 'groups.group_type LIKE %6';
         $typeString = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, $types) . CRM_Core_DAO::VALUE_SEPARATOR;
-        $params[6] = array($typeString, 'String', TRUE);
+        $params[6] = [$typeString, 'String', TRUE];
       }
     }
 
@@ -427,12 +427,12 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
       switch ($showActive) {
         case 1:
           $clauses[] = 'camp.is_active = 1';
-          $params[7] = array($showActive, 'Integer');
+          $params[7] = [$showActive, 'Integer'];
           break;
 
         case 2:
           $clauses[] = 'camp.is_active = 0';
-          $params[7] = array($showActive, 'Integer');
+          $params[7] = [$showActive, 'Integer'];
           break;
 
         case 3:
@@ -474,16 +474,16 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
     $parent_id = $params['parent_id'] ?? NULL;
     if ($parent_id) {
       $clauses[] = 'camp.id IN (SELECT id FROM civicrm_campaign WHERE parent_id = %7)';
-      $params[7] = array($parent_id, 'Integer');
+      $params[7] = [$parent_id, 'Integer'];
     }
 
     if ($createdBy = $params['created_by'] ?? NULL) {
       $clauses[] = "createdBy.sort_name LIKE %8";
       if (strpos($createdBy, '%') !== FALSE) {
-        $params[8] = array($createdBy, 'String', FALSE);
+        $params[8] = [$createdBy, 'String', FALSE];
       }
       else {
-        $params[8] = array($createdBy, 'String', TRUE);
+        $params[8] = [$createdBy, 'String', TRUE];
       }
     }
 
@@ -504,35 +504,35 @@ class CRM_CampaignManager_BAO_CampaignTree extends CRM_Campaign_DAO_Campaign
    *   array of action links
    */
   public static function actionLinks($objectId) {
-    $links = array(
-      CRM_Core_Action::VIEW => array(
+    $links = [
+      CRM_Core_Action::VIEW => [
         'name' => ts('View'),
         'url' => CRM_Utils_System::url('civicrm/a/#/campaign/'. $objectId .'/view'),
         'qs' => '',
         'class' => 'no-popup',
         'title' => ts('View Campaign'),
-      ),
-      CRM_Core_Action::UPDATE => array(
+      ],
+      CRM_Core_Action::UPDATE => [
         'name' => ts('Edit'),
         'url' => CRM_Utils_System::url('civicrm/campaign/add', "reset=1&action=update&id={$objectId}"),
         'title' => ts('Update Campaign'),
-      ),
-      CRM_Core_Action::DISABLE => array(
+      ],
+      CRM_Core_Action::DISABLE => [
         'name' => ts('Disable'),
         'title' => ts('Disable Campaign'),
         'ref' => 'crm-enable-disable',
-      ),
-      CRM_Core_Action::ENABLE => array(
+      ],
+      CRM_Core_Action::ENABLE => [
         'name' => ts('Enable'),
         'title' => ts('Enable Campaign'),
         'ref' => 'crm-enable-disable',
-      ),
-      CRM_Core_Action::DELETE => array(
+      ],
+      CRM_Core_Action::DELETE => [
         'name' => ts('Delete'),
         'url' => CRM_Utils_System::url('civicrm/campaign/add', "action=delete&reset=1&id={$objectId}"),
         'title' => ts('Delete Campaign'),
-      ),
-    );
+      ],
+    ];
     return $links;
   }
 }

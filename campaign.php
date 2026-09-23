@@ -60,20 +60,20 @@ function campaign_civicrm_enable() {
  * Implementation of hook_civicrm_angularModules
  */
 function campaign_civicrm_angularModules(&$angularModules) {
-  $angularModules['crmD3'] = array(
+  $angularModules['crmD3'] = [
     'ext' => 'civicrm',
-    'js' => array('ang/crmD3.js', 'bower_components/d3/d3.min.js'),
-  );
-  $angularModules['campaign'] = array(
+    'js' => ['ang/crmD3.js', 'bower_components/d3/d3.min.js'],
+  ];
+  $angularModules['campaign'] = [
     'ext' => 'de.systopia.campaign',
     'js' => [
       'js/campaign.js',
       'js/lib/d3-context-menu.js',
     ],
-    'partials' => array('partials'),
-    'css' => array('css/lib/d3-context-menu.css', 'css/campaign.css'),
-    'requires' => array('crmD3'),
-  );
+    'partials' => ['partials'],
+    'css' => ['css/lib/d3-context-menu.css', 'css/campaign.css'],
+    'requires' => ['crmD3'],
+  ];
 }
 
 /**
@@ -88,33 +88,33 @@ function campaign_civicrm_buildForm($formName, &$form) {
         $select = $form->getElement('parent_id');
         $select->setSelected($_GET['pid']);
       }
-      CRM_Core_Region::instance('form-body')->add(array(
+      CRM_Core_Region::instance('form-body')->add([
         		'template' => 'CRM/CampaignManager/Form/ExtendedCampaign.tpl',
-      	));
+      	]);
     }elseif (($action == CRM_Core_Action::UPDATE || $action == CRM_Core_Action::ADD) && !isset($_GET['qfKey'])) {
       $cid = $form->get('id');
       $campaigns = CRM_Campaign_BAO_Campaign::getCampaigns(CRM_Utils_Array::value('parent_id', $form->get('values')), $cid);
       if (!empty($campaigns)) {
-        $form->addElement('select', 'parent_id', ts('Parent ID', array('domain' => 'de.systopia.campaign')),
-          array('' => ts('- select Parent -', array('domain' => 'de.systopia.campaign'))) + $campaigns,
-          array('class' => 'crm-select2')
+        $form->addElement('select', 'parent_id', ts('Parent ID', ['domain' => 'de.systopia.campaign']),
+          ['' => ts('- select Parent -', ['domain' => 'de.systopia.campaign'])] + $campaigns,
+          ['class' => 'crm-select2']
         );
       }
-      CRM_Core_Region::instance('form-body')->add(array(
+      CRM_Core_Region::instance('form-body')->add([
         		'template' => 'CRM/CampaignManager/Form/ExtendedCampaign.tpl',
-      	));
+      	]);
     }
 	}
 }
 
 function campaign_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &$values ) {
     if($objectName == 'Campaign' && $op == 'campaign.dashboard.row') {
-      $viewLink = array(
-          'name' => ts('View', array('domain' => 'de.systopia.campaign')),
-          'title' => ts('View Campaign', array('domain' => 'de.systopia.campaign')),
+      $viewLink = [
+          'name' => ts('View', ['domain' => 'de.systopia.campaign']),
+          'title' => ts('View Campaign', ['domain' => 'de.systopia.campaign']),
           'class' => 'no-popup',
           'url' => CRM_Utils_System::url("civicrm/a/#/campaign/{$objectId}/view"),
-      );
+      ];
 
       array_unshift($links, $viewLink);
     }
@@ -123,9 +123,9 @@ function campaign_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &
 function campaign_civicrm_install_options($data) {
   foreach ($data as $groupName => $group) {
     // check group existence
-    $result = civicrm_api('option_group', 'getsingle', array('version' => 3, 'name' => $groupName));
+    $result = civicrm_api('option_group', 'getsingle', ['version' => 3, 'name' => $groupName]);
     if (isset($result['is_error']) && $result['is_error']) {
-      $params = array(
+      $params = [
           'version' => 3,
           'sequential' => 1,
           'name' => $groupName,
@@ -133,7 +133,7 @@ function campaign_civicrm_install_options($data) {
           'is_active' => 1,
           'title' => $group['title'],
           'description' => $group['description'],
-      );
+      ];
       $result = civicrm_api('option_group', 'create', $params);
       $group_id = $result['values'][0]['id'];
     } else {
@@ -143,9 +143,9 @@ function campaign_civicrm_install_options($data) {
       $groupValues = $group['values'];
       $weight = 1;
       foreach ($groupValues as $valueName => $value) {
-        $result = civicrm_api('option_value', 'getsingle', array('version' => 3, 'name' => $valueName));
+        $result = civicrm_api('option_value', 'getsingle', ['version' => 3, 'name' => $valueName]);
         if (isset($result['is_error']) && $result['is_error']) {
-          $params = array(
+          $params = [
               'version' => 3,
               'sequential' => 1,
               'option_group_id' => $group_id,
@@ -154,7 +154,7 @@ function campaign_civicrm_install_options($data) {
               'weight' => isset($value['weight']) ? $value['weight'] : $weight,
               'is_default' => $value['is_default'],
               'is_active' => 1,
-          );
+          ];
           if (isset($value['value'])) {
             $params['value'] = $value['value'];
           }
@@ -168,22 +168,22 @@ function campaign_civicrm_install_options($data) {
 }
 
 function campaign_civicrm_options() {
-  return array(
-      'campaign_expense_types' => array(
-          'title' => ts('Campaign Expense Types', array('domain' => 'de.systopia.campaign')),
+  return [
+      'campaign_expense_types' => [
+          'title' => ts('Campaign Expense Types', ['domain' => 'de.systopia.campaign']),
           'description' => '',
           'is_reserved' => 1,
           'is_active' => 1,
-          'values' => array(
-            'Default' => array(
-              'label' => ts('Default', array('domain' => 'de.systopia.campaign')),
+          'values' => [
+            'Default' => [
+              'label' => ts('Default', ['domain' => 'de.systopia.campaign']),
               'is_default' => 1,
               'is_reserved' => 1,
               'value' => 1,
-            ),
-          ),
-        ),
-    );
+            ],
+          ],
+        ],
+    ];
 }
 
 /**
@@ -192,31 +192,31 @@ function campaign_civicrm_options() {
 function campaign_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions)
 {
   // Mend Campaign API
-  $permissions['campaign']['getsingle'] = array('manage campaign');
-  $permissions['campaign']['create'] = array('manage campaign');
-  $permissions['campaign']['update'] = array('manage campaign');
-  $permissions['campaign']['get'] = array('manage campaign');
-  $permissions['campaign']['delete'] = array('manage campaign');
+  $permissions['campaign']['getsingle'] = ['manage campaign'];
+  $permissions['campaign']['create'] = ['manage campaign'];
+  $permissions['campaign']['update'] = ['manage campaign'];
+  $permissions['campaign']['get'] = ['manage campaign'];
+  $permissions['campaign']['delete'] = ['manage campaign'];
 
   // CampaignExpense API
-  $permissions['campaign_expense']['get'] = array('manage campaign');
-  $permissions['campaign_expense']['getsingle'] = array('manage campaign');
-  $permissions['campaign_expense']['getsum'] = array('manage campaign');
-  $permissions['campaign_expense']['create'] = array('manage campaign');
-  $permissions['campaign_expense']['update'] = array('manage campaign');
-  $permissions['campaign_expense']['delete'] = array('manage campaign');
+  $permissions['campaign_expense']['get'] = ['manage campaign'];
+  $permissions['campaign_expense']['getsingle'] = ['manage campaign'];
+  $permissions['campaign_expense']['getsum'] = ['manage campaign'];
+  $permissions['campaign_expense']['create'] = ['manage campaign'];
+  $permissions['campaign_expense']['update'] = ['manage campaign'];
+  $permissions['campaign_expense']['delete'] = ['manage campaign'];
 
   // CampaignKPI API
-  $permissions['campaign_kpi']['get'] = array('manage campaign');
+  $permissions['campaign_kpi']['get'] = ['manage campaign'];
 
   // CampaignTree API
-  $permissions['campaign_tree']['getids'] = array('manage campaign');
-  $permissions['campaign_tree']['getparentids'] = array('manage campaign');
-  $permissions['campaign_tree']['gettree'] = array('manage campaign');
-  $permissions['campaign_tree']['setnodeparent'] = array('manage campaign');
-  $permissions['campaign_tree']['clone'] = array('manage campaign');
-  $permissions['campaign_tree']['getcustominfo'] = array('manage campaign');
-  $permissions['campaign_tree']['getlinks'] = array('manage campaign');
+  $permissions['campaign_tree']['getids'] = ['manage campaign'];
+  $permissions['campaign_tree']['getparentids'] = ['manage campaign'];
+  $permissions['campaign_tree']['gettree'] = ['manage campaign'];
+  $permissions['campaign_tree']['setnodeparent'] = ['manage campaign'];
+  $permissions['campaign_tree']['clone'] = ['manage campaign'];
+  $permissions['campaign_tree']['getcustominfo'] = ['manage campaign'];
+  $permissions['campaign_tree']['getlinks'] = ['manage campaign'];
 }
 
 /**

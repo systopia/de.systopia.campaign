@@ -49,7 +49,7 @@ class CRM_CampaignManager_CampaignTree_Form_Search extends CRM_Core_Form {
     //campaign end date.
     $this->add('datepicker', 'end_date', ts('End Date'), [], FALSE, ['time' => FALSE]);
 
-    $campaignShow = array(ts('Root') => 1, ts('Parent') => 2, ts('Child') => 3, ts('Other') => 4);
+    $campaignShow = [ts('Root') => 1, ts('Parent') => 2, ts('Child') => 3, ts('Other') => 4];
     $this->addCheckBox('show',
       ts('Show Campaigns:'),
       $campaignShow,
@@ -57,7 +57,7 @@ class CRM_CampaignManager_CampaignTree_Form_Search extends CRM_Core_Form {
     );
 
     //Active
-    $campaignActive = array(ts('Active') => 1, ts('Disabled') => 2);
+    $campaignActive = [ts('Active') => 1, ts('Disabled') => 2];
     $this->addCheckBox('active',
       ts('Show Campaigns:'),
       $campaignActive,
@@ -67,9 +67,9 @@ class CRM_CampaignManager_CampaignTree_Form_Search extends CRM_Core_Form {
     //campaign type.
     $campaignTypes = CRM_Campaign_PseudoConstant::campaignType();
     $this->add('select', 'type_id', ts('Campaign Type'),
-      array(
+      [
         '' => ts('- any -'),
-      ) + $campaignTypes
+      ] + $campaignTypes
     );
 
     $this->set('campaignTypes', $campaignTypes);
@@ -78,25 +78,25 @@ class CRM_CampaignManager_CampaignTree_Form_Search extends CRM_Core_Form {
     //campaign status
     $campaignStatus = CRM_Campaign_PseudoConstant::campaignStatus();
     $this->addElement('select', 'status_id', ts('Campaign Status'),
-      array(
+      [
         '' => ts('- any -'),
-      ) + $campaignStatus
+      ] + $campaignStatus
     );
     $this->set('campaignStatus', $campaignStatus);
     $this->assign('campaignStatus', json_encode($campaignStatus));
 
-    $this->addButtons(array(
-      array(
+    $this->addButtons([
+      [
         'type' => 'refresh',
         'name' => ts('Search'),
         'isDefault' => TRUE,
-      ),
-      array(
+      ],
+      [
         'type' => 'cancel',
         'name' => ts('Reset'),
         'isDefault' => FALSE,
-      ),
-    ));
+      ],
+    ]);
 
     parent::buildQuickForm();
     $this->assign('suppressForm', TRUE);
@@ -106,7 +106,7 @@ class CRM_CampaignManager_CampaignTree_Form_Search extends CRM_Core_Form {
     $params = $this->controller->exportValues($this->_name);
     $parent = $this->controller->getParent();
     if (!empty($params)) {
-      $fields = array('title', 'created_by', 'campaign_type', 'visibility', 'active_status', 'inactive_status');
+      $fields = ['title', 'created_by', 'campaign_type', 'visibility', 'active_status', 'inactive_status'];
       foreach ($fields as $field) {
         if (isset($params[$field]) &&
           !CRM_Utils_System::isNull($params[$field])

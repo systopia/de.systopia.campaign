@@ -65,7 +65,7 @@ class CRM_CampaignManager_KPIActivity {
    * @return array
    */
   public static function activityCounter($campaignId, $children) {
-    $ids = array_merge(array($campaignId), array_keys($children));
+    $ids = array_merge([$campaignId], array_keys($children));
     $query = "SELECT
                 a.activity_type_id, a.status_id, count(a.id) counter
               FROM civicrm_activity a
@@ -73,7 +73,7 @@ class CRM_CampaignManager_KPIActivity {
                 JOIN civicrm_campaign_config_activity_status s ON s.activity_type_id = a.activity_type_id AND s.status_id = a.status_id
                 WHERE a.is_test = 0 AND a.campaign_id IN (" . implode(' ,', $ids) . ")
               GROUP BY a.activity_type_id, a.status_id";
-    $params = array();
+    $params = [];
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     return $dao->fetchAll();
   }
@@ -87,7 +87,7 @@ class CRM_CampaignManager_KPIActivity {
    * @return array
    */
   public static function activityReport($campaignId, $children) {
-    $ids = array_merge(array($campaignId), array_keys($children));
+    $ids = array_merge([$campaignId], array_keys($children));
     $query = "SELECT t1.activity_type_id, at1.label, t1.grouping, sum(t1.counter) counter FROM
                 (SELECT
                   a.activity_type_id, a.status_id, s.grouping, count(a.id) counter
@@ -109,7 +109,7 @@ class CRM_CampaignManager_KPIActivity {
                 WHERE option_group_id = (SELECT id FROM civicrm_option_group WHERE name = 'activity_type')) at1 ON at1.id = t1.activity_type_id
               GROUP BY t1.activity_type_id, at1.label, t1.grouping
               ORDER BY at1.label, ss.sequence";
-    $params = array();
+    $params = [];
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     return $dao->fetchAll();
   }
@@ -117,7 +117,7 @@ class CRM_CampaignManager_KPIActivity {
   public static function sequence() {
     $query = "SELECT grouping FROM civicrm_campaign_config_status_sequence ORDER BY sequence";
     $dao = CRM_Core_DAO::executeQuery($query);
-    $result = array();
+    $result = [];
     while ($dao->fetch()) {
       $result[] = $dao->grouping;
     }
@@ -127,12 +127,12 @@ class CRM_CampaignManager_KPIActivity {
   public static function calculateActivityStats(&$kpi, $campaign_id, $children) {
     $stats = self::activityReport($campaign_id, $children);
     $sequence = CRM_CampaignManager_KPIActivity::sequence();
-    $report = array();
-    $columns = array();
-    $activityTypes = array();
-    $totalPerRow = array();
-    $totalPerColumn = array();
-    $existingGrouping = array();
+    $report = [];
+    $columns = [];
+    $activityTypes = [];
+    $totalPerRow = [];
+    $totalPerColumn = [];
+    $existingGrouping = [];
     foreach ($stats as $stat) {
       $report[$stat['label']][$stat['grouping']] = $stat['counter'];
       $activityTypes[$stat['label']] = $stat['label'];
@@ -141,9 +141,9 @@ class CRM_CampaignManager_KPIActivity {
       $totalPerColumn[$stat['grouping']] += $stat['counter'];
       $existingGrouping[$stat['grouping']] = $stat['grouping'];
     }
-    $header = array(E::ts("Activity"));
-    $body = array();
-    $footer = array();
+    $header = [E::ts("Activity")];
+    $body = [];
+    $footer = [];
     $total = 0;
     foreach ($sequence as $i => $grouping) {
       if (!in_array($grouping, $existingGrouping)) {
@@ -155,7 +155,7 @@ class CRM_CampaignManager_KPIActivity {
     }
     $header[] = E::ts('Total');
     foreach ($activityTypes as $type) {
-      $body[$type] = array($type);
+      $body[$type] = [$type];
       foreach ($sequence as $i => $grouping) {
         $body[$type][$grouping] = $report[$type][$grouping];
       }
@@ -168,34 +168,34 @@ class CRM_CampaignManager_KPIActivity {
     }
     $footer[] = $total;
 
-    $kpi["actiontable"] = array(
+    $kpi["actiontable"] = [
       "id" => "actiontable",
       "description" => E::ts('Statistics on associated activities'),
       "kpi_type" => "hidden",
       "link" => "",
       "title" => E::ts('Statistics on associated activities'),
       "vis_type" => "table",
-      "value" => array(
-        "header" => array(
+      "value" => [
+        "header" => [
           "comment" => "This is a header :-)",
-          "cells" => array(
+          "cells" => [
             "comment" => "This is a comment to cells ;-)",
             "value" => $header,
-          ),
-        ),
-        "body" => array(
+          ],
+        ],
+        "body" => [
           "comment" => "List of counters",
-          "cells" => array(
+          "cells" => [
             "value" => $body,
-          ),
-        ),
-        "footer" => array(
-          "cells" => array(
+          ],
+        ],
+        "footer" => [
+          "cells" => [
             "value" => $footer,
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
   }
 
 }
