@@ -27,8 +27,6 @@
 * @return array
 */
 
-require_once('CRM/CampaignManager/CampaignTree/Tree.php');
-
 function civicrm_api3_campaign_tree_getids($params) {
    return CRM_CampaignManager_CampaignTree_Tree::getCampaignIds($params['id'], $params['depth']);
 }

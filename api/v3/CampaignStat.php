@@ -16,8 +16,6 @@
 
 use CRM_CampaignManager_ExtensionUtil as E;
 
-require_once 'CRM/CampaignManager/CampaignTree/Tree.php';
-
 function _civicrm_api3_campaign_stat_activity_counter(&$params) {
   $params['id'] = [
     'name' => 'id',
