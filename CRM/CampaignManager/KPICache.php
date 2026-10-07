@@ -15,8 +15,6 @@
 
 use CRM_CampaignManager_ExtensionUtil as E;
 
-require_once('CRM/CampaignManager/CampaignTree/Tree.php');
-
 class CRM_CampaignManager_KPICache {
 
   /**
