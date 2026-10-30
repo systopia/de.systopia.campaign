@@ -16,6 +16,7 @@
     <path>civicrm/ajax/campaign/list</path>
     <page_callback>CRM_CampaignManager_CampaignTree_Page_AJAX::getCampaignList</page_callback>
     <access_arguments>access CiviCRM</access_arguments>
+    <is_ajax>true</is_ajax>
   </item>
   <item>
     <path>civicrm/campaign/settings</path>
