@@ -18,7 +18,7 @@
   <version>1.6.0-dev</version>
   <develStage>dev</develStage>
   <compatibility>
-    <ver>5.67</ver>
+    <ver>6.16</ver>
   </compatibility>
   <comments>This extension was originally developed as part of the 2015 Google
     Summer of Code as described at
@@ -27,11 +27,12 @@
   </comments>
   <civix>
     <namespace>CRM/CampaignManager</namespace>
-    <format>23.02.1</format>
+    <format>26.10.3</format>
   </civix>
   <mixins>
     <mixin>menu-xml@1.0.0</mixin>
-    <mixin>smarty-v2@1.0.1</mixin>
+    <mixin>scan-classes@1.0.0</mixin>
+    <mixin>smarty@1.0.3</mixin>
   </mixins>
   <classloader>
     <psr0 prefix="CRM_" path="."/>
